@@ -1,20 +1,123 @@
 @import "tailwindcss";
 
+/* Custom Fonts */
+/* Clash Display Font Family */
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Extralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* The Year of Handicrafts Font Family */
+@font-face {
+  font-family: 'The Year of Handicrafts';
+  src: url('/fonts/alfont_com_TheYearofHandicrafts-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Year of Handicrafts';
+  src: url('/fonts/alfont_com_TheYearofHandicrafts-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Year of Handicrafts';
+  src: url('/fonts/alfont_com_TheYearofHandicrafts-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Year of Handicrafts';
+  src: url('/fonts/TheYearofHandicrafts-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'The Year of Handicrafts';
+  src: url('/fonts/alfont_com_TheYearofHandicrafts-Black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #31241a;
+  --primary: #8b5261;
+  --secondary: #31241a;
+  --gradient: #966192;
+  --primary-light: #a66b78;
+  --primary-dark: #6f3e4a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-gradient: var(--gradient);
+  --font-sans: var(--font-clash-display), var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono);
+  --font-clash: var(--font-clash-display), sans-serif;
+  --font-handicrafts: var(--font-year-handicrafts), serif;
+  --font-arabic: var(--font-year-handicrafts), serif;
+  --font-english: var(--font-clash-display), sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #fafbfc;
     --foreground: #ededed;
   }
 }
@@ -22,5 +125,110 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-clash-display), Arial, Helvetica, sans-serif;
+}
+
+/* Arabic body font */
+body[dir="rtl"] {
+  font-family: var(--font-year-handicrafts), Arial, Helvetica, sans-serif;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Locale-specific styles */
+.locale-container {
+  min-height: 100vh;
+}
+
+.locale-container.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.locale-container.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* RTL-specific adjustments */
+[dir="rtl"] .flex.space-x-4 > * + * {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+[dir="rtl"] .flex.space-x-8 > * + * {
+  margin-left: 0;
+  margin-right: 2rem;
+}
+
+/* Language-specific font rendering */
+[dir="rtl"] {
+  font-family: var(--font-year-handicrafts), var(--font-cairo), Arial, sans-serif;
+}
+
+[dir="ltr"] {
+  font-family: var(--font-clash-display), var(--font-geist-sans), Arial, sans-serif;
+}
+
+/* Override for specific Arabic content */
+[lang="ar"], [lang="ar"] * {
+  font-family: var(--font-year-handicrafts), Arial, sans-serif !important;
+}
+
+/* Override for specific English content */
+[lang="en"], [lang="en"] * {
+  font-family: var(--font-clash-display), Arial, sans-serif !important;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Custom Font Utility Classes */
+.font-clash {
+  font-family: var(--font-clash);
+}
+
+.font-handicrafts {
+  font-family: var(--font-handicrafts);
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+.font-english {
+  font-family: var(--font-english);
+}
+
+/* Language-aware font classes */
+.font-locale {
+  font-family: var(--font-clash-display), sans-serif;
+}
+
+[dir="rtl"] .font-locale {
+  font-family: var(--font-year-handicrafts), serif;
+}
+
+[lang="ar"] .font-locale {
+  font-family: var(--font-year-handicrafts), serif;
+}
+
+[lang="en"] .font-locale {
+  font-family: var(--font-clash-display), sans-serif;
 }

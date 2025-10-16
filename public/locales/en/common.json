@@ -1,0 +1,422 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "contact": "Contact"
+  },
+  "header": {
+    "promo": {
+      "text": "Get a 14-day free trial and start your restaurant booking system today",
+      "cta": "Subscribe Now"
+    },
+    "actions": {
+      "subscribe": "Subscribe Now",
+      "contact": "Contact Us",
+      "ClientPage": "So-Eat for Customers"
+    }
+  },
+  "hero": {
+    "title": "Complete Restaurant Management Solution with So-Eat Platform",
+    "subtitle": "Comprehensive Restaurant Management System",
+    "description": "An integrated platform that helps you manage your restaurant efficiently with advanced analytics tools and comprehensive reports",
+    "startNow": "Start Now",
+    "learnMore": "Learn More",
+    "heroImageAlt": "Restaurant Dashboard",
+    "dashboardPreview": "Dashboard Preview"
+  },
+  "features": {
+    "title": "Our Distinguished Services",
+    "description": "We provide comprehensive solutions to manage your restaurant efficiently",
+    "serviceTitle": "Service Number {{number}}",
+    "serviceDescription": "A brief description of the service provided and how it can help develop your business",
+    "featureImageAlt": "Feature Image {{number}}",
+    "analytics": {
+      "title": "Advanced Analytics",
+      "description": "Get deep insights into your restaurant performance with detailed reports"
+    },
+    "orders": {
+      "title": "Order Management",
+      "description": "Advanced system for order management and real-time tracking"
+    },
+    "inventory": {
+      "title": "Inventory Management",
+      "description": "Track inventory and manage raw materials efficiently"
+    }
+  },
+  "about": {
+    "title": "Who Are We?",
+    "description": "We are a specialized team in developing technical solutions for restaurants and food institutions. We strive to provide the best services that help in the growth and development of your business.",
+    "features": [
+      "More than 10 years of experience in the field",
+      "Specialized and professional work team",
+      "24/7 technical support",
+      "Customized solutions according to your needs"
+    ],
+    "aboutImageAlt": "About Image"
+  },
+  "statistics": {
+    "restaurants": "Partner Restaurants",
+    "orders": "Daily Orders",
+    "satisfaction": "Customer Satisfaction",
+    "support": "Technical Support",
+    "revenue": "Revenue Increase",
+    "efficiency": "Efficiency Improvement",
+    "customers": "Happy Customers",
+    "growth": "Monthly Growth"
+  },
+  "pricing": {
+    "title": "Choose the Right Plan for You",
+    "description": "Flexible plans suitable for all restaurant sizes",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save {{amount}}",
+    "plans": {
+      "basic": {
+        "name": "Basic Plan",
+        "price": "299",
+        "period": "/month",
+        "description": "Perfect for small restaurants",
+        "features": [
+          "Up to 100 orders monthly",
+          "Menu management",
+          "Basic reports",
+          "Technical support"
+        ]
+      },
+      "professional": {
+        "name": "Professional Plan",
+        "price": "599",
+        "period": "/month",
+        "description": "For medium restaurants",
+        "popular": "Most Popular",
+        "features": [
+          "Unlimited orders",
+          "Advanced analytics",
+          "Inventory management",
+          "Mobile app",
+          "Priority support"
+        ]
+      },
+      "enterprise": {
+        "name": "Enterprise Plan",
+        "price": "Custom",
+        "period": "",
+        "description": "For large restaurants",
+        "features": [
+          "Custom solutions",
+          "Advanced integration",
+          "24/7 support",
+          "Custom training",
+          "Dedicated account manager"
+        ]
+      }
+    },
+    "selectPlan": "Select Plan",
+    "contactSales": "Talk to Sales Team",
+    "helpText": "Need help choosing the right plan?"
+  },
+  "reservations": {
+    "badge": "Reservation & Table Management",
+    "title": "Control Your Reservations and Tables in Real Time",
+    "description": "Interactive dashboard showing the status of each table (available - occupied - cleaning). To avoid chaos and increase occupancy efficiency. And a smart system for reservation management: accept, reject, modify, or add to waiting list",
+    "cta": "Try Reservation System",
+    "stats": {
+      "todayBookings": "Today's Bookings",
+      "availableTables": "Available Tables",
+      "confirmedBookings": "Confirmed Bookings",
+      "waitingList": "Waiting List",
+      "newCustomers": "New Customers",
+      "occupancyRate": "Occupancy Rate"
+    },
+    "days": {
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday"
+    },
+    "dashboard": {
+      "title": "Reservation Management Dashboard",
+      "subtitle": "Full Real-time Control",
+      "connected": "Connected",
+      "weeklyStats": "Weekly Statistics",
+      "occupancy": "Occupancy",
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "occupancyRate": "Occupancy Rate",
+      "orderCount": "Order Count",
+      "revenueAmount": "Revenue (SAR)",
+      "reservationDistribution": "Reservation Distribution",
+      "occupancyPercent": "Occupancy",
+      "reserved": "Reserved",
+      "waiting": "Waiting",
+      "available": "Available",
+      "newBookingConfirmed": "New Booking Confirmed",
+      "tableNumber": "Table 12 - 4 People"
+    },
+    "management": {
+      "title": "Advanced Reservation Management",
+      "description": "Comprehensive system for managing all reservations with instant modification and cancellation capabilities",
+      "tablePlanning": {
+        "title": "Smart Table Layout",
+        "description": "Interactive design for table arrangement and space utilization optimization"
+      },
+      "realTimeTracking": {
+        "title": "Real-time Monitoring",
+        "description": "Live updates for table status, arrival and departure times"
+      },
+      "advancedAnalytics": {
+        "title": "Advanced Analytics",
+        "description": "Detailed reports on occupancy rates and peak times"
+      }
+    }
+  },
+  "trustedRestaurants": {
+    "badge": "Restaurants Trust Our System",
+    "title": "Leading Restaurants Trust Our System",
+    "description": "From small restaurants to large chains. Dozens of local brands have chosen us as their system to provide a smart experience for their customers",
+    "cta": {
+      "description": "Join hundreds of restaurants that trust our system",
+      "button": "Start Your Journey With Us"
+    }
+  },
+  "dynamicMenu": {
+    "badge": "Dynamic Menu",
+    "title": "Dynamic Menu Always Updated by Staff",
+    "cta": "Try Menu Management",
+    "stats": {
+      "menuItems": "Menu Items",
+      "millionOrders": "Million Orders",
+      "thousandOrders": "Thousand Orders"
+    },
+    "features": {
+      "updateMenu": "Update Your Restaurant Menu Easily",
+      "updateMenuDesc": "The system connects the menu to inventory directly, and when a specific item runs out it gets updated",
+      "autoUpdate": "Menu Updates Automatically for Customers",
+      "autoUpdateDesc": "Instant and direct updates for all customers"
+    },
+    "days": {
+      "saturday": "Saturday",
+      "sunday": "Sunday", 
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday"
+    },
+    "dashboard": {
+      "title": "Dynamic Menu Management",
+      "connected": "Connected",
+      "menuItems": ["Main Dish", "Appetizers", "Beverages"],
+      "menuUpdate": "Menu Update",
+      "newItemAdded": "New item added"
+    }
+  },
+  "smartWaitlist": {
+    "badge": "Smart Waitlist",
+    "title": "Say Goodbye to Chaos with Smart Waitlist",
+    "description": "Automatic system that manages customer entry when capacity is full with notifications when tables become available. We maintain a smooth and organized experience",
+    "cta": "Try Waitlist Management",
+    "stats": {
+      "waiting": "Waiting",
+      "millionOrders": "Million Orders",
+      "thousandOrders": "Thousand Orders"
+    },
+    "features": {
+      "smartQueue": "Smart Queue Management System",
+      "smartQueueDesc": "Automatic system that manages customer entry when capacity is full",
+      "tableNotifications": "Notifications When Tables Available",
+      "tableNotificationsDesc": "Notifications when tables become available. We maintain a smooth and organized experience"
+    },
+    "days": {
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday"
+    },
+    "dashboard": {
+      "smartWaitlist": "Smart Waitlist",
+      "waitingStatus": "Waiting",
+      "receivedStatus": "Received",
+      "cancelledStatus": "Cancelled",
+      "newCustomer": "New Customer",
+      "addedToWaitlist": "Added to waitlist"
+    }
+  },
+  "loyaltyProgram": {
+    "badge": "Custom Loyalty Programs",
+    "title": "Keep Your Customers with Interactive Loyalty Programs",
+    "description": "Build loyalty programs that suit your audience. All regular customers, and offer personalized deals based on their behavior",
+    "cta": "Start Loyalty Program",
+    "features": {
+      "rewardPoints": "Reward Points",
+      "rewardPointsDesc": "Earn points with every order and redeem them for exclusive rewards",
+      "membershipLevels": "Membership Levels",
+      "membershipLevelsDesc": "Bronze, Silver, Gold - the more loyal you are, the more rewards you get",
+      "exclusiveOffers": "Exclusive Offers",
+      "exclusiveOffersDesc": "Discounts and special offers for premium members only",
+      "specialOccasions": "Special Occasions",
+      "specialOccasionsDesc": "Rewards on birthdays and special occasions"
+    },
+    "stats": {
+      "loyaltyIncrease": "Increase in Loyalty",
+      "visitFrequency": "Visit Frequency",
+      "revenueIncrease": "Revenue Increase"
+    }
+  },
+  "analyticsReports": {
+    "badge": "Reports & Analytics",
+    "title": "Make Smarter Decisions with Accurate Reports",
+    "description": "Get detailed data about your restaurant performance. Table occupancy rates. Sales and reservations analysis. Key Performance Indicators (KPIs)",
+    "cta": "View Reports",
+    "stats": {
+      "monthlyReports": "Monthly Reports",
+      "millionOrders": "Million Orders",
+      "thousandOrders": "Thousand Orders"
+    },
+    "months": {
+      "january": "January", "february": "February", "march": "March", "april": "April",
+      "may": "May", "june": "June", "july": "July", "august": "August",
+      "september": "September", "october": "October", "november": "November", "december": "December"
+    },
+    "features": {
+      "detailedReports": "Detailed Sales and Reservations Reports",
+      "detailedReportsDesc": "Get detailed data about your restaurant performance",
+      "kpiIndicators": "Key Performance Indicators (KPIs)",
+      "kpiIndicatorsDesc": "Data analysis and interactive control. Interactive control tools",
+      "customerBehavior": "Customer Behavior Analysis",
+      "customerBehaviorDesc": "Deeper understanding of your customers' preferences and behavior"
+    },
+    "dashboard": {
+      "advancedReports": "Advanced Reports & Analytics",
+      "activity": "Activity",
+      "growthRate": "Growth Rate",
+      "customerSatisfaction": "Customer Satisfaction",
+      "averageOrder": "Average Order",
+      "newReport": "New Report",
+      "salesReportGenerated": "Sales report generated"
+    }
+  },
+  "customerFeedback": {
+    "badge": "Customer Reviews",
+    "title": "Listen to Your Customers and Improve Their Experience",
+    "description": "Follow customer reviews and opinions, strengthen their feedback and continuously improve their experience in your restaurant",
+    "cta": "Start Tracking Reviews",
+    "features": {
+      "negativeAlerts": "Alerts for Negative Reviews",
+      "negativeAlertsDesc": "Get instant notifications when there are negative reviews to take quick action",
+      "satisfactionReports": "Customer Satisfaction Reports",
+      "satisfactionReportsDesc": "Comprehensive analysis of customer satisfaction levels and review trends over time",
+      "reviewDisplay": "Customer Review Display",
+      "reviewDisplayDesc": "Display all reviews and feedback in one place with the ability to respond"
+    },
+    "reviews": [
+      {
+        "name": "Ahmed Mohammed",
+        "comment": "Excellent service and delicious food, I recommend visiting the restaurant",
+        "avatar": "👨‍💼"
+      },
+      {
+        "name": "Fatima Ali",
+        "comment": "Great experience, professional staff and comfortable atmosphere",
+        "avatar": "👩‍💼"
+      },
+      {
+        "name": "Mohammed Salem",
+        "comment": "Best restaurant in the area, high quality and reasonable prices",
+        "avatar": "👨‍🦱"
+      }
+    ],
+    "dashboard": {
+      "managerName": "Ahmed Manager",
+      "testimonial": "Amazing system that helps me track customer opinions and continuously improve service",
+      "averageRating": "Average Rating"
+    }
+  },
+  "securityTrust": {
+    "badge": "Security Made Easy",
+    "title": "Trust and Security",
+    "description": "A robust system designed specifically to serve restaurant owners with high levels of accuracy, efficiency and security. Made especially for you",
+    "cta": "Learn More About Security",
+    "trusted": "Trusted Security"
+  },
+  "faq": {
+    "badge": "Frequently Asked Questions",
+    "title": "Frequently Asked Questions",
+    "description": "Answers to the most common questions you might have about our system",
+    "contact": {
+      "title": "Didn't find an answer to your question?",
+      "description": "Our team is ready to help you anytime",
+      "cta": "Contact Us"
+    },
+    "questions": [
+      {
+        "question": "Is the system suitable for a small restaurant or food truck?",
+        "answer": "Yes absolutely! The system is designed to suit all restaurant sizes and applications, from small projects to large chains. You can start with the basic plan and then upgrade as your business grows."
+      },
+      {
+        "question": "Can the system integrate with existing POS systems?",
+        "answer": "Yes, the system supports integration with most popular POS systems and banking services. It can also be linked to delivery apps like HungerStation, Talabat and Uber Eats."
+      }
+    ]
+  },
+  "mobileApp": {
+    "title": "Advanced Mobile App",
+    "description": "Manage your restaurant from anywhere using our advanced mobile app",
+    "features": [
+      "Real-time order tracking",
+      "Menu and pricing management",
+      "Detailed reports",
+      "Instant notifications"
+    ],
+    "downloadApp": "Download App",
+    "dashboard": {
+      "appName": "So-Eat",
+      "todayOrders": "Today's Orders",
+      "sales": "Sales",
+      "weeklyStats": "Weekly Statistics",
+      "menuItems": ["Menu Management", "Sales Reports", "Restaurant Settings"],
+      "newOrder": "New Order!"
+    }
+  },
+  "cta": {
+    "title": "Are You Ready to Develop Your Restaurant?",
+    "description": "Join hundreds of restaurants that trust our services",
+    "button": "Start Free Today"
+  },
+  "footer": {
+    "company": {
+      "description": "Join So-Eat's mailing list by subscribing to the system to get the latest offers and updates about the system. Whether you're looking for a simple and fast food experience for business success or waiting for orders"
+    },
+    "newsletter": {
+      "title": "Join So-Eat's Mailing List",
+      "subscribe": "Subscribe",
+      "demo": "Request System Demo"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "policy": "Privacy Policy",
+      "terms": "Terms & Conditions"
+    },
+    "links": {
+      "title": "Important Links",
+      "pricing": "Pricing Plans",
+      "contact": "Contact Us",
+      "questions": "FAQ"
+    },
+    "copyright": "© 2025 So-Eat. All rights reserved"
+  },
+  "company": {
+    "name": "So-Eat",
+    "description": "An integrated platform for restaurant management and electronic orders",
+    "email": "info@so-eat.com",
+    "phone": "+966 50 123 4567",
+    "address": "Riyadh, Saudi Arabia"
+  }
+}

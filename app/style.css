@@ -1,0 +1,15 @@
+
+.border-orange {
+    border-radius: 100px;
+    border: 1px solid rgba(237, 97, 74, 0.08); /* 80% opacity of #ED614A */
+    background: rgba(237, 97, 74, 0.08);      /* 8% opacity background */
+}
+
+.header-font {
+    color: #637381;
+    text-align: right;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
