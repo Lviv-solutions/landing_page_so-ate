@@ -2,20 +2,20 @@
 
 import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
-import { Gift, Star, Award, Zap } from "lucide-react";
+import { Gift, Star, Award } from "lucide-react";
+import Image from "next/image";
 
 export default function LoyaltyProgramSection() {
   const { t } = useTranslation();
 
 
-  const giftBoxes = [
-    { color: "from-orange-400 to-red-500", delay: 0 },
-    { color: "from-yellow-400 to-orange-500", delay: 0.2 },
-    { color: "from-red-400 to-pink-500", delay: 0.4 },
-  ];
 
   return (
-    <section className=" mx-20 rounded-3xl border border-b-[#ffffff] py-20 bg-gradient-to-br from-[#ffffff] via-[#dfdfdf] to-[#efefef] relative overflow-hidden">
+    <section id="loyalty" className=" mx-20 rounded-3xl border border-b-[#ffffff] py-10 relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(250deg, rgba(145, 158, 171, 0.12)',
+          
+        }}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 right-20 w-96 h-96 bg-orange-400 rounded-full blur-3xl" />
@@ -26,63 +26,32 @@ export default function LoyaltyProgramSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Gift Boxes Illustration */}
           <motion.div
-            className="relative flex justify-center"
+            className="relative flex justify-center lg:order-2"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <div className="relative">
-              {/* Gift Boxes */}
-              <div className="flex items-end justify-center space-x-4">
-                {giftBoxes.map((box, index) => (
-                  <motion.div
-                    key={index}
-                    className="relative"
-                    initial={{ opacity: 0, y: 50, scale: 0.8 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.8, delay: box.delay }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -10, rotate: 5 }}
-                  >
-                    {/* Gift Box */}
-                    <div className={`w-24 h-24 bg-gradient-to-br ${box.color} rounded-lg shadow-lg relative overflow-hidden`}>
-                      {/* Box Ribbon Vertical */}
-                      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-3 h-full bg-yellow-300 opacity-80" />
-                      {/* Box Ribbon Horizontal */}
-                      <div className="absolute top-1/2 left-0 transform -translate-y-1/2 w-full h-3 bg-yellow-300 opacity-80" />
-                      
-                      {/* Bow */}
-                      <motion.div
-                        className="absolute -top-2 left-1/2 transform -translate-x-1/2"
-                        animate={{ rotate: [0, 5, -5, 0] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      >
-                        <div className="w-8 h-6 bg-yellow-400 rounded-full relative">
-                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-4 bg-yellow-500 rounded-full" />
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* Sparkles around gift boxes */}
-                    <motion.div
-                      className="absolute -top-2 -right-2 text-yellow-400"
-                      animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-                      transition={{ duration: 2, repeat: Infinity, delay: index * 0.5 }}
-                    >
-                      <Star size={12} fill="currentColor" />
-                    </motion.div>
-                    <motion.div
-                      className="absolute -bottom-1 -left-2 text-orange-400"
-                      animate={{ scale: [1, 1.3, 1], rotate: [0, -180, -360] }}
-                      transition={{ duration: 2.5, repeat: Infinity, delay: index * 0.3 }}
-                    >
-                      <Zap size={10} fill="currentColor" />
-                    </motion.div>
-                  </motion.div>
-                ))}
-              </div>
-
+            <motion.div
+              className="relative"
+              animate={{ 
+                y: [-5, 5, -5],
+                rotate: [-1, 1, -1]
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Image
+                src="/image/loyalty.png"
+                alt="Loyalty Program"
+                width={400}
+                height={400}
+                className="drop-shadow-2xl"
+              />
+              
               {/* Floating Elements */}
               <motion.div
                 className="absolute top-10 left-10 text-orange-400"
@@ -105,11 +74,12 @@ export default function LoyaltyProgramSection() {
               >
                 <Star size={14} fill="currentColor" />
               </motion.div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Content */}
           <motion.div
+            className="lg:order-1"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}

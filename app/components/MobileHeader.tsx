@@ -3,12 +3,19 @@
 import { useState } from "react";
 import { useTranslation } from "../hooks/useTranslation";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter, usePathname } from "next/navigation";
+import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PromoBanner from "./PromoBanner";
 
 export default function MobileHeader() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Extract current locale from pathname
+  const currentLocale = pathname.split('/')[1] || 'ar';
 
   const navItems = [
     { key: "nav.home", href: "#hero" },
@@ -25,17 +32,28 @@ export default function MobileHeader() {
     setIsMenuOpen(false);
   };
 
+  const handleClientPageClick = () => {
+    router.push(`/${currentLocale}/client`);
+  };
+
   return (
     <>
       <PromoBanner />
       <header className="md:hidden bg-[#ED614A] shadow-sm relative">
       <div className="px-4 py-3 sm:py-4">
         <div className="flex justify-between items-center min-h-[48px]">
-          <motion.h1
-            className="text-xl font-bold text-white relative font-clash"
+          <motion.div
+            className="relative"
             whileHover={{ scale: 1.05 }}
           >
-            {t("company.name")}
+            <Image
+              src="/image/logo.png"
+              alt={t("company.name")}
+              width={100}
+              height={32}
+              className="h-8 w-auto"
+              priority
+            />
             <motion.span
               className="absolute -top-1 -right-1 text-xs"
               animate={{ rotate: [0, 360] }}
@@ -43,18 +61,19 @@ export default function MobileHeader() {
             >
               🌟
             </motion.span>
-          </motion.h1>
+          </motion.div>
 
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
             
             <motion.button
+              onClick={handleClientPageClick}
               className="hidden sm:block px-4 py-2 rounded-full text-xs font-semibold text-white font-clash whitespace-nowrap"
               style={{ background: 'linear-gradient(90deg, #ED614A 0%, #E6446F 100%)' }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {t("header.actions.subscribe")}
+              {t("header.actions.ClientPage")}
             </motion.button>
             
             <motion.button

@@ -30,14 +30,36 @@ export default function ReservationManagementSection() {
   const [activeChart, setActiveChart] = useState<'occupancy' | 'orders' | 'revenue'>('occupancy');
 
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50 via-yellow-50 to-pink-50 relative overflow-hidden">
-      {/* Background Pattern */}
+    <section id="reservations" className="py-20 relative overflow-hidden">
+         {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-orange-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-yellow-400 rounded-full blur-3xl" />
+        <div className="absolute inset-0"  />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Right Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          right: '-538.83px',
+          bottom: 'auto',
+          background: 'linear-gradient(250deg, rgba(230, 97, 74, 0.50) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+          filter: 'blur(213.05px)'
+        }}
+      />
+
+      {/* Left Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          left: '-574px',
+          bottom: 'auto',
+          background: 'linear-gradient(142deg, rgba(5, 218, 155, 0.30) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+
+          filter: 'blur(213.05px)'
+        }}
+      />
+
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-6 relative z-10">
         {/* Header */}
         <motion.div
           className="text-center mb-16"
@@ -67,7 +89,7 @@ export default function ReservationManagementSection() {
           </motion.h2>
           
           <motion.p
-            className="text-xl text-gray-600 max-w-3xl mx-auto font-clash"
+            className="text-2xl text-[#637381] max-w-7xl mx-auto px-5 font-clash"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
@@ -389,12 +411,12 @@ export default function ReservationManagementSection() {
                   transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-orange-100 to-yellow-100 rounded-xl flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 rounded-xl flex items-center justify-center">
                     <feature.icon className="text-orange-600" size={24} />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2 font-clash">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed font-clash">{feature.description}</p>
+                    <p className="text-[#637381] leading-relaxed font-clash">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}

@@ -131,7 +131,7 @@ const noiseY = noise3D(x * 0.01 + 100, y * 0.01, time * 0.1) * 0.02;
 
 ### Color Scheme:
 
-- **Primary Torus**: #8B5261 (Brand coral)
+- **Primary Torus**: #f9dcc7 (Brand coral)
 - **Secondary Accents**: #966192 (Brand purple)
 - **Particle System**: #966192 with transparency
 - **Energy Rings**: Layered brand colors
@@ -215,7 +215,7 @@ const particleCount = 200; // Reduce for performance
 
 ### Color Psychology:
 
-- **Coral (#8B5261)**: Warmth and approachability
+- **Coral (#f9dcc7)**: Warmth and approachability
 - **Purple (#966192)**: Innovation and creativity
 - **Dark Brown (#31241A)**: Stability and trust
 

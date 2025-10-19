@@ -18,7 +18,7 @@ export default function StatisticsSection() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
           {statistics.map((stat, index) => (
             <div key={index}>
-              <div className="text-4xl font-bold text-[#8B5261] mb-2">
+              <div className="text-4xl font-bold text-[#f9dcc7] mb-2">
                 {stat.value}
               </div>
               <div className="text-gray-600">{t(stat.labelKey)}</div>

@@ -24,7 +24,7 @@ function Stars() {
     return positions;
   };
 
-  const sphere = generateSphere(5000, 1.5);
+  const sphere = generateSphere(700, 1.8);
 
   useFrame((state, delta) => {
     if (ref.current) {
@@ -38,7 +38,7 @@ function Stars() {
       <Points positions={sphere} stride={3} frustumCulled={false}>
         <PointMaterial
           transparent
-          color="#8B5261"
+          color="#fff9ec"
           size={0.005}
           sizeAttenuation={true}
           depthWrite={false}
@@ -63,8 +63,8 @@ function FloatingOrbs() {
 
   return (
     <mesh ref={meshRef} position={[2, 0, -5]}>
-      <sphereGeometry args={[0.5, 64, 64]} />
-      <meshBasicMaterial color="#966192" transparent opacity={0.1} />
+      <sphereGeometry args={[0.3, 64, 64]} />
+      <meshBasicMaterial color="#fff9ec" transparent opacity={0.4} />
     </mesh>
   );
 }

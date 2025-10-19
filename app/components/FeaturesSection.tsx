@@ -56,14 +56,14 @@ export default function FeaturesSection() {
               }}
             >
               <motion.div
-                className="bg-gradient-to-br from-[#8B5261]/10 to-[#966192]/10 h-48 rounded-lg mb-4 flex items-center justify-center group-hover:from-[#8B5261]/20 group-hover:to-[#966192]/20 transition-all duration-300"
+                className="bg-gradient-to-br from-[#f9dcc7]/10 to-[#966192]/10 h-48 rounded-lg mb-4 flex items-center justify-center group-hover:from-[#f9dcc7]/20 group-hover:to-[#966192]/20 transition-all duration-300"
                 whileHover={{ scale: 1.02 }}
               >
-                <span className="text-[#8B5261] font-medium">
+                <span className="text-[#f9dcc7] font-medium">
                   {t("features.featureImageAlt", { number: item })}
                 </span>
               </motion.div>
-              <h3 className="text-xl font-semibold text-[#31241A] mb-2 group-hover:text-[#8B5261] transition-colors">
+              <h3 className="text-xl font-semibold text-[#31241A] mb-2 group-hover:text-[#f9dcc7] transition-colors">
                 {t("features.serviceTitle", { number: item })}
               </h3>
               <p className="text-gray-600">

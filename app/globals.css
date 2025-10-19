@@ -94,7 +94,7 @@
 :root {
   --background: #ffffff;
   --foreground: #31241a;
-  --primary: #8b5261;
+  --primary: #f9dcc7;
   --secondary: #31241a;
   --gradient: #966192;
   --primary-light: #a66b78;
@@ -117,7 +117,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #fafbfc;
+    --background: rgba(255,192,66,0.10);
     --foreground: #ededed;
   }
 }

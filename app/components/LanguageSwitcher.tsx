@@ -8,7 +8,17 @@ export default function LanguageSwitcher() {
   const pathname = usePathname();
 
   const switchLanguage = (locale: string) => {
-    const newPath = locale === "ar" ? "/" : `/${locale}`;
+    const segments = pathname.split("/").filter(Boolean);
+    
+    // Remove current locale from segments if it exists
+    if (segments[0] === "en" || segments[0] === "ar") {
+      segments.shift();
+    }
+    
+    // Build new path with new locale
+    const pathWithoutLocale = segments.length > 0 ? `/${segments.join("/")}` : "";
+    const newPath = `/${locale}${pathWithoutLocale}`;
+    
     router.push(newPath);
   };
 

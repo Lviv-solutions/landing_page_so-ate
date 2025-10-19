@@ -2,6 +2,8 @@
 
 import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
@@ -11,8 +13,8 @@ export default function Footer() {
     {
       titleKey: "footer.privacy.title",
       links: [
-        { labelKey: "footer.privacy.policy", href: "#" },
-        { labelKey: "footer.privacy.terms", href: "#" },
+        { labelKey: "footer.privacy.policy", href: "/privacy" },
+        { labelKey: "footer.privacy.terms", href: "/terms" },
       ],
     },
     {
@@ -64,18 +66,24 @@ export default function Footer() {
           viewport={{ once: true }}
         >
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-12"
+            className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12"
             variants={containerVariants}
           >
             {/* Company Info */}
-            <motion.div variants={itemVariants} className="md:col-span-1">
+            <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-1">
               <motion.div
                 className="flex items-center space-x-3 mb-6"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-red-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">S</span>
+                <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center p-2">
+                  <Image
+                    src="/image/logo-2.svg"
+                    alt={t("company.name")}
+                    width={40}
+                    height={32}
+                    className="w-full h-auto"
+                  />
                 </div>
                 <h3 className="text-2xl font-bold">{t("company.name")}</h3>
               </motion.div>
@@ -86,16 +94,16 @@ export default function Footer() {
               {/* Newsletter Signup */}
               <div className="mb-6">
                 <h4 className="font-semibold mb-3">{t("footer.newsletter.title")}</h4>
-                <div className="flex space-x-2">
+                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                   <motion.button
-                    className="px-6 py-3 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300"
+                    className="px-4 sm:px-6 py-3 bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-full font-medium hover:shadow-lg transition-all duration-300 text-sm sm:text-base"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {t("footer.newsletter.subscribe")}
                   </motion.button>
                   <motion.button
-                    className="px-6 py-3 border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300"
+                    className="px-4 sm:px-6 py-3 border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -116,12 +124,12 @@ export default function Footer() {
                       whileHover={{ x: 5 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <a
+                      <Link
                         href={link.href}
                         className="hover:text-orange-400 transition-colors duration-200 text-base"
                       >
                         {t(link.labelKey)}
-                      </a>
+                      </Link>
                     </motion.li>
                   ))}
                 </ul>
@@ -135,7 +143,7 @@ export default function Footer() {
             className="border-t border-white/20 mt-12 pt-8"
             variants={itemVariants}
           >
-            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 gap-4">
               {/* Copyright */}
               <motion.p
                 className="text-white/60 text-sm"

@@ -34,7 +34,7 @@ export default function ScrollIndicator() {
     >
       <button
         onClick={scrollToNext}
-        className="flex flex-col items-center space-y-2 text-[#8B5261] hover:text-[#6F3E4A] transition-colors group"
+        className="flex flex-col items-center space-y-2 text-[#f9dcc7] hover:text-[#6F3E4A] transition-colors group"
         aria-label="Scroll down"
       >
         <motion.div

@@ -37,12 +37,9 @@ export default function DynamicMenuSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#d2ebcb]/80 via-[#f9f8f3] to-[#f8dac4] relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-purple-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-blue-400 rounded-full blur-3xl" />
-      </div>
+    <section id="menu" className="py-20 relative overflow-hidden">
+      
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -84,12 +81,12 @@ export default function DynamicMenuSection() {
                   transition={{ duration: 0.6, delay: 0.4 + index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-purple-100 to-blue-100 rounded-xl flex items-center justify-center">
-                    <feature.icon className="text-purple-600" size={24} />
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 rounded-xl flex items-center justify-center">
+                    <feature.icon className="text-red-600" size={24} />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                    <p className="text-[#637381] leading-relaxed">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}

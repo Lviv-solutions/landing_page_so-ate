@@ -97,7 +97,7 @@ TypeScript interfaces for:
 
 The application uses a custom color palette:
 
-- **Primary**: #8B5261 (coral/salmon)
+- **Primary**: #f9dcc7 (coral/salmon)
 - **Secondary**: #31241A (dark brown)
 - **Gradient**: #966192 (pink/purple)
 - **Accent colors**: Various shades for hover states

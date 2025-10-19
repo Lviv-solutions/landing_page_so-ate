@@ -7,7 +7,7 @@ export default function HeroSection() {
   const { t } = useTranslation();
 
   return (
-    <section className=" mx-20 max-h-200 rounded-3xl border bg-gradient-to-br from-[#ed624a] to-[#ef715d] relative overflow-hidden">
+    <section id="hero" className=" mx-20 max-h-200 rounded-3xl border bg-gradient-to-br from-[#ed624a] to-[#ef715d] relative overflow-hidden">
     <div className="relative py-35 overflow-hidden" style={{
       backgroundImage: 'url(/image/Vector.png)',
       backgroundSize: 'cover',

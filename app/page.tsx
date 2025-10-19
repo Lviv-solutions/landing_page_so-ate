@@ -18,7 +18,7 @@ import ScrollProgress from "./components/ScrollProgress";
 export default function Home() {
   return (
     <LocaleLayout>
-      <div className="min-h-screen bg-white relative">
+      <div className="min-h-screen relative">
         <ThreeBackground />
         <ScrollProgress />
         <Header />

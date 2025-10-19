@@ -38,22 +38,55 @@ export default function SmartWaitlistSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-orange-50 via-red-50 to-yellow-50 relative overflow-hidden">
-      {/* Background Pattern */}
+    <section id="waitlist" className="py-20  relative overflow-hidden">
+              {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-red-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-orange-400 rounded-full blur-3xl" />
+        <div className="absolute inset-0"  />
       </div>
+
+        {/* Right Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          right: '-538.83px',
+          bottom: 'auto',
+          background: 'linear-gradient(250deg, rgba(230, 97, 74, 0.50) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+          filter: 'blur(213.05px)'
+        }}
+      />
+
+      {/* Left Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          left: '-574px',
+          bottom: 'auto',
+          background: 'linear-gradient(142deg, rgba(5, 218, 155, 0.30) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+
+          filter: 'blur(213.05px)'
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Content */}
           <motion.div
+            className="lg:order-2"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
+            <motion.div
+              animate={{ 
+                x: [-10, 10, -10]
+              }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
             <motion.div
               className="inline-block bg-[#ED614A]/12 text-[#ED614A] px-6 py-2 rounded-full text-sm font-medium mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -75,7 +108,7 @@ export default function SmartWaitlistSection() {
             </motion.h2>
 
             <motion.p
-              className="text-xl text-gray-600 mb-8 leading-relaxed"
+              className="text-xl text-[#637381] mb-8 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -100,7 +133,7 @@ export default function SmartWaitlistSection() {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                    <p className="text-[#637381] leading-relaxed">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -122,16 +155,27 @@ export default function SmartWaitlistSection() {
               {/*  {t("smartWaitlist.cta")}*/}
               {/*</motion.button>*/}
             </motion.div>
+            </motion.div>
           </motion.div>
 
           {/* Dashboard Preview */}
           <motion.div
-            className="relative"
+            className="relative lg:order-1"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
             viewport={{ once: true }}
           >
+            <motion.div
+              animate={{ 
+                x: [10, -10, 10]
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
             {/* Main Dashboard */}
             <motion.div
               className="bg-white rounded-2xl shadow-2xl p-6 border border-gray-100"
@@ -151,7 +195,7 @@ export default function SmartWaitlistSection() {
               </div>
 
               {/* Stats Cards */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-2 gap-4 mb-6 ">
                 {waitlistStats.map((stat, index) => (
                   <motion.div
                     key={index}
@@ -178,7 +222,7 @@ export default function SmartWaitlistSection() {
               </div>
 
               {/* Charts Section */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 ">
                 {/* Bar Chart */}
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="text-sm font-semibold text-gray-800 mb-3">Website visits</h4>
@@ -295,6 +339,7 @@ export default function SmartWaitlistSection() {
                   <div className="text-gray-600 text-xs">{t("smartWaitlist.dashboard.addedToWaitlist")}</div>
                 </div>
               </div>
+            </motion.div>
             </motion.div>
           </motion.div>
         </div>

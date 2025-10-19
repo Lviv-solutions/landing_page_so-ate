@@ -1,9 +1,15 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About",
-    "services": "Services",
-    "contact": "Contact"
+    "reservations": "Reservations",
+    "menu": "Menu",
+    "waitlist": "Waitlist",
+    "loyalty": "Loyalty",
+    "analytics": "Analytics",
+    "feedback": "Feedback",
+    "security": "Security",
+    "pricing": "Pricing",
+    "faq": "FAQ"
   },
   "header": {
     "promo": {
@@ -13,8 +19,15 @@
     "actions": {
       "subscribe": "Subscribe Now",
       "contact": "Contact Us",
-      "ClientPage": "So-Eat for Customers"
+      "ClientPage": "So-Eat for Customers",
+      "BusinessPage": "So-Eat for Business",
+      "HomePage": "Back to Home"
     }
+  },
+  "clientPage": {
+    "title": "So-Eat for Customers",
+    "subtitle": "Download our mobile app and enjoy the best restaurant experience",
+    "description": "Order food, make reservations, and discover new restaurants with our easy-to-use mobile application."
   },
   "hero": {
     "title": "Complete Restaurant Management Solution with So-Eat Platform",
@@ -24,6 +37,145 @@
     "learnMore": "Learn More",
     "heroImageAlt": "Restaurant Dashboard",
     "dashboardPreview": "Dashboard Preview"
+  },
+  "clientHero": {
+    "title": "Book Your Table in Seconds and Enjoy a Smart Experience Without Waiting or Calling",
+    "description": "One app that brings together all restaurants, offers, and reservations in one place. Book your table with one click without calling or waiting",
+    "downloadOn": "Download on",
+    "getItOn": "Get it on",
+    "searchPlaceholder": "Search for restaurant or dish..."
+  },
+  "smartPayment": {
+    "badge": "Smart Payment",
+    "title": "Pay the Way That Suits You..",
+    "description": "Mada, STC Pay or Apple Pay - all methods are available within the app.",
+    "features": {
+      "electronic": {
+        "title": "Safe and Fast Electronic Payment",
+        "description": "Enjoy a fast and secure payment process through all available electronic payment methods"
+      },
+      "security": {
+        "title": "Save Your Preferred Card",
+        "description": "Save your preferred card for quick payment next time with complete security"
+      },
+      "advance": {
+        "title": "Advance Payment or In-Restaurant",
+        "description": "Choose between advance payment when booking or payment inside the restaurant as you prefer"
+      }
+    }
+  },
+  "bookingSteps": {
+    "title": "Booking Steps",
+    "steps": {
+      "choose": {
+        "title": "Choose Your Restaurant",
+        "description": "Among all the options, So-Eat will suggest the best ones that suit you."
+      },
+      "book": {
+        "title": "Book Your Suitable Time",
+        "description": "Without waiting and hassle, choose your suitable time and let So-Eat book it for you."
+      },
+      "enjoy": {
+        "title": "Enjoy a Unique Experience",
+        "description": "So-Eat creates unforgettable memories for you with your loved ones."
+      }
+    }
+  },
+  "interactiveMenu": {
+    "badge": "Interactive Menu",
+    "title": "Browse the menu and learn about the dishes before you arrive.",
+    "description": "Explore the food menu in detail and learn about each dish's ingredients and nutritional information before visiting the restaurant.",
+    "cta": "Browse Menu",
+    "features": {
+      "browse": {
+        "title": "Browse Complete Menu",
+        "description": "View all available dishes with detailed photos and prices"
+      },
+      "preview": {
+        "title": "Preview Dishes",
+        "description": "See high-quality photos of each dish with detailed ingredient descriptions"
+      },
+      "time": {
+        "title": "Save Your Time",
+        "description": "Choose your order in advance and receive it as soon as you arrive at the restaurant"
+      }
+    }
+  },
+  "enjoyMakeFriends": {
+    "title": "Enjoy and make friends at the touch of a button",
+    "description": "Discover new people who share your food interests and make new friends in a comfortable and distinctive atmosphere.",
+    "cta": "Start Free Trial",
+    "features": {
+      "connect": {
+        "title": "Connect with Others",
+        "description": "Meet new people who love the same restaurants"
+      },
+      "share": {
+        "title": "Share Experiences",
+        "description": "Share your experiences and memories with friends"
+      },
+      "enjoy": {
+        "title": "Enjoy the Atmosphere",
+        "description": "Spend enjoyable times in a wonderful social environment"
+      }
+    }
+  },
+  "experience": {
+    "title": "Let your experience benefit others..",
+    "description": "Rate restaurants and dishes, and share photos of your experience.",
+    "features": {
+      "rating": {
+        "title": "Rating Dishes and Restaurants",
+        "description": "Help others make better decisions through your honest ratings"
+      },
+      "reviews": {
+        "title": "Writing Reviews and Photos",
+        "description": "Share your experience in detail with appetizing photos of dishes"
+      },
+      "community": {
+        "title": "Interactive Community for Food Lovers",
+        "description": "Join an active community of food enthusiasts and exchange experiences"
+      }
+    }
+  },
+  "recommendations": {
+    "badge": "AI-Powered Recommendations",
+    "title": "We work to always recommend the best to meet our users' needs",
+    "description": "Through the main page, you can access the most recommended restaurants that suit your needs at the same moment",
+    "features": {
+      "ai": {
+        "title": "Advanced Artificial Intelligence",
+        "description": "Smart algorithms that learn from your preferences and behavior to provide accurate recommendations"
+      },
+      "personalized": {
+        "title": "Personalized Custom Recommendations",
+        "description": "Restaurant and dish suggestions that match your taste, budget, and preferred time"
+      },
+      "smart": {
+        "title": "Smart Data Analysis",
+        "description": "We analyze thousands of reviews and ratings to provide you with the best options"
+      }
+    }
+  },
+  "electronicInvitations": {
+    "badge": "Electronic Invitations",
+    "title": "Is your friend with you? Now send them an invitation wherever you are",
+    "description": "Share the booking link with your friends, and let everyone add their own order for the same session",
+    "cta": "Unforgettable experiences..",
+    "features": {
+      "send": {
+        "title": "Send Instant Invitations",
+        "description": "Send electronic invitations to your friends with one click through the app"
+      },
+      "share": {
+        "title": "Share Booking Details",
+        "description": "Share restaurant details, time, and location with all invitees"
+      },
+      "group": {
+        "title": "Organize Group Sessions",
+        "description": "Organize group dining sessions and let each person choose their order in advance"
+      }
+    }
   },
   "features": {
     "title": "Our Distinguished Services",
@@ -363,6 +515,22 @@
       {
         "question": "Can the system integrate with existing POS systems?",
         "answer": "Yes, the system supports integration with most popular POS systems and banking services. It can also be linked to delivery apps like HungerStation, Talabat and Uber Eats."
+      },
+      {
+        "question": "How secure is customer data and payment information?",
+        "answer": "We use bank-level security with SSL encryption and comply with international security standards. All payment data is processed through certified payment gateways and we never store sensitive payment information on our servers."
+      },
+      {
+        "question": "What kind of support do you provide?",
+        "answer": "We offer 24/7 technical support through multiple channels including phone, email, and live chat. Our team also provides free training sessions and setup assistance for new customers."
+      },
+      {
+        "question": "Can I customize the menu and pricing?",
+        "answer": "Absolutely! You have full control over your menu items, categories, pricing, and availability. You can update everything in real-time through our easy-to-use dashboard or mobile app."
+      },
+      {
+        "question": "Is there a free trial available?",
+        "answer": "Yes, we offer a 14-day free trial with full access to all features. No credit card required to start, and you can cancel anytime during the trial period."
       }
     ]
   },
@@ -376,6 +544,16 @@
       "Instant notifications"
     ],
     "downloadApp": "Download App",
+    "downloadButtons": {
+      "appStore": {
+        "prefix": "Download on the",
+        "store": "App Store"
+      },
+      "googlePlay": {
+        "prefix": "Get it on",
+        "store": "Google Play"
+      }
+    },
     "dashboard": {
       "appName": "So-Eat",
       "todayOrders": "Today's Orders",
@@ -418,5 +596,98 @@
     "email": "info@so-eat.com",
     "phone": "+966 50 123 4567",
     "address": "Riyadh, Saudi Arabia"
+  },
+  "terms": {
+    "badge": "Legal Documents",
+    "title": "Terms and Conditions",
+    "description": "Please read these terms and conditions carefully before using our service. By accessing or using So-Eat, you agree to be bound by these terms.",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing and using the So-Eat platform, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.\n\nThese terms apply to all visitors, users, and others who access or use the service. We reserve the right to update and change the Terms of Service from time to time without notice."
+      },
+      "services": {
+        "title": "2. Description of Services",
+        "content": "So-Eat provides an integrated platform for restaurant management and electronic orders. Our services include:\n\n• Restaurant reservation management\n• Digital menu systems\n• Order processing and payment\n• Customer feedback and analytics\n• Loyalty program management\n\nWe reserve the right to modify, suspend, or discontinue any part of our services at any time."
+      },
+      "userResponsibilities": {
+        "title": "3. User Responsibilities",
+        "content": "As a user of So-Eat, you agree to:\n\n• Provide accurate and complete information\n• Maintain the security of your account credentials\n• Use the service only for lawful purposes\n• Respect other users and restaurant partners\n• Not attempt to disrupt or damage the platform\n\nYou are responsible for all activities that occur under your account."
+      },
+      "privacy": {
+        "title": "4. Privacy and Data Protection",
+        "content": "We take your privacy seriously and are committed to protecting your personal information. Our Privacy Policy explains how we collect, use, and protect your data.\n\nBy using our service, you consent to the collection and use of information in accordance with our Privacy Policy. We implement appropriate security measures to protect your personal information."
+      },
+      "limitations": {
+        "title": "5. Limitations of Liability",
+        "content": "So-Eat shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses.\n\nWe do not warrant that the service will be uninterrupted, timely, secure, or error-free. Your use of the service is at your own risk."
+      },
+      "contact": {
+        "title": "6. Contact Information",
+        "content": "If you have any questions about these Terms and Conditions, please contact us:\n\nEmail: legal@so-eat.com\nPhone: +966 50 123 4567\nAddress: Riyadh, Saudi Arabia\n\nWe will respond to your inquiries within 48 hours during business days."
+      }
+    },
+    "footer": {
+      "title": "Need Help?",
+      "description": "If you have any questions about these terms or need assistance, we're here to help.",
+      "privacyPolicy": "Privacy Policy",
+      "contactUs": "Contact Us"
+    }
+  },
+  "privacy": {
+    "badge": "Privacy & Security",
+    "title": "Privacy Policy",
+    "description": "We are committed to protecting your privacy and ensuring the security of your personal information. This policy explains how we collect, use, and safeguard your data when you use So-Eat.",
+    "lastUpdated": "Last updated",
+    "sections": {
+      "collection": {
+        "title": "1. Information We Collect",
+        "content": "We collect information you provide directly to us, such as:\n\n• Account information (name, email, phone number)\n• Restaurant preferences and dietary restrictions\n• Reservation and order history\n• Payment information (processed securely)\n• Location data (with your permission)\n• Device and usage information\n\nWe also collect information automatically through cookies and similar technologies to improve your experience and analyze usage patterns."
+      },
+      "usage": {
+        "title": "2. How We Use Your Information",
+        "content": "We use your information to:\n\n• Provide and improve our services\n• Process reservations and orders\n• Send important updates and notifications\n• Personalize your experience and recommendations\n• Analyze usage patterns and improve our platform\n• Prevent fraud and ensure security\n• Comply with legal obligations\n\nWe do not sell your personal information to third parties for marketing purposes."
+      },
+      "protection": {
+        "title": "3. Data Protection & Security",
+        "content": "We implement industry-standard security measures to protect your data:\n\n• Encryption of sensitive data in transit and at rest\n• Regular security audits and vulnerability assessments\n• Access controls and authentication systems\n• Secure payment processing through certified providers\n• Regular staff training on data protection\n• Incident response procedures\n\nWhile we strive to protect your information, no method of transmission over the internet is 100% secure."
+      },
+      "cookies": {
+        "title": "4. Cookies and Tracking",
+        "content": "We use cookies and similar technologies to:\n\n• Remember your preferences and settings\n• Analyze website traffic and usage patterns\n• Provide personalized content and recommendations\n• Enable social media features\n• Improve website performance and functionality\n\nYou can control cookie settings through your browser preferences. However, disabling cookies may affect some website functionality."
+      },
+      "rights": {
+        "title": "5. Your Privacy Rights",
+        "content": "You have the right to:\n\n• Access your personal information\n• Correct inaccurate data\n• Request deletion of your data\n• Object to processing of your data\n• Data portability\n• Withdraw consent at any time\n\nTo exercise these rights, please contact us using the information provided below. We will respond to your request within 30 days."
+      },
+      "thirdParty": {
+        "title": "6. Third-Party Services",
+        "content": "We may share your information with trusted third-party service providers who assist us in:\n\n• Payment processing (Stripe, PayPal)\n• Analytics and performance monitoring\n• Customer support services\n• Marketing and communication tools\n• Cloud storage and hosting services\n\nThese partners are contractually bound to protect your information and use it only for specified purposes."
+      },
+      "contact": {
+        "title": "7. Contact Information",
+        "content": "If you have questions about this Privacy Policy or our data practices, please contact us:\n\nData Protection Officer\nEmail: privacy@so-eat.com\nPhone: +966 50 123 4567\nAddress: Riyadh, Saudi Arabia\n\nWe are committed to resolving any privacy concerns promptly and transparently."
+      }
+    },
+    "rights": {
+      "title": "Your Data Rights",
+      "description": "Under applicable data protection laws, you have the following rights regarding your personal information:",
+      "access": "Right to Access",
+      "rectification": "Right to Rectification",
+      "erasure": "Right to Erasure",
+      "portability": "Data Portability",
+      "restriction": "Restriction of Processing",
+      "objection": "Right to Object"
+    },
+    "footer": {
+      "title": "Questions About Privacy?",
+      "description": "If you have any concerns about how we handle your data or need to exercise your privacy rights, we're here to help.",
+      "termsConditions": "Terms & Conditions",
+      "contactUs": "Contact Us"
+    }
+  },
+  "common": {
+    "backToHome": "Back to Home"
   }
 }

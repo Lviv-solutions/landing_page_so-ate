@@ -83,7 +83,7 @@ function FloatingGeometry() {
       <mesh ref={meshRef1} position={[-2, 0, -3]}>
         <boxGeometry args={[0.3, 0.3, 0.3]} />
         <meshBasicMaterial
-          color="#8B5261"
+          color="#f9dcc7"
           transparent
           opacity={0.1}
           wireframe
@@ -137,7 +137,7 @@ function WaveGeometry() {
   return (
     <mesh ref={meshRef} position={[0, -1, -5]} rotation={[-Math.PI / 6, 0, 0]}>
       <planeGeometry args={[8, 2, 32, 8]} />
-      <meshBasicMaterial color="#8B5261" transparent opacity={0.05} wireframe />
+      <meshBasicMaterial color="#f9dcc7" transparent opacity={0.05} wireframe />
     </mesh>
   );
 }
@@ -158,7 +158,7 @@ function ParticleField() {
       // Alternate between brand colors
       const color =
         Math.random() > 0.5
-          ? new THREE.Color("#8B5261")
+          ? new THREE.Color("#f9dcc7")
           : new THREE.Color("#966192");
       colors[i * 3] = color.r;
       colors[i * 3 + 1] = color.g;

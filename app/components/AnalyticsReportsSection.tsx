@@ -48,12 +48,34 @@ export default function AnalyticsReportsSection() {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#d2ebcb] via-[#f9f8f3] to-[#f8dac4] relative overflow-hidden">
-      {/* Background Pattern */}
+    <section id="analytics" className="py-20   relative overflow-hidden">
+           {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-blue-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-400 rounded-full blur-3xl" />
+        <div className="absolute inset-0"  />
       </div>
+
+      {/* Right Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          right: '-538.83px',
+          bottom: 'auto',
+          background: 'linear-gradient(250deg, rgba(230, 97, 74, 0.50) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+          filter: 'blur(213.05px)'
+        }}
+      />
+
+      {/* Left Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          left: '-574px',
+          bottom: 'auto',
+          background: 'linear-gradient(142deg, rgba(5, 218, 155, 0.30) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+
+          filter: 'blur(213.05px)'
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -105,8 +127,8 @@ export default function AnalyticsReportsSection() {
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl flex items-center justify-center">
-                    <feature.icon className="text-blue-600" size={24} />
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 rounded-xl flex items-center justify-center">
+                    <feature.icon className="text-amber-600" size={24} />
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-800 mb-2">{feature.title}</h3>

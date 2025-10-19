@@ -13,7 +13,7 @@ import SecurityTrustSection from "../components/SecurityTrustSection";
 import FAQSection from "../components/FAQSection";
 import TrustedRestaurantsSection from "../components/TrustedRestaurantsSection";
 import PricingSection from "../components/PricingSection";
-import MobileAppSection from "../components/MobileAppSection";
+// import MobileAppSection from "../components/MobileAppSection";
 // import CTASection from "../components/CTASection";
 import Footer from "../components/Footer";
 import LocaleLayout from "../components/LocaleLayout";
@@ -29,10 +29,6 @@ export default function LocalePage() {
         <ScrollProgress />
         <Header />
         <HeroSection />
-        {/*<ScrollIndicator />*/}
-        {/*<FeaturesSection />*/}
-        {/*<AboutSection />*/}
-        {/*<StatisticsSection />*/}
         <ReservationManagementSection />
         <DynamicMenuSection />
         <SmartWaitlistSection />
@@ -42,8 +38,6 @@ export default function LocalePage() {
         <SecurityTrustSection />
         <TrustedRestaurantsSection />
         <PricingSection />
-        {/* <MobileAppSection /> */}
-        {/*<CTASection />*/}
         <FAQSection />
         <Footer />
       </div>

@@ -23,7 +23,7 @@ A dedicated Three.js canvas specifically designed for the footer section with mu
 **FloatingGeometry**
 
 - Three geometric shapes with different animations:
-  - **Wireframe Cube**: Rotating cube with brand color (#8B5261)
+  - **Wireframe Cube**: Rotating cube with brand color (#f9dcc7)
   - **Floating Sphere**: Smooth sphere with gradient animation (#966192)
   - **Torus Ring**: Wireframe torus with complex rotation (#31241A)
 - Each shape has unique timing and movement patterns
@@ -39,7 +39,7 @@ A dedicated Three.js canvas specifically designed for the footer section with mu
 **ParticleField**
 
 - 1000 colored particles spread across footer area
-- Alternating brand colors (#8B5261, #966192)
+- Alternating brand colors (#f9dcc7, #966192)
 - Slow rotation and gentle movement
 - Vertex colors for performance optimization
 
@@ -104,7 +104,7 @@ const generateFooterPattern = (count: number) => {
 ### Color Scheme:
 
 - **Primary Particles**: #966192 (Purple gradient)
-- **Secondary Elements**: #8B5261 (Coral)
+- **Secondary Elements**: #f9dcc7 (Coral)
 - **Accent Details**: #31241A (Dark brown)
 - **Overlay**: Semi-transparent gradient for readability
 

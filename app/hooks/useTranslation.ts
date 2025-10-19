@@ -4,10 +4,15 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 interface Translations {
-  [key: string]: string | number | Translations | string[];
+  [key: string]: string | number | Translations | string[] | FAQItem[];
 }
 
-type TranslationValue = string | number | Translations | string[];
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+type TranslationValue = string | number | Translations | string[] | FAQItem[];
 
 export function useTranslation() {
   const pathname = usePathname();
@@ -101,8 +106,28 @@ export function useTranslation() {
       }
     }
 
-    return Array.isArray(value) ? value : [];
+    return Array.isArray(value) && typeof value[0] === 'string' ? value as string[] : [];
   };
 
-  return { t, getArray, locale, isLoading };
+  const getObjectArray = (key: string): FAQItem[] => {
+    const keys = key.split(".");
+    let value: TranslationValue = translations;
+
+    for (const k of keys) {
+      if (
+        value &&
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        k in value
+      ) {
+        value = (value as Translations)[k];
+      } else {
+        return [];
+      }
+    }
+
+    return Array.isArray(value) ? value as unknown as FAQItem[] : [];
+  };
+
+  return { t, getArray, getObjectArray, locale, isLoading };
 }

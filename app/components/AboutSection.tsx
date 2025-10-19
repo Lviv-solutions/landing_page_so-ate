@@ -23,7 +23,7 @@ export default function AboutSection() {
             <ul className="space-y-3 text-gray-600">
               {features.map((feature, index) => (
                 <li key={index} className="flex items-center">
-                  <span className="w-2 h-2 bg-[#8B5261] rounded-full mr-3"></span>
+                  <span className="w-2 h-2 bg-[#f9dcc7] rounded-full mr-3"></span>
                   {feature}
                 </li>
               ))}

@@ -16,7 +16,7 @@ function AITorusInterface() {
       uniforms: {
         uTime: { value: 0 },
         uNoiseScale: { value: 0.5 },
-        uPrimaryColor: { value: new THREE.Color("#8B5261") },
+        uPrimaryColor: { value: new THREE.Color("#f9dcc7") },
         uSecondaryColor: { value: new THREE.Color("#966192") },
         uOpacity: { value: 0.8 },
       },
@@ -253,7 +253,7 @@ function AIEnergyRings() {
     <>
       <mesh ref={ring1Ref} position={[0, 0, -1]}>
         <ringGeometry args={[2, 2.1, 64]} />
-        <meshBasicMaterial color="#8B5261" transparent opacity={0.3} />
+        <meshBasicMaterial color="#f9dcc7" transparent opacity={0.3} />
       </mesh>
       <mesh ref={ring2Ref} position={[0, 0, -0.5]}>
         <ringGeometry args={[1.5, 1.6, 64]} />

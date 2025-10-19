@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import { Bell, BarChart3, Settings, Download } from "lucide-react";
 
 export default function MobileAppSection() {
-  const { t, getArray } = useTranslation();
+  const { t, getArray, locale } = useTranslation();
+  const isRTL = locale === 'ar';
 
   const appFeatures = [
     {
@@ -72,8 +73,8 @@ export default function MobileAppSection() {
               {appFeatures.map((feature, index) => (
                 <motion.div
                   key={index}
-                  className="flex items-center space-x-4"
-                  initial={{ opacity: 0, x: -30 }}
+                  className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}
+                  initial={{ opacity: 0, x: isRTL ? 30 : -30 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
                   viewport={{ once: true }}
@@ -95,26 +96,26 @@ export default function MobileAppSection() {
               viewport={{ once: true }}
             >
               <motion.button
-                className="flex items-center justify-center space-x-3 bg-black text-white px-6 py-4 rounded-xl hover:bg-gray-800 transition-colors font-clash"
+                className={`flex items-center justify-center ${isRTL ? 'space-x-reverse space-x-3' : 'space-x-3'} bg-black text-white px-6 py-4 rounded-xl hover:bg-gray-800 transition-colors font-clash`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Download size={20} />
-                <div className="text-left">
-                  <div className="text-xs">Download on the</div>
-                  <div className="text-lg font-semibold">App Store</div>
+                <div className={isRTL ? "text-right" : "text-left"}>
+                  <div className="text-xs">{t("mobileApp.downloadButtons.appStore.prefix")}</div>
+                  <div className="text-lg font-semibold">{t("mobileApp.downloadButtons.appStore.store")}</div>
                 </div>
               </motion.button>
               
               <motion.button
-                className="flex items-center justify-center space-x-3 bg-black text-white px-6 py-4 rounded-xl hover:bg-gray-800 transition-colors font-clash"
+                className={`flex items-center justify-center ${isRTL ? 'space-x-reverse space-x-3' : 'space-x-3'} bg-black text-white px-6 py-4 rounded-xl hover:bg-gray-800 transition-colors font-clash`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Download size={20} />
-                <div className="text-left">
-                  <div className="text-xs">Get it on</div>
-                  <div className="text-lg font-semibold">Google Play</div>
+                <div className={isRTL ? "text-right" : "text-left"}>
+                  <div className="text-xs">{t("mobileApp.downloadButtons.googlePlay.prefix")}</div>
+                  <div className="text-lg font-semibold">{t("mobileApp.downloadButtons.googlePlay.store")}</div>
                 </div>
               </motion.button>
             </motion.div>

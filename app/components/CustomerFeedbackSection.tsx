@@ -3,9 +3,17 @@
 import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
 import { MessageCircle, Star, Users, ThumbsUp, BarChart3 } from "lucide-react";
+import Image from "next/image";
+
+interface Review {
+  name: string;
+  rating: number;
+  comment: string;
+  avatar: string;
+}
 
 export default function CustomerFeedbackSection() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const feedbackFeatures = [
     {
@@ -25,34 +33,85 @@ export default function CustomerFeedbackSection() {
     }
   ];
 
-  const customerReviews = [
-    {
-      name: t("customerFeedback.reviews.0.name"),
-      rating: 5,
-      comment: t("customerFeedback.reviews.0.comment"),
-      avatar: "👨‍💼"
-    },
-    {
-      name: t("customerFeedback.reviews.1.name"),
-      rating: 4,
-      comment: t("customerFeedback.reviews.1.comment"),
-      avatar: "👩‍💼"
-    },
-    {
-      name: t("customerFeedback.reviews.2.name"),
-      rating: 5,
-      comment: t("customerFeedback.reviews.2.comment"),
-      avatar: "👨‍🦱"
+  // Dynamic reviews data based on current language
+  const getCustomerReviews = (): Review[] => {
+    if (locale === 'en') {
+      return [
+        {
+          name: "Ahmed Mohammed",
+          rating: 5,
+          comment: "Excellent service and delicious food, I recommend visiting the restaurant",
+          avatar: "/image/usre.png"
+        },
+        {
+          name: "Fatima Ali",
+          rating: 4,
+          comment: "Great experience, professional staff and comfortable atmosphere",
+          avatar: "/image/usre.png"
+        },
+        {
+          name: "Mohammed Salem",
+          rating: 5,
+          comment: "Best restaurant in the area, high quality and reasonable prices",
+          avatar: "/image/usre.png"
+        }
+      ];
+    } else {
+      // Arabic reviews
+      return [
+        {
+          name: "أحمد محمد",
+          rating: 5,
+          comment: "خدمة ممتازة وطعام لذيذ، أنصح بزيارة المطعم",
+          avatar: "/image/usre.png"
+        },
+        {
+          name: "فاطمة علي",
+          rating: 4,
+          comment: "تجربة رائعة، الطاقم محترف والأجواء مريحة",
+          avatar: "/image/usre.png"
+        },
+        {
+          name: "محمد سالم",
+          rating: 5,
+          comment: "أفضل مطعم في المنطقة، جودة عالية وأسعار مناسبة",
+          avatar: "/image/usre.png"
+        }
+      ];
     }
-  ];
+  };
+
+  const customerReviews = getCustomerReviews();
 
   return (
-    <section className="py-20 bg-gradient-to-br from-[#f5fbfa] via-[#f9f8f3] to-[#f8dac4] relative overflow-hidden">
-      {/* Background Pattern */}
+    <section id="feedback" className="py-20 relative overflow-hidden">
+               {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-amber-400 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-orange-400 rounded-full blur-3xl" />
+        <div className="absolute inset-0"  />
       </div>
+
+        {/* Right Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          right: '-538.83px',
+          bottom: 'auto',
+          background: 'linear-gradient(250deg, rgba(230, 97, 74, 0.50) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+          filter: 'blur(213.05px)'
+        }}
+      />
+
+      {/* Left Gradient Blur */}
+      <div 
+        className="absolute w-[864px] h-[80%] rounded-full"
+        style={{
+          left: '-574px',
+          bottom: 'auto',
+          background: 'linear-gradient(142deg, rgba(5, 218, 155, 0.30) 33.68%, rgba(255, 192, 66, 0.30) 78.63%)',
+
+          filter: 'blur(213.05px)'
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -74,11 +133,18 @@ export default function CustomerFeedbackSection() {
                 {/* Customer Avatar */}
                 <div className="flex items-center justify-center mb-6">
                   <motion.div
-                    className="w-24 h-24 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full flex items-center justify-center text-4xl"
+                    className="w-24 h-24 bg-gradient-to-r from-amber-100 to-orange-100 rounded-full flex items-center justify-center overflow-hidden"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 3, repeat: Infinity }}
+                    style={{ borderRadius: '110.4px' }}
                   >
-                    👨‍💻
+                    <Image
+                      src="/image/usre.png"
+                      alt="Customer Manager"
+                      width={96}
+                      height={96}
+                      className="object-cover w-full h-full"
+                    />
                   </motion.div>
                 </div>
 
@@ -134,7 +200,16 @@ export default function CustomerFeedbackSection() {
                   }}
                 >
                   <div className="flex items-start space-x-3">
-                    <div className="text-2xl">{review.avatar}</div>
+                    <div className="flex-shrink-0">
+                      <Image
+                        src={review.avatar}
+                        alt={review.name}
+                        width={40}
+                        height={40}
+                        className="object-cover"
+                        style={{ borderRadius: '110.4px' }}
+                      />
+                    </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-1">
                         <span className="font-semibold text-sm text-gray-800">{review.name}</span>
@@ -216,7 +291,7 @@ export default function CustomerFeedbackSection() {
                   transition={{ duration: 0.6, delay: 0.6 + index * 0.2 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-amber-100 to-orange-100 rounded-xl flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-orange-100 to-red-100 rounded-xl flex items-center justify-center">
                     <feature.icon className="text-amber-600" size={24} />
                   </div>
                   <div>

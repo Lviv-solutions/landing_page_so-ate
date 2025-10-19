@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
-import { BarChart3, TrendingUp, Users, ShoppingCart } from "lucide-react";
+// import { BarChart3, TrendingUp, Users, ShoppingCart } from "lucide-react";
 
 export default function HeroSection() {
   const { t } = useTranslation();

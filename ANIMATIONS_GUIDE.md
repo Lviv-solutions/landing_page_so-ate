@@ -11,7 +11,7 @@ The So-Eat landing page now includes advanced animations and Three.js integratio
 - **Animated Stars**: 5000 floating particles in a sphere formation
 - **Floating Orbs**: Subtle geometric shapes with sine wave animations
 - **Performance Optimized**: Uses React Three Fiber for efficient rendering
-- **Theme Colors**: Particles use brand colors (#8B5261, #966192)
+- **Theme Colors**: Particles use brand colors (#f9dcc7, #966192)
 
 ### 2. Scroll Indicators
 

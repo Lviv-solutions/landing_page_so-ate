@@ -6,26 +6,18 @@ import { Plus, Minus, HelpCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function FAQSection() {
-  const { t } = useTranslation();
+  const { t, getObjectArray } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const faqs = [
-    {
-      question: t("faq.questions.0.question"),
-      answer: t("faq.questions.0.answer")
-    },
-    {
-      question: t("faq.questions.1.question"),
-      answer: t("faq.questions.1.answer")
-    }
-  ];
+  // Dynamically get all FAQ questions
+  const faqs = getObjectArray("faq.questions");
 
   const toggleFAQ = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+    <section id="faq" className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 right-20 w-96 h-96 bg-[#ED614A] rounded-full blur-3xl" />
@@ -42,38 +34,41 @@ export default function FAQSection() {
           viewport={{ once: true }}
         >
           <motion.div
-            className="inline-block bg-[#ED614A]/12 text-[#ED614A] px-6 py-2 rounded-full text-sm font-medium mb-6"
+            className="inline-block bg-[#ED614A]/12 text-[#ED614A] px-6 py-2 rounded-full text-sm font-medium mb-6 font-clash"
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            dir="auto"
           >
             {t("faq.badge")}
           </motion.div>
           
           <motion.h2
-            className="text-4xl lg:text-5xl font-bold text-[#31241A] mb-6 leading-tight"
+            className="text-4xl lg:text-5xl font-bold text-[#31241A] mb-6 leading-tight font-clash"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
+            dir="auto"
           >
             {t("faq.title")}
           </motion.h2>
           
           <motion.p
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            className="text-xl text-gray-600 max-w-3xl mx-auto font-clash"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
+            dir="auto"
           >
             {t("faq.description")}
           </motion.p>
         </motion.div>
 
         {/* FAQ Items */}
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-2 lg:gap-4">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
@@ -85,13 +80,13 @@ export default function FAQSection() {
               whileHover={{ y: -2 }}
             >
               <motion.button
-                className="w-full px-8 py-6 text-right flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+                className="w-full px-4 sm:px-6 py-4 sm:py-5 text-left flex items-start justify-between hover:bg-gray-50 transition-colors duration-200"
                 onClick={() => toggleFAQ(index)}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center space-x-4">
+                <div className="flex items-start space-x-4 flex-1">
                   <motion.div
-                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors duration-300 ${
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors duration-300 flex-shrink-0 ${
                       openIndex === index
                         ? 'bg-gradient-to-r from-[#ED614A] to-[#E6446F] text-white'
                         : 'bg-gray-100 text-gray-600'
@@ -108,7 +103,7 @@ export default function FAQSection() {
                           exit={{ rotate: 90, opacity: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <Minus size={20} />
+                          <Minus size={16} />
                         </motion.div>
                       ) : (
                         <motion.div
@@ -118,21 +113,21 @@ export default function FAQSection() {
                           exit={{ rotate: -90, opacity: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <Plus size={20} />
+                          <Plus size={16} />
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </motion.div>
                   
-                  <div className="text-right">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                  <div className="text-start flex-1">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-800 leading-tight font-clash" dir="auto">
                       {faq.question}
                     </h3>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <span className={`text-6xl font-bold transition-colors duration-300 ${
+                <div className="flex items-center ml-4">
+                  <span className={`text-2xl font-bold transition-colors duration-300 ${
                     openIndex === index ? 'text-[#ED614A]' : 'text-gray-300'
                   }`}>
                     {String(index + 1).padStart(2, '0')}
@@ -150,13 +145,13 @@ export default function FAQSection() {
                     className="overflow-hidden"
                   >
                     <motion.div
-                      className="px-8 pb-6"
+                      className="px-4 sm:px-6 pb-4 sm:pb-5"
                       initial={{ y: -10 }}
                       animate={{ y: 0 }}
                       transition={{ duration: 0.3, delay: 0.1 }}
                     >
-                      <div className="bg-gradient-to-r from-[#ED614A]/5 to-[#E6446F]/5 rounded-xl p-6 border-r-4 border-[#ED614A]">
-                        <p className="text-gray-700 leading-relaxed text-lg">
+                      <div className="bg-gradient-to-r from-[#ED614A]/5 to-[#E6446F]/5 rounded-xl p-4 sm:p-5 border-l-4 border-[#ED614A]">
+                        <p className="text-gray-700 leading-relaxed text-xs sm:text-sm font-clash" dir="auto">
                           {faq.answer}
                         </p>
                       </div>
@@ -170,13 +165,13 @@ export default function FAQSection() {
 
         {/* Contact CTA */}
         <motion.div
-          className="text-center mt-16"
+          className="text-center mt-12 col-span-full"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 max-w-2xl mx-auto">
             <motion.div
               className="w-16 h-16 bg-gradient-to-r from-[#ED614A] to-[#E6446F] rounded-full flex items-center justify-center mx-auto mb-6"
               whileHover={{ scale: 1.1, rotate: 5 }}
@@ -184,18 +179,19 @@ export default function FAQSection() {
               <HelpCircle className="text-white" size={28} />
             </motion.div>
             
-            <h3 className="text-2xl font-bold text-gray-800 mb-4">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4 font-clash" dir="auto">
               {t("faq.contact.title")}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 mb-6 font-clash" dir="auto">
               {t("faq.contact.description")}
             </p>
             
             <motion.button
-              className="px-8 py-4 rounded-full text-lg font-semibold text-white shadow-lg"
+              className="px-8 py-4 rounded-full text-lg font-semibold text-white shadow-lg font-clash"
               style={{ background: 'linear-gradient(90deg, #ED614A 0%, #E6446F 100%)' }}
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
+              dir="auto"
             >
               {t("faq.contact.cta")}
             </motion.button>

@@ -103,7 +103,7 @@ my-app/
 ## 🎨 Visual Design Features
 
 ### **Brand Identity**
-- **Primary Color**: #8B5261 (Coral)
+- **Primary Color**: #f9dcc7 (Coral)
 - **Secondary Color**: #966192 (Purple)
 - **Accent Color**: #31241A (Dark Brown)
 - **Typography**: Cairo (Arabic), Geist (English)

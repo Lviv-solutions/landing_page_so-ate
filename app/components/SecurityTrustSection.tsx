@@ -2,7 +2,7 @@
 
 import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
-import { Lock, Star, CheckCircle, Eye, Server } from "lucide-react";
+import { Lock, Star, CheckCircle } from "lucide-react";
 import Image from "next/image";
 
 export default function SecurityTrustSection() {
@@ -27,89 +27,101 @@ export default function SecurityTrustSection() {
   // ];
 
   return (
-    <section className=" mx-20 rounded-3xl border py-10 bg-gradient-to-br from-[#502746] via-[#401736] to-[#200016] relative overflow-hidden">
+    <section id="security" className="mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-20 rounded-3xl border py-8 md:py-10 bg-gradient-to-br from-[#502746] via-[#401736] to-[#200016] relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 right-20 w-96 h-96 bg-purple-400 rounded-full blur-3xl" />
         <div className="absolute bottom-20 left-20 w-80 h-80 bg-indigo-400 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 relative z-9">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-stretch">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-4 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 lg:gap-20 xl:gap-24 items-center">
           {/* Security Illustration */}
           <motion.div
-              className="relative flex justify-center lg:order-last"
+              className="relative flex justify-center lg:order-last mb-12 lg:mb-0 px-4 sm:px-6 md:px-8"
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
           >
-            <div className="sticky">
+            <motion.div
+              className=""
+              animate={{ 
+                rotate: [-2, 2, -2],
+                x: [-5, 5, -5]
+              }}
+              transition={{
+                duration: 4, 
+                repeat: Infinity, 
+                ease: "easeInOut"
+              }}
+            >
+            <div className="relative w-60 h-60 sm:w-72 sm:h-72 md:w-80 md:h-80 mx-auto">
               {/* Main Security Shield */}
 
                  {/*Shield Background*/}
                 <motion.div
-                    className="absolute inset-0 w-80 h-80 flex items-center justify-center"
+                    className="absolute inset-0 flex items-center justify-center"
                     transition={{ duration: 3, repeat: Infinity }}
                     whileInView={{ opacity: 1, x: 0 }}
                 >
                   <Image
-                    src="/image/shield2.png"
+                    src="/image/shield.png"
                     alt="Security Shield"
                     width={320}
                     height={320}
-                    className="absolute drop-shadow-2xl"
+                    className="absolute drop-shadow-2xl w-full h-full object-contain"
                   />
                 </motion.div>
 
                 {/* Lock Icon */}
                 <motion.div
-                    className="relative z-10 w-20 h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm"
+                    className="relative z-10 w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm"
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <Lock className="text-white" size={32} />
+                  <Lock className="text-white" size={24} />
                 </motion.div>
 
                 {/* Floating Security Elements */}
                 <motion.div
-                    className="absolute -top-8 -right-8 w-16 h-16 bg-white/10 rounded-lg backdrop-blur-sm flex items-center justify-center"
+                    className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 md:-top-8 md:-right-8 w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-white/10 rounded-lg backdrop-blur-sm flex items-center justify-center"
                     animate={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
                     transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
                 >
-                  <Star className="text-yellow-300" size={24} />
+                  <Star className="text-yellow-300" size={20} />
                 </motion.div>
 
                 <motion.div
-                    className="absolute -bottom-6 -left-8 w-14 h-14 bg-white/10 rounded-full backdrop-blur-sm flex items-center justify-center"
+                    className="absolute -bottom-3 -left-4 sm:-bottom-4 sm:-left-6 md:-bottom-6 md:-left-8 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/10 rounded-full backdrop-blur-sm flex items-center justify-center"
                     animate={{ scale: [1, 1.2, 1], rotate: [0, -10, 0] }}
                     transition={{ duration: 4, repeat: Infinity, delay: 1 }}
                 >
-                  <CheckCircle className="text-green-300" size={20} />
+                  <CheckCircle className="text-green-300" size={16} />
                 </motion.div>
 
                 {/* Gear Elements */}
                 <motion.div
-                    className="absolute top-4 left-4 w-12 h-12 bg-orange-400/80 rounded-lg flex items-center justify-center"
+                    className="absolute top-2 left-2 sm:top-3 sm:left-3 md:top-4 md:left-4 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-400/80 rounded-lg flex items-center justify-center"
                     animate={{ rotate: 360 }}
                     transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
                 >
-                  <div className="w-6 h-6 border-2 border-white rounded-full relative">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 border-2 border-white rounded-full relative">
                     <div className="absolute inset-1 border border-white rounded-full" />
                   </div>
                 </motion.div>
 
                 <motion.div
-                    className="absolute bottom-8 right-8 w-10 h-10 bg-yellow-300/80 rounded-full flex items-center justify-center"
+                    className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-yellow-300/80 rounded-full flex items-center justify-center"
                     animate={{ rotate: -360 }}
                     transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
                 >
-                  <div className="w-4 h-4 border border-white rounded-sm" />
+                  <div className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 border border-white rounded-sm" />
                 </motion.div>
 
                 {/* Rating Card */}
                 <motion.div
-                    className="absolute -right-16 top-16 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg"
+                    className="absolute -right-8 sm:-right-12 md:-right-16 top-8 sm:top-12 md:top-16 bg-white/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 shadow-lg hidden sm:block"
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -122,7 +134,7 @@ export default function SecurityTrustSection() {
                 >
                   <div className="flex items-center space-x-1 mb-1">
                     {[...Array(5)].map((_, index) => (
-                        <Star key={index} size={12} className="text-yellow-400 fill-current" />
+                        <Star key={index} size={10} className="text-yellow-400 fill-current" />
                     ))}
                   </div>
                   <div className="text-xs text-gray-700 font-medium">{t("securityTrust.trusted")}</div>
@@ -160,19 +172,20 @@ export default function SecurityTrustSection() {
                   </motion.div>
               ))}
             </div>
+            </motion.div>
 
           </motion.div>
 
           {/* Content */}
           <motion.div
-              className="lg:order-first p-12 rounded-2xl flex flex-col justify-center"
+              className="lg:order-first p-6 sm:p-8 md:p-10 lg:p-12 rounded-2xl flex flex-col justify-center"
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
               viewport={{ once: true }}
               style={{ 
                 backgroundImage: 'url(/image/14.png)',
-                backgroundSize: '120% 100%',
+                backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat'
               }}
@@ -188,7 +201,7 @@ export default function SecurityTrustSection() {
             {/*</motion.div>*/}
 
             <motion.h2
-                className="text-4xl lg:text-5xl font-bold text-yellow-300 mb-6 leading-tight"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-yellow-300 mb-4 sm:mb-6 leading-tight"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -198,7 +211,7 @@ export default function SecurityTrustSection() {
             </motion.h2>
 
             <motion.p
-                className="text-2xl  text-white/80 mb-8 leading-relaxed"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/80 mb-6 sm:mb-8 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
