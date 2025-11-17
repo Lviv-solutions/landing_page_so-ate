@@ -93,6 +93,11 @@ export default function Header() {
     }
   };
 
+  const handleBusinessPageClick = () => {
+    const basePath = `/${currentLocale}`;
+    router.push(`${basePath}/business`);
+  };
+
   // Show mobile header on small screens
   if (isMobile) {
     return <MobileHeader />;
@@ -195,6 +200,26 @@ export default function Header() {
                   </span>
                 </MouseTrackingButton>
 
+                {!isBusinessPage && (
+                  <MouseTrackingButton
+                    onClick={handleBusinessPageClick}
+                    variant="secondary"
+                    size="md"
+                    className="text-xs md:text-xs lg:text-sm font-bold px-2 md:px-3 lg:px-5 xl:px-8 py-1 md:py-1.5 lg:py-2.5 xl:py-3 backdrop-blur-sm bg-white/10"
+                    baseBackground="rgba(255, 255, 255, 0.1)"
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      {t("header.actions.BusinessPage")}
+                      <motion.span
+                        className="text-xs"
+                        animate={{ rotate: [0, 360] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                      >
+                      </motion.span>
+                    </span>
+                  </MouseTrackingButton>
+                )}
+
                 <MouseTrackingButton
                   onClick={handleClientPageClick}
                   variant="secondary"
@@ -203,7 +228,7 @@ export default function Header() {
                   baseBackground="rgba(255, 255, 255, 0.1)"
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    {isClientPage ? t("header.actions.BusinessPage") : isBusinessPage ? t("header.actions.HomePage") : t("header.actions.ClientPage")}
+                    {isClientPage ? t("header.actions.HomePage") : t("header.actions.ClientPage")}
                     <motion.span
                       className="text-xs"
                       animate={{ rotate: [0, 360] }}

@@ -32,8 +32,15 @@ export default function MobileHeader() {
     setIsMenuOpen(false);
   };
 
+  const isClientPage = pathname.includes('/client');
+  const isBusinessPage = pathname.includes('/business');
+
   const handleClientPageClick = () => {
     router.push(`/${currentLocale}/client`);
+  };
+
+  const handleBusinessPageClick = () => {
+    router.push(`/${currentLocale}/business`);
   };
 
   return (
@@ -66,15 +73,29 @@ export default function MobileHeader() {
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
             
-            <motion.button
-              onClick={handleClientPageClick}
-              className="hidden sm:block px-4 py-2 rounded-full text-xs font-semibold text-white font-clash whitespace-nowrap"
-              style={{ background: 'linear-gradient(90deg, #ED614A 0%, #E6446F 100%)' }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {t("header.actions.ClientPage")}
-            </motion.button>
+            {!isBusinessPage && (
+              <motion.button
+                onClick={handleBusinessPageClick}
+                className="hidden sm:block px-4 py-2 rounded-full text-xs font-semibold text-white font-clash whitespace-nowrap"
+                style={{ background: 'linear-gradient(90deg, #ED614A 0%, #E6446F 100%)' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {t("header.actions.BusinessPage")}
+              </motion.button>
+            )}
+            
+            {!isClientPage && (
+              <motion.button
+                onClick={handleClientPageClick}
+                className="hidden sm:block px-4 py-2 rounded-full text-xs font-semibold text-white font-clash whitespace-nowrap"
+                style={{ background: 'linear-gradient(90deg, #ED614A 0%, #E6446F 100%)' }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {t("header.actions.ClientPage")}
+              </motion.button>
+            )}
             
             <motion.button
               className="p-2 text-white relative z-10"

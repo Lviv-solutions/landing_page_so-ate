@@ -1,0 +1,166 @@
+
+syntax = "proto3";
+
+package email.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+option go_package = "email/v1;email_v1";
+
+
+// EmailService provides email management operations
+service EmailService {
+  rpc SendInvitationEmail(SendInvitationEmailRequest) returns (SendInvitationEmailResponse);
+  rpc EmailStatus(EmailStatusRequest) returns (EmailStatusResponse);
+  rpc SendOtp(SendOtpRequest) returns (SendOtpResponse);
+
+  // Send email verification
+  rpc SendVerificationEmail(SendVerificationEmailRequest) returns (SendVerificationEmailResponse);
+
+  // Verify email with token
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+
+  // Resend verification email
+  rpc ResendVerificationEmail(ResendVerificationEmailRequest) returns (ResendVerificationEmailResponse);
+
+  // Request password reset
+  rpc RequestPasswordReset(RequestPasswordResetRequest) returns (RequestPasswordResetResponse);
+
+  // Validate password reset token
+  rpc ValidateResetToken(ValidateResetTokenRequest) returns (ValidateResetTokenResponse);
+
+  // Reset password with token
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+
+  // Get email logs for user
+  rpc GetEmailLogs(GetEmailLogsRequest) returns (GetEmailLogsResponse);
+
+  // Cleanup expired tokens (admin only)
+  rpc CleanupExpiredTokens(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+// Email verification request
+message SendVerificationEmailRequest {
+  string email = 1;
+}
+message EmailStatusRequest {
+  string id = 1;
+}
+
+// Email verification response
+message SendVerificationEmailResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Verify email request
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+// Verify email response
+message VerifyEmailResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Resend verification email request
+message ResendVerificationEmailRequest {
+  string email = 1;
+}
+
+// Resend verification email response
+message ResendVerificationEmailResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+
+message EmailStatusResponse {
+  string status = 1;
+  string message = 2;
+
+}
+
+message SendInvitationEmailRequest {
+  string to = 1;
+}
+
+message SendInvitationEmailResponse {
+  bool success = 1;
+}
+
+
+
+
+// Password reset request
+message RequestPasswordResetRequest {
+  string email = 1;
+}
+
+// Password reset response
+message RequestPasswordResetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Validate reset token request
+message ValidateResetTokenRequest {
+  string token = 1;
+}
+
+// Validate reset token response
+message ValidateResetTokenResponse {
+  bool valid = 1;
+  int64 expires_at = 2;
+  string message = 3;
+}
+
+// Reset password request
+message ResetPasswordRequest {
+  string token = 1;
+  string new_password = 2;
+}
+
+// Reset password response
+message ResetPasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Email log entry
+message EmailLog {
+  int64 id = 1;
+  string user_id = 2;
+  string email = 3;
+  string type = 4;
+  string status = 5;
+  google.protobuf.Timestamp sent_at = 6;
+  string error = 7;
+}
+
+// Get email logs request
+message GetEmailLogsRequest {
+  string user_id = 1;
+  int32 page_size = 2;
+  int32 page = 3;
+}
+
+
+
+// Get email logs response
+message GetEmailLogsResponse {
+  repeated EmailLog logs = 1;
+  int32 total_count = 2;
+  int32 page = 3;
+  int32 page_size = 4;
+}
+
+message SendOtpRequest {
+  string phone_number = 1;
+  string email = 2;
+}
+
+message SendOtpResponse {
+  bool success = 1;
+  string message = 2;
+}

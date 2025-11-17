@@ -1,0 +1,621 @@
+syntax = "proto3";
+
+package business.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+
+option go_package = "lviv_backend/api/gen/business/v1;business_v1";
+
+// Services
+service BusinessService {
+  // Business
+  rpc CreateBusiness(CreateBusinessRequest) returns (CreateBusinessResponse);
+  rpc GetBusiness(GetBusinessRequest) returns (GetBusinessResponse);
+  rpc GetBusinessByName(GetBusinessByNameRequest) returns (GetBusinessByNameResponse);
+  rpc UpdateBusiness(UpdateBusinessRequest) returns (UpdateBusinessResponse);
+  rpc DeleteBusiness(DeleteBusinessRequest) returns (google.protobuf.Empty);
+  rpc ListBusinesses(ListBusinessesRequest) returns (ListBusinessesResponse);
+
+  // BusinessLocation
+  rpc CreateBusinessLocation(CreateBusinessLocationRequest) returns (CreateBusinessLocationResponse);
+  rpc GetBusinessLocation(GetBusinessLocationRequest) returns (GetBusinessLocationResponse);
+  rpc UpdateBusinessLocation(UpdateBusinessLocationRequest) returns (UpdateBusinessLocationResponse);
+  rpc DeleteBusinessLocation(DeleteBusinessLocationRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessLocations(ListBusinessLocationsRequest) returns (ListBusinessLocationsResponse);
+
+  // BusinessMedia
+  rpc CreateBusinessMedia(CreateBusinessMediaRequest) returns (CreateBusinessMediaResponse);
+  rpc GetBusinessMedia(GetBusinessMediaRequest) returns (GetBusinessMediaResponse);
+  rpc UpdateBusinessMedia(UpdateBusinessMediaRequest) returns (UpdateBusinessMediaResponse);
+  rpc DeleteBusinessMedia(DeleteBusinessMediaRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessMedia(ListBusinessMediaRequest) returns (ListBusinessMediaResponse);
+
+  // SocialPlatform
+  rpc CreateSocialPlatform(CreateSocialPlatformRequest) returns (CreateSocialPlatformResponse);
+  rpc GetSocialPlatform(GetSocialPlatformRequest) returns (GetSocialPlatformResponse);
+  rpc UpdateSocialPlatform(UpdateSocialPlatformRequest) returns (UpdateSocialPlatformResponse);
+  rpc DeleteSocialPlatform(DeleteSocialPlatformRequest) returns (google.protobuf.Empty);
+  rpc ListSocialPlatforms(ListSocialPlatformsRequest) returns (ListSocialPlatformsResponse);
+
+  // Category
+  rpc CreateCategory(CreateCategoryRequest) returns (CreateCategoryResponse);
+  rpc GetCategory(GetCategoryRequest) returns (GetCategoryResponse);
+  rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse);
+  rpc DeleteCategory(DeleteCategoryRequest) returns (google.protobuf.Empty);
+  rpc ListCategories(ListCategoriesRequest) returns (ListCategoriesResponse);
+
+  // BusinessSocialAccount
+  rpc CreateBusinessSocialAccount(CreateBusinessSocialAccountRequest) returns (CreateBusinessSocialAccountResponse);
+  rpc GetBusinessSocialAccount(GetBusinessSocialAccountRequest) returns (GetBusinessSocialAccountResponse);
+  rpc UpdateBusinessSocialAccount(UpdateBusinessSocialAccountRequest) returns (UpdateBusinessSocialAccountResponse);
+  rpc DeleteBusinessSocialAccount(DeleteBusinessSocialAccountRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessSocialAccounts(ListBusinessSocialAccountsRequest) returns (ListBusinessSocialAccountsResponse);
+
+  // BusinessReview
+  rpc CreateBusinessReview(CreateBusinessReviewRequest) returns (CreateBusinessReviewResponse);
+  rpc GetBusinessReview(GetBusinessReviewRequest) returns (GetBusinessReviewResponse);
+  rpc UpdateBusinessReview(UpdateBusinessReviewRequest) returns (UpdateBusinessReviewResponse);
+  rpc DeleteBusinessReview(DeleteBusinessReviewRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessReviews(ListBusinessReviewsRequest) returns (ListBusinessReviewsResponse);
+
+  // BusinessMembership
+  rpc CreateBusinessMembership(CreateBusinessMembershipRequest) returns (CreateBusinessMembershipResponse);
+  rpc GetBusinessMembership(GetBusinessMembershipRequest) returns (GetBusinessMembershipResponse);
+  rpc UpdateBusinessMembership(UpdateBusinessMembershipRequest) returns (UpdateBusinessMembershipResponse);
+  rpc DeleteBusinessMembership(DeleteBusinessMembershipRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessMemberships(ListBusinessMembershipsRequest) returns (ListBusinessMembershipsResponse);
+
+
+
+  // BusinessBrand
+  rpc CreateBusinessBrand(CreateBusinessBrandRequest) returns (CreateBusinessBrandResponse);
+  rpc GetBusinessBrand(GetBusinessBrandRequest) returns (GetBusinessBrandResponse);
+  rpc UpdateBusinessBrand(UpdateBusinessBrandRequest) returns (UpdateBusinessBrandResponse);
+  rpc DeleteBusinessBrand(DeleteBusinessBrandRequest) returns (google.protobuf.Empty);
+  rpc ListBusinessBrands(ListBusinessBrandsRequest) returns (ListBusinessBrandsResponse);
+
+  // BusinessRelation
+  rpc CreateBusinessRelation(CreateBusinessRelationRequest) returns (CreateBusinessRelationResponse);
+  rpc GetBusinessRelation(GetBusinessRelationRequest) returns (GetBusinessRelationResponse);
+  rpc UpdateBusinessRelation(UpdateBusinessRelationRequest) returns (UpdateBusinessRelationResponse);
+  rpc DeleteBusinessRelation(DeleteBusinessRelationRequest) returns (google.protobuf.Empty);
+}
+
+// Enums
+
+enum VerificationStatus {
+  VERIFICATION_STATUS_UNSPECIFIED = 0;
+  DRAFT = 1;
+  PENDING = 2;
+  VERIFIED = 3;
+  SUSPENDED = 4;
+}
+
+enum ReviewStatus {
+  REVIEW_STATUS_UNSPECIFIED = 0;
+  VISIBLE = 1;
+  HIDDEN = 2;
+  FLAGGED = 3;
+}
+
+// Messages
+
+message Business {
+  string id = 1;
+  string created_by = 2;
+  string ar_name = 3;
+  string en_name = 4;
+  string ar_description = 5;
+  string en_description = 6;
+  string address = 7;
+  string phone_number = 8;
+  int64 storage_quota = 9;
+  google.protobuf.Struct key_words = 10;
+  string email = 11;
+  google.protobuf.Struct working_hours = 12;
+  string category_id = 13;
+  bool is_active = 14;
+  VerificationStatus verification_status = 15;
+  google.protobuf.Timestamp verified_at = 16;
+  google.protobuf.Timestamp deleted_at = 17;
+  google.protobuf.Timestamp created_at = 18;
+  google.protobuf.Timestamp updated_at = 19;
+}
+
+message BusinessLocation {
+  string id = 1;
+  string business_id = 2;
+  string street = 3;
+  string city = 4;
+  string state = 5;
+  string zip_code = 6;
+  string language = 7;
+  double latitude = 8;
+  double longitude = 9;
+  string map_url = 10;
+  bool is_primary = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+message BusinessMedia {
+  string id = 1;
+  string business_id = 2;
+  string media_url = 3;
+  string media_type = 4;
+  string name = 5;
+  google.protobuf.Timestamp uploaded_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message SocialPlatform {
+    string id = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp updated_at = 4;
+}
+
+message Category {
+    string id = 1;
+    string name = 2;
+    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp updated_at = 4;
+}
+
+message BusinessSocialAccount {
+  string id = 1;
+  string business_id = 2;
+  string platform_id = 3;
+  string url = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message BusinessReview {
+  string id = 1;
+  string business_id = 2;
+  string user_id = 3;
+  int32 rating = 4;
+  string comment = 5;
+  ReviewStatus status = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+message BusinessMembership {
+  string id = 1;
+  string business_id = 2;
+  int32 role_id = 3;
+  string account_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+
+message BusinessBrand {
+    string id = 1;
+    string business_id = 2;
+    string brand_id = 3;
+    string relationship = 4;
+    bool is_primary = 5;
+    google.protobuf.Struct metadata = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
+
+message BusinessRelation {
+    string id = 1;
+    string business_id_a = 2;
+    string business_id_b = 3;
+    string relation_type = 4;
+    string notes = 5;
+    google.protobuf.Timestamp created_at = 6;
+}
+
+
+
+
+// Request and Response messages
+
+// Business
+message CreateBusinessRequest {
+  Business business = 1;
+}
+
+message CreateBusinessResponse {
+  string businessID = 1;
+}
+
+message GetBusinessRequest {
+  string businessID = 1;
+}
+
+message GetBusinessResponse {
+  Business business = 1;
+}
+
+message GetBusinessByNameRequest {
+  string ar_name = 1;
+  string en_name = 2;
+}
+
+message GetBusinessByNameResponse {
+  Business business = 1;
+}
+
+message UpdateBusinessRequest {
+  Business business = 1;
+}
+
+message UpdateBusinessResponse {
+  string businessID = 1;
+}
+
+message DeleteBusinessRequest {
+  string businessID = 1;
+}
+
+message ListBusinessesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+}
+
+message ListBusinessesResponse {
+  repeated Business businesses = 1;
+  string next_page_token = 2;
+}
+
+// BusinessLocation
+message CreateBusinessLocationRequest {
+  BusinessLocation business_location = 1;
+}
+
+message CreateBusinessLocationResponse {
+  string  LocationID = 1;
+}
+
+message GetBusinessLocationRequest {
+  string id = 1;
+}
+
+message GetBusinessLocationResponse {
+  BusinessLocation business_location = 1;
+}
+
+message UpdateBusinessLocationRequest {
+  BusinessLocation business_location = 1;
+}
+
+message UpdateBusinessLocationResponse {
+  string LocationID = 1;
+}
+
+message DeleteBusinessLocationRequest {
+  string id = 1;
+}
+
+message ListBusinessLocationsRequest {
+  string business_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListBusinessLocationsResponse {
+  repeated BusinessLocation business_locations = 1;
+  string next_page_token = 2;
+}
+
+// BusinessMedia
+message CreateBusinessMediaRequest {
+  BusinessMedia MediaID = 1;
+}
+
+message CreateBusinessMediaResponse {
+  string MediaID = 1;
+}
+
+message GetBusinessMediaRequest {
+  string id = 1;
+}
+
+message GetBusinessMediaResponse {
+  BusinessMedia business_media = 1;
+}
+
+message UpdateBusinessMediaRequest {
+  BusinessMedia business_media = 1;
+  
+}
+
+message UpdateBusinessMediaResponse {
+  string MediaID = 1;
+}
+
+message DeleteBusinessMediaRequest {
+  string id = 1;
+}
+
+message ListBusinessMediaRequest {
+  string business_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListBusinessMediaResponse {
+  repeated BusinessMedia business_media = 1;
+  string next_page_token = 2;
+}
+
+// SocialPlatform
+message CreateSocialPlatformRequest {
+  SocialPlatform social_platform = 1;
+}
+
+message CreateSocialPlatformResponse {
+  SocialPlatform social_platform = 1;
+}
+
+message GetSocialPlatformRequest {
+  string id = 1;
+}
+
+message GetSocialPlatformResponse {
+  SocialPlatform social_platform = 1;
+}
+
+message UpdateSocialPlatformRequest {
+  SocialPlatform social_platform = 1;
+}
+
+message UpdateSocialPlatformResponse {
+  SocialPlatform social_platform = 1;
+}
+
+message DeleteSocialPlatformRequest {
+  string id = 1;
+}
+
+message ListSocialPlatformsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListSocialPlatformsResponse {
+  repeated SocialPlatform social_platforms = 1;
+  string next_page_token = 2;
+}
+
+// Category
+message CreateCategoryRequest {
+  Category category = 1;
+}
+
+message CreateCategoryResponse {
+  Category category = 1;
+}
+
+message GetCategoryRequest {
+  string id = 1;
+}
+
+message GetCategoryResponse {
+  Category category = 1;
+}
+
+message UpdateCategoryRequest {
+  Category category = 1;
+}
+
+message UpdateCategoryResponse {
+  Category category = 1;
+}
+
+message DeleteCategoryRequest {
+  string id = 1;
+}
+
+message ListCategoriesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListCategoriesResponse {
+  repeated Category categories = 1;
+  string next_page_token = 2;
+}
+
+// BusinessSocialAccount
+message CreateBusinessSocialAccountRequest {
+  BusinessSocialAccount business_social_account = 1;
+}
+
+message CreateBusinessSocialAccountResponse {
+  BusinessSocialAccount business_social_account = 1;
+}
+
+message GetBusinessSocialAccountRequest {
+  string id = 1;
+}
+
+message GetBusinessSocialAccountResponse {
+  BusinessSocialAccount business_social_account = 1;
+}
+
+message UpdateBusinessSocialAccountRequest {
+  BusinessSocialAccount business_social_account = 1;
+}
+
+message UpdateBusinessSocialAccountResponse {
+  BusinessSocialAccount business_social_account = 1;
+}
+
+message DeleteBusinessSocialAccountRequest {
+  string id = 1;
+}
+
+message ListBusinessSocialAccountsRequest {
+  string business_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListBusinessSocialAccountsResponse {
+  repeated BusinessSocialAccount business_social_accounts = 1;
+  string next_page_token = 2;
+}
+
+// BusinessReview
+message CreateBusinessReviewRequest {
+  BusinessReview business_review = 1;
+}
+
+message CreateBusinessReviewResponse {
+  BusinessReview business_review = 1;
+}
+
+message GetBusinessReviewRequest {
+  string id = 1;
+}
+
+message GetBusinessReviewResponse {
+  BusinessReview business_review = 1;
+}
+
+message UpdateBusinessReviewRequest {
+  BusinessReview business_review = 1;
+}
+
+message UpdateBusinessReviewResponse {
+  BusinessReview business_review = 1;
+}
+
+message DeleteBusinessReviewRequest {
+  string id = 1;
+}
+
+message ListBusinessReviewsRequest {
+  string business_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListBusinessReviewsResponse {
+  repeated BusinessReview business_reviews = 1;
+  string next_page_token = 2;
+}
+
+// BusinessMembership
+message CreateBusinessMembershipRequest {
+  BusinessMembership business_membership = 1;
+}
+
+message CreateBusinessMembershipResponse {
+  BusinessMembership business_membership = 1;
+}
+
+message GetBusinessMembershipRequest {
+  string id = 1;
+}
+
+message GetBusinessMembershipResponse {
+  BusinessMembership business_membership = 1;
+}
+
+message UpdateBusinessMembershipRequest {
+  BusinessMembership business_membership = 1;
+}
+
+message UpdateBusinessMembershipResponse {
+  BusinessMembership business_membership = 1;
+}
+
+message DeleteBusinessMembershipRequest {
+  string id = 1;
+}
+
+message ListBusinessMembershipsRequest {
+  string business_id = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListBusinessMembershipsResponse {
+  repeated BusinessMembership business_memberships = 1;
+  string next_page_token = 2;
+}
+
+
+// BusinessBrand
+message CreateBusinessBrandRequest {
+    BusinessBrand business_brand = 1;
+}
+
+message CreateBusinessBrandResponse {
+    BusinessBrand business_brand = 1;
+}
+
+message GetBusinessBrandRequest {
+    string id = 1;
+}
+
+message GetBusinessBrandResponse {
+    BusinessBrand business_brand = 1;
+}
+
+message UpdateBusinessBrandRequest {
+    BusinessBrand business_brand = 1;
+}
+
+message UpdateBusinessBrandResponse {
+    BusinessBrand business_brand = 1;
+}
+
+message DeleteBusinessBrandRequest {
+    string id = 1;
+}
+
+message ListBusinessBrandsRequest {
+    string business_id = 1;
+    int32 page_size = 2;
+    string page_token = 3;
+}
+
+message ListBusinessBrandsResponse {
+    repeated BusinessBrand business_brands = 1;
+    string next_page_token = 2;
+}
+
+// BusinessRelation
+message CreateBusinessRelationRequest {
+    BusinessRelation business_relation = 1;
+}
+
+message CreateBusinessRelationResponse {
+    BusinessRelation business_relation = 1;
+}
+
+message GetBusinessRelationRequest {
+    string id = 1;
+}
+
+message GetBusinessRelationResponse {
+    BusinessRelation business_relation = 1;
+}
+
+message UpdateBusinessRelationRequest {
+    BusinessRelation business_relation = 1;
+}
+
+message UpdateBusinessRelationResponse {
+    BusinessRelation business_relation = 1;
+}
+
+message DeleteBusinessRelationRequest {
+    string id = 1;
+}
+
+
