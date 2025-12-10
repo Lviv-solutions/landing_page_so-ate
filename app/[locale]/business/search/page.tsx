@@ -17,7 +17,7 @@ export default function SearchBusinessPage() {
     e.preventDefault();
     
     if (!searchQuery.trim()) {
-      setError("الرجاء إدخال اسم المطعم");
+      setError("الرجاء إدخال اسم البراند");
       return;
     }
 
@@ -27,7 +27,7 @@ export default function SearchBusinessPage() {
     setFoundBusiness(null);
 
     try {
-      const response = await businessService.getBusinessByName(searchQuery, searchQuery);
+      const response = await businessService.getBusinessByBrandName(searchQuery);
       
       if (response.business) {
         setFoundBusiness(response.business);
@@ -140,15 +140,15 @@ export default function SearchBusinessPage() {
                   </div>
 
                   <h2 className="text-2xl md:text-3xl font-bold text-black leading-relaxed">
-                    من الأفضل أن يكون مطعمك موجوداً
+                    من الأفضل أن يكون برانك موجوداً
                     <br />
                     بالفعل على سو ايت. 
                     <span className="text-[#ED614A]"> ابحث عنه الآن</span>
                   </h2>
 
                   <p className="text-black leading-relaxed">
-                    ابحث عن مطعمك أو إذا كنت تريد إضافة مطعم جديد، يمكنك إضافة اسم مطعمك
-                    مطعمك من خلال البحث في مستندات So-Eat حيث أنه
+                    ابحث عن البراند أو إذا كنت تريد إضافة براند جديد، يمكنك إضافة اسم البراند
+                    من خلال البحث في مستندات So-Eat حيث أنه
                   </p>
 
                   {/* Search Form */}
@@ -168,7 +168,7 @@ export default function SearchBusinessPage() {
                           setSearchQuery(e.target.value);
                           setError("");
                         }}
-                        placeholder="ابحث عن مطعمك..."
+                        placeholder="ابحث عن البراند..."
                         disabled={loading}
                         className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right text-black disabled:bg-gray-50"
                       />
@@ -264,7 +264,7 @@ export default function SearchBusinessPage() {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="اضف اسم مطعمك..."
+                            placeholder="اضف اسم البراند..."
                             className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right text-black"
                           />
                           <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
@@ -276,7 +276,7 @@ export default function SearchBusinessPage() {
                           </div>
                         </div>
                       </div>
-                      <p className="text-sm text-black mt-2">اضف مطعمك</p>
+                      <p className="text-sm text-black mt-2">اضف البراند</p>
                     </div>
                   )}
                 </div>

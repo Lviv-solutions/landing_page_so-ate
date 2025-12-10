@@ -1803,6 +1803,264 @@ export class BusinessServiceClient {
     this.methodDescriptorListBusinessMemberships);
   }
 
+  methodDescriptorCreateBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/CreateBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.CreateBrandRequest,
+    business_v1_business_pb.CreateBrandResponse,
+    (request: business_v1_business_pb.CreateBrandRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.CreateBrandResponse.deserializeBinary
+  );
+
+  createBrand(
+    request: business_v1_business_pb.CreateBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.CreateBrandResponse>;
+
+  createBrand(
+    request: business_v1_business_pb.CreateBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.CreateBrandResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.CreateBrandResponse>;
+
+  createBrand(
+    request: business_v1_business_pb.CreateBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.CreateBrandResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/CreateBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorCreateBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/CreateBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorCreateBrand);
+  }
+
+  methodDescriptorGetBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/GetBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.GetBrandRequest,
+    business_v1_business_pb.GetBrandResponse,
+    (request: business_v1_business_pb.GetBrandRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.GetBrandResponse.deserializeBinary
+  );
+
+  getBrand(
+    request: business_v1_business_pb.GetBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.GetBrandResponse>;
+
+  getBrand(
+    request: business_v1_business_pb.GetBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.GetBrandResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.GetBrandResponse>;
+
+  getBrand(
+    request: business_v1_business_pb.GetBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.GetBrandResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/GetBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorGetBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/GetBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorGetBrand);
+  }
+
+  methodDescriptorUpdateBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/UpdateBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.UpdateBrandRequest,
+    business_v1_business_pb.UpdateBrandResponse,
+    (request: business_v1_business_pb.UpdateBrandRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.UpdateBrandResponse.deserializeBinary
+  );
+
+  updateBrand(
+    request: business_v1_business_pb.UpdateBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.UpdateBrandResponse>;
+
+  updateBrand(
+    request: business_v1_business_pb.UpdateBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.UpdateBrandResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.UpdateBrandResponse>;
+
+  updateBrand(
+    request: business_v1_business_pb.UpdateBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.UpdateBrandResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/UpdateBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorUpdateBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/UpdateBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorUpdateBrand);
+  }
+
+  methodDescriptorDeleteBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/DeleteBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.DeleteBrandRequest,
+    google_protobuf_empty_pb.Empty,
+    (request: business_v1_business_pb.DeleteBrandRequest) => {
+      return request.serializeBinary();
+    },
+    google_protobuf_empty_pb.Empty.deserializeBinary
+  );
+
+  deleteBrand(
+    request: business_v1_business_pb.DeleteBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<google_protobuf_empty_pb.Empty>;
+
+  deleteBrand(
+    request: business_v1_business_pb.DeleteBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void): grpcWeb.ClientReadableStream<google_protobuf_empty_pb.Empty>;
+
+  deleteBrand(
+    request: business_v1_business_pb.DeleteBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/DeleteBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorDeleteBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/DeleteBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorDeleteBrand);
+  }
+
+  methodDescriptorListBrands = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/ListBrands',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.ListBrandsRequest,
+    business_v1_business_pb.ListBrandsResponse,
+    (request: business_v1_business_pb.ListBrandsRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.ListBrandsResponse.deserializeBinary
+  );
+
+  listBrands(
+    request: business_v1_business_pb.ListBrandsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.ListBrandsResponse>;
+
+  listBrands(
+    request: business_v1_business_pb.ListBrandsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.ListBrandsResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.ListBrandsResponse>;
+
+  listBrands(
+    request: business_v1_business_pb.ListBrandsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.ListBrandsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/ListBrands',
+        request,
+        metadata || {},
+        this.methodDescriptorListBrands,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/ListBrands',
+    request,
+    metadata || {},
+    this.methodDescriptorListBrands);
+  }
+
+  methodDescriptorSearchBrands = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/SearchBrands',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.SearchBrandsRequest,
+    business_v1_business_pb.SearchBrandsResponse,
+    (request: business_v1_business_pb.SearchBrandsRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.SearchBrandsResponse.deserializeBinary
+  );
+
+  searchBrands(
+    request: business_v1_business_pb.SearchBrandsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.SearchBrandsResponse>;
+
+  searchBrands(
+    request: business_v1_business_pb.SearchBrandsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.SearchBrandsResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.SearchBrandsResponse>;
+
+  searchBrands(
+    request: business_v1_business_pb.SearchBrandsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.SearchBrandsResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/SearchBrands',
+        request,
+        metadata || {},
+        this.methodDescriptorSearchBrands,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/SearchBrands',
+    request,
+    metadata || {},
+    this.methodDescriptorSearchBrands);
+  }
+
   methodDescriptorCreateBusinessBrand = new grpcWeb.MethodDescriptor(
     '/business.v1.BusinessService/CreateBusinessBrand',
     grpcWeb.MethodType.UNARY,
@@ -2016,6 +2274,92 @@ export class BusinessServiceClient {
     request,
     metadata || {},
     this.methodDescriptorListBusinessBrands);
+  }
+
+  methodDescriptorAddBusinessToBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/AddBusinessToBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.AddBusinessToBrandRequest,
+    business_v1_business_pb.AddBusinessToBrandResponse,
+    (request: business_v1_business_pb.AddBusinessToBrandRequest) => {
+      return request.serializeBinary();
+    },
+    business_v1_business_pb.AddBusinessToBrandResponse.deserializeBinary
+  );
+
+  addBusinessToBrand(
+    request: business_v1_business_pb.AddBusinessToBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<business_v1_business_pb.AddBusinessToBrandResponse>;
+
+  addBusinessToBrand(
+    request: business_v1_business_pb.AddBusinessToBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.AddBusinessToBrandResponse) => void): grpcWeb.ClientReadableStream<business_v1_business_pb.AddBusinessToBrandResponse>;
+
+  addBusinessToBrand(
+    request: business_v1_business_pb.AddBusinessToBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: business_v1_business_pb.AddBusinessToBrandResponse) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/AddBusinessToBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorAddBusinessToBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/AddBusinessToBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorAddBusinessToBrand);
+  }
+
+  methodDescriptorRemoveBusinessFromBrand = new grpcWeb.MethodDescriptor(
+    '/business.v1.BusinessService/RemoveBusinessFromBrand',
+    grpcWeb.MethodType.UNARY,
+    business_v1_business_pb.RemoveBusinessFromBrandRequest,
+    google_protobuf_empty_pb.Empty,
+    (request: business_v1_business_pb.RemoveBusinessFromBrandRequest) => {
+      return request.serializeBinary();
+    },
+    google_protobuf_empty_pb.Empty.deserializeBinary
+  );
+
+  removeBusinessFromBrand(
+    request: business_v1_business_pb.RemoveBusinessFromBrandRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<google_protobuf_empty_pb.Empty>;
+
+  removeBusinessFromBrand(
+    request: business_v1_business_pb.RemoveBusinessFromBrandRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void): grpcWeb.ClientReadableStream<google_protobuf_empty_pb.Empty>;
+
+  removeBusinessFromBrand(
+    request: business_v1_business_pb.RemoveBusinessFromBrandRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: google_protobuf_empty_pb.Empty) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/business.v1.BusinessService/RemoveBusinessFromBrand',
+        request,
+        metadata || {},
+        this.methodDescriptorRemoveBusinessFromBrand,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/business.v1.BusinessService/RemoveBusinessFromBrand',
+    request,
+    metadata || {},
+    this.methodDescriptorRemoveBusinessFromBrand);
   }
 
   methodDescriptorCreateBusinessRelation = new grpcWeb.MethodDescriptor(

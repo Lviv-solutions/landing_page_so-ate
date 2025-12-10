@@ -13,3 +13,27 @@
     font-weight: 500;
     line-height: normal;
 }
+
+/* Sidebar Styles */
+.sidebar-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(237, 97, 74, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(237, 97, 74, 0.4);
+}
+
+/* Sidebar RTL Support */
+.sidebar-rtl {
+    direction: rtl;
+    text-align: right;
+}

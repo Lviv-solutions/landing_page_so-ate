@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package business.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+option go_package = "lviv_backend/api/gen/business/v1;business_v1";
+
+// Services
+service ClaimRequestService {
+  rpc CreateClaimRequest(CreateClaimRequestRequest) returns (CreateClaimRequestResponse);
+  rpc GetClaimRequest(GetClaimRequestRequest) returns (GetClaimRequestResponse);
+  rpc ListClaimRequests(ListClaimRequestsRequest) returns (ListClaimRequestsResponse);
+  rpc ApproveClaimRequest(ApproveClaimRequestRequest) returns (ApproveClaimRequestResponse);
+  rpc RejectClaimRequest(RejectClaimRequestRequest) returns (RejectClaimRequestResponse);
+}
+
+// Enums
+enum ClaimStatus {
+  CLAIM_STATUS_UNSPECIFIED = 0;
+  CLAIM_STATUS_PENDING = 1;
+  CLAIM_STATUS_APPROVED = 2;
+  CLAIM_STATUS_REJECTED = 3;
+}
+
+// Messages
+message ClaimRequest {
+  string id = 1;
+  string business_id = 2;
+  string requester_id = 3;
+  ClaimStatus status = 4;
+  google.protobuf.Struct evidence_json = 5;
+  string reviewed_by = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  google.protobuf.Timestamp reviewed_at = 9;
+}
+
+// Request and Response messages
+message CreateClaimRequestRequest {
+  string requester_id = 1;
+  google.protobuf.Struct business_data = 2;  // Business information to be created
+  google.protobuf.Struct evidence_json = 3;  // Supporting documents/proof
+}
+
+message CreateClaimRequestResponse {
+  string claim_request_id = 1;
+}
+
+message GetClaimRequestRequest {
+  string id = 1;
+}
+
+message GetClaimRequestResponse {
+  ClaimRequest claim_request = 1;
+}
+
+message ListClaimRequestsRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string filter = 3;
+  ClaimStatus status = 4;
+  string business_id = 5;
+  string requester_id = 6;
+}
+
+message ListClaimRequestsResponse {
+  repeated ClaimRequest claim_requests = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message ApproveClaimRequestRequest {
+  string id = 1;
+  string reviewed_by = 2;
+}
+
+message ApproveClaimRequestResponse {
+  string claim_request_id = 1;
+  string business_id = 2;
+}
+
+message RejectClaimRequestRequest {
+  string id = 1;
+  string reviewed_by = 2;
+  string rejection_reason = 3;
+}
+
+message RejectClaimRequestResponse {
+  string claim_request_id = 1;
+}

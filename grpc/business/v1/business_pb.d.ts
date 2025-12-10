@@ -46,8 +46,8 @@ export class Business extends jspb.Message {
   hasWorkingHours(): boolean;
   clearWorkingHours(): Business;
 
-  getCategoryId(): string;
-  setCategoryId(value: string): Business;
+  getCategoryId(): number;
+  setCategoryId(value: number): Business;
 
   getIsActive(): boolean;
   setIsActive(value: boolean): Business;
@@ -97,7 +97,7 @@ export namespace Business {
     keyWords?: google_protobuf_struct_pb.Struct.AsObject;
     email: string;
     workingHours?: google_protobuf_struct_pb.Struct.AsObject;
-    categoryId: string;
+    categoryId: number;
     isActive: boolean;
     verificationStatus: VerificationStatus;
     verifiedAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
@@ -258,8 +258,8 @@ export namespace SocialPlatform {
 }
 
 export class Category extends jspb.Message {
-  getId(): string;
-  setId(value: string): Category;
+  getId(): number;
+  setId(value: number): Category;
 
   getName(): string;
   setName(value: string): Category;
@@ -284,7 +284,7 @@ export class Category extends jspb.Message {
 
 export namespace Category {
   export type AsObject = {
-    id: string;
+    id: number;
     name: string;
     createdAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
     updatedAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
@@ -420,6 +420,52 @@ export namespace BusinessMembership {
     businessId: string;
     roleId: number;
     accountId: string;
+    createdAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
+    updatedAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
+  };
+}
+
+export class Brand extends jspb.Message {
+  getId(): string;
+  setId(value: string): Brand;
+
+  getName(): string;
+  setName(value: string): Brand;
+
+  getSlug(): string;
+  setSlug(value: string): Brand;
+
+  getDescription(): string;
+  setDescription(value: string): Brand;
+
+  getIsActive(): boolean;
+  setIsActive(value: boolean): Brand;
+
+  getCreatedAt(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setCreatedAt(value?: google_protobuf_timestamp_pb.Timestamp): Brand;
+  hasCreatedAt(): boolean;
+  clearCreatedAt(): Brand;
+
+  getUpdatedAt(): google_protobuf_timestamp_pb.Timestamp | undefined;
+  setUpdatedAt(value?: google_protobuf_timestamp_pb.Timestamp): Brand;
+  hasUpdatedAt(): boolean;
+  clearUpdatedAt(): Brand;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Brand.AsObject;
+  static toObject(includeInstance: boolean, msg: Brand): Brand.AsObject;
+  static serializeBinaryToWriter(message: Brand, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Brand;
+  static deserializeBinaryFromReader(message: Brand, reader: jspb.BinaryReader): Brand;
+}
+
+export namespace Brand {
+  export type AsObject = {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    isActive: boolean;
     createdAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
     updatedAt?: google_protobuf_timestamp_pb.Timestamp.AsObject;
   };
@@ -1328,8 +1374,8 @@ export namespace CreateCategoryResponse {
 }
 
 export class GetCategoryRequest extends jspb.Message {
-  getId(): string;
-  setId(value: string): GetCategoryRequest;
+  getId(): number;
+  setId(value: number): GetCategoryRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): GetCategoryRequest.AsObject;
@@ -1341,7 +1387,7 @@ export class GetCategoryRequest extends jspb.Message {
 
 export namespace GetCategoryRequest {
   export type AsObject = {
-    id: string;
+    id: number;
   };
 }
 
@@ -2027,6 +2073,238 @@ export namespace ListBusinessMembershipsResponse {
   };
 }
 
+export class CreateBrandRequest extends jspb.Message {
+  getBrand(): Brand | undefined;
+  setBrand(value?: Brand): CreateBrandRequest;
+  hasBrand(): boolean;
+  clearBrand(): CreateBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateBrandRequest): CreateBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: CreateBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateBrandRequest;
+  static deserializeBinaryFromReader(message: CreateBrandRequest, reader: jspb.BinaryReader): CreateBrandRequest;
+}
+
+export namespace CreateBrandRequest {
+  export type AsObject = {
+    brand?: Brand.AsObject;
+  };
+}
+
+export class CreateBrandResponse extends jspb.Message {
+  getBrandId(): string;
+  setBrandId(value: string): CreateBrandResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): CreateBrandResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: CreateBrandResponse): CreateBrandResponse.AsObject;
+  static serializeBinaryToWriter(message: CreateBrandResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CreateBrandResponse;
+  static deserializeBinaryFromReader(message: CreateBrandResponse, reader: jspb.BinaryReader): CreateBrandResponse;
+}
+
+export namespace CreateBrandResponse {
+  export type AsObject = {
+    brandId: string;
+  };
+}
+
+export class GetBrandRequest extends jspb.Message {
+  getId(): string;
+  setId(value: string): GetBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetBrandRequest): GetBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: GetBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetBrandRequest;
+  static deserializeBinaryFromReader(message: GetBrandRequest, reader: jspb.BinaryReader): GetBrandRequest;
+}
+
+export namespace GetBrandRequest {
+  export type AsObject = {
+    id: string;
+  };
+}
+
+export class GetBrandResponse extends jspb.Message {
+  getBrand(): Brand | undefined;
+  setBrand(value?: Brand): GetBrandResponse;
+  hasBrand(): boolean;
+  clearBrand(): GetBrandResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetBrandResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: GetBrandResponse): GetBrandResponse.AsObject;
+  static serializeBinaryToWriter(message: GetBrandResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetBrandResponse;
+  static deserializeBinaryFromReader(message: GetBrandResponse, reader: jspb.BinaryReader): GetBrandResponse;
+}
+
+export namespace GetBrandResponse {
+  export type AsObject = {
+    brand?: Brand.AsObject;
+  };
+}
+
+export class UpdateBrandRequest extends jspb.Message {
+  getBrand(): Brand | undefined;
+  setBrand(value?: Brand): UpdateBrandRequest;
+  hasBrand(): boolean;
+  clearBrand(): UpdateBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateBrandRequest): UpdateBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: UpdateBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateBrandRequest;
+  static deserializeBinaryFromReader(message: UpdateBrandRequest, reader: jspb.BinaryReader): UpdateBrandRequest;
+}
+
+export namespace UpdateBrandRequest {
+  export type AsObject = {
+    brand?: Brand.AsObject;
+  };
+}
+
+export class UpdateBrandResponse extends jspb.Message {
+  getBrandId(): string;
+  setBrandId(value: string): UpdateBrandResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UpdateBrandResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: UpdateBrandResponse): UpdateBrandResponse.AsObject;
+  static serializeBinaryToWriter(message: UpdateBrandResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UpdateBrandResponse;
+  static deserializeBinaryFromReader(message: UpdateBrandResponse, reader: jspb.BinaryReader): UpdateBrandResponse;
+}
+
+export namespace UpdateBrandResponse {
+  export type AsObject = {
+    brandId: string;
+  };
+}
+
+export class DeleteBrandRequest extends jspb.Message {
+  getId(): string;
+  setId(value: string): DeleteBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): DeleteBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: DeleteBrandRequest): DeleteBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: DeleteBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): DeleteBrandRequest;
+  static deserializeBinaryFromReader(message: DeleteBrandRequest, reader: jspb.BinaryReader): DeleteBrandRequest;
+}
+
+export namespace DeleteBrandRequest {
+  export type AsObject = {
+    id: string;
+  };
+}
+
+export class ListBrandsRequest extends jspb.Message {
+  getPageSize(): number;
+  setPageSize(value: number): ListBrandsRequest;
+
+  getPageToken(): string;
+  setPageToken(value: string): ListBrandsRequest;
+
+  getFilter(): string;
+  setFilter(value: string): ListBrandsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListBrandsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListBrandsRequest): ListBrandsRequest.AsObject;
+  static serializeBinaryToWriter(message: ListBrandsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListBrandsRequest;
+  static deserializeBinaryFromReader(message: ListBrandsRequest, reader: jspb.BinaryReader): ListBrandsRequest;
+}
+
+export namespace ListBrandsRequest {
+  export type AsObject = {
+    pageSize: number;
+    pageToken: string;
+    filter: string;
+  };
+}
+
+export class ListBrandsResponse extends jspb.Message {
+  getBrandsList(): Array<Brand>;
+  setBrandsList(value: Array<Brand>): ListBrandsResponse;
+  clearBrandsList(): ListBrandsResponse;
+  addBrands(value?: Brand, index?: number): Brand;
+
+  getNextPageToken(): string;
+  setNextPageToken(value: string): ListBrandsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListBrandsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: ListBrandsResponse): ListBrandsResponse.AsObject;
+  static serializeBinaryToWriter(message: ListBrandsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListBrandsResponse;
+  static deserializeBinaryFromReader(message: ListBrandsResponse, reader: jspb.BinaryReader): ListBrandsResponse;
+}
+
+export namespace ListBrandsResponse {
+  export type AsObject = {
+    brandsList: Array<Brand.AsObject>;
+    nextPageToken: string;
+  };
+}
+
+export class SearchBrandsRequest extends jspb.Message {
+  getQuery(): string;
+  setQuery(value: string): SearchBrandsRequest;
+
+  getPageSize(): number;
+  setPageSize(value: number): SearchBrandsRequest;
+
+  getPageToken(): string;
+  setPageToken(value: string): SearchBrandsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SearchBrandsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SearchBrandsRequest): SearchBrandsRequest.AsObject;
+  static serializeBinaryToWriter(message: SearchBrandsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SearchBrandsRequest;
+  static deserializeBinaryFromReader(message: SearchBrandsRequest, reader: jspb.BinaryReader): SearchBrandsRequest;
+}
+
+export namespace SearchBrandsRequest {
+  export type AsObject = {
+    query: string;
+    pageSize: number;
+    pageToken: string;
+  };
+}
+
+export class SearchBrandsResponse extends jspb.Message {
+  getBrandsList(): Array<Brand>;
+  setBrandsList(value: Array<Brand>): SearchBrandsResponse;
+  clearBrandsList(): SearchBrandsResponse;
+  addBrands(value?: Brand, index?: number): Brand;
+
+  getNextPageToken(): string;
+  setNextPageToken(value: string): SearchBrandsResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SearchBrandsResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: SearchBrandsResponse): SearchBrandsResponse.AsObject;
+  static serializeBinaryToWriter(message: SearchBrandsResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SearchBrandsResponse;
+  static deserializeBinaryFromReader(message: SearchBrandsResponse, reader: jspb.BinaryReader): SearchBrandsResponse;
+}
+
+export namespace SearchBrandsResponse {
+  export type AsObject = {
+    brandsList: Array<Brand.AsObject>;
+    nextPageToken: string;
+  };
+}
+
 export class CreateBusinessBrandRequest extends jspb.Message {
   getBusinessBrand(): BusinessBrand | undefined;
   setBusinessBrand(value?: BusinessBrand): CreateBusinessBrandRequest;
@@ -2210,6 +2488,78 @@ export namespace ListBusinessBrandsResponse {
   export type AsObject = {
     businessBrandsList: Array<BusinessBrand.AsObject>;
     nextPageToken: string;
+  };
+}
+
+export class AddBusinessToBrandRequest extends jspb.Message {
+  getBrandId(): string;
+  setBrandId(value: string): AddBusinessToBrandRequest;
+
+  getBusinessId(): string;
+  setBusinessId(value: string): AddBusinessToBrandRequest;
+
+  getRelationship(): string;
+  setRelationship(value: string): AddBusinessToBrandRequest;
+
+  getIsPrimary(): boolean;
+  setIsPrimary(value: boolean): AddBusinessToBrandRequest;
+
+  getMetadata(): google_protobuf_struct_pb.Struct | undefined;
+  setMetadata(value?: google_protobuf_struct_pb.Struct): AddBusinessToBrandRequest;
+  hasMetadata(): boolean;
+  clearMetadata(): AddBusinessToBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddBusinessToBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: AddBusinessToBrandRequest): AddBusinessToBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: AddBusinessToBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddBusinessToBrandRequest;
+  static deserializeBinaryFromReader(message: AddBusinessToBrandRequest, reader: jspb.BinaryReader): AddBusinessToBrandRequest;
+}
+
+export namespace AddBusinessToBrandRequest {
+  export type AsObject = {
+    brandId: string;
+    businessId: string;
+    relationship: string;
+    isPrimary: boolean;
+    metadata?: google_protobuf_struct_pb.Struct.AsObject;
+  };
+}
+
+export class AddBusinessToBrandResponse extends jspb.Message {
+  getBusinessBrandId(): string;
+  setBusinessBrandId(value: string): AddBusinessToBrandResponse;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): AddBusinessToBrandResponse.AsObject;
+  static toObject(includeInstance: boolean, msg: AddBusinessToBrandResponse): AddBusinessToBrandResponse.AsObject;
+  static serializeBinaryToWriter(message: AddBusinessToBrandResponse, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): AddBusinessToBrandResponse;
+  static deserializeBinaryFromReader(message: AddBusinessToBrandResponse, reader: jspb.BinaryReader): AddBusinessToBrandResponse;
+}
+
+export namespace AddBusinessToBrandResponse {
+  export type AsObject = {
+    businessBrandId: string;
+  };
+}
+
+export class RemoveBusinessFromBrandRequest extends jspb.Message {
+  getBusinessBrandId(): string;
+  setBusinessBrandId(value: string): RemoveBusinessFromBrandRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): RemoveBusinessFromBrandRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: RemoveBusinessFromBrandRequest): RemoveBusinessFromBrandRequest.AsObject;
+  static serializeBinaryToWriter(message: RemoveBusinessFromBrandRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): RemoveBusinessFromBrandRequest;
+  static deserializeBinaryFromReader(message: RemoveBusinessFromBrandRequest, reader: jspb.BinaryReader): RemoveBusinessFromBrandRequest;
+}
+
+export namespace RemoveBusinessFromBrandRequest {
+  export type AsObject = {
+    businessBrandId: string;
   };
 }
 

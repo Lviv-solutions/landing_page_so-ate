@@ -74,6 +74,16 @@ export default function CreateBusinessStep4() {
     setError('');
 
     try {
+      // TODO: Verify OTP with backend
+      // For now, we'll skip OTP verification and proceed to business creation
+      // In production, you should verify the OTP first:
+      // const otpResponse = await authService.verifyOTP(phoneNumber, otpCode);
+      // if (!otpResponse.valid) {
+      //   setError('رمز التحقق غير صحيح');
+      //   setLoading(false);
+      //   return;
+      // }
+      
       // Get all form data from IndexedDB
       const savedData = await businessFormDB.getFormData();
       
@@ -114,7 +124,7 @@ export default function CreateBusinessStep4() {
         },
         email: savedData.email,
         workingHours: workingHours,
-        categoryId: savedData.categoryId,
+        categoryId: 1, // Default Restaurant category
         isActive: true,
       };
 
@@ -153,7 +163,8 @@ export default function CreateBusinessStep4() {
       
     } catch (err: any) {
       console.error('Error creating business:', err);
-      setError('حدث خطأ أثناء إنشاء المطعم. الرجاء المحاولة مرة أخرى.');
+      console.error('Error details:', err.message, err.code, err.metadata);
+      setError(`حدث خطأ أثناء إنشاء المطعم: ${err.message || 'خطأ غير معروف'}`);
     } finally {
       setLoading(false);
     }

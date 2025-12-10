@@ -689,5 +689,21 @@
   },
   "common": {
     "backToHome": "العودة للرئيسية"
+  },
+  "sidebar": {
+    "home": "الرئيسية",
+    "externalDatabases": "قواعد البيانات الخارجية",
+    "products": "المنتجات",
+    "externalAccounts": "الحسابات الخارجية",
+    "manageSuggestions": "إدارة الاقتراحات",
+    "posts": "المنشورات",
+    "articles": "المقالات",
+    "services": "الخدمات",
+    "orders": "الطلبات",
+    "transactions": "المعاملات",
+    "rightsPrivacy": "حقوق والخصوصيات",
+    "ads": "الإعلانات",
+    "announcements": "إعلانات",
+    "requests": "طلبات"
   }
 }

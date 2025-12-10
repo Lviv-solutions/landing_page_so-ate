@@ -689,5 +689,21 @@
   },
   "common": {
     "backToHome": "Back to Home"
+  },
+  "sidebar": {
+    "home": "Home",
+    "externalDatabases": "External Databases",
+    "products": "Products",
+    "externalAccounts": "External Accounts",
+    "manageSuggestions": "Manage Suggestions",
+    "posts": "Posts",
+    "articles": "Articles",
+    "services": "Services",
+    "orders": "Orders",
+    "transactions": "Transactions",
+    "rightsPrivacy": "Rights & Privacy",
+    "ads": "Ads",
+    "announcements": "Announcements",
+    "requests": "Requests"
   }
 }

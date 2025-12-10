@@ -70,12 +70,22 @@ service BusinessService {
 
 
 
+  // Brand
+  rpc CreateBrand(CreateBrandRequest) returns (CreateBrandResponse);
+  rpc GetBrand(GetBrandRequest) returns (GetBrandResponse);
+  rpc UpdateBrand(UpdateBrandRequest) returns (UpdateBrandResponse);
+  rpc DeleteBrand(DeleteBrandRequest) returns (google.protobuf.Empty);
+  rpc ListBrands(ListBrandsRequest) returns (ListBrandsResponse);
+  rpc SearchBrands(SearchBrandsRequest) returns (SearchBrandsResponse);
+
   // BusinessBrand
   rpc CreateBusinessBrand(CreateBusinessBrandRequest) returns (CreateBusinessBrandResponse);
   rpc GetBusinessBrand(GetBusinessBrandRequest) returns (GetBusinessBrandResponse);
   rpc UpdateBusinessBrand(UpdateBusinessBrandRequest) returns (UpdateBusinessBrandResponse);
   rpc DeleteBusinessBrand(DeleteBusinessBrandRequest) returns (google.protobuf.Empty);
   rpc ListBusinessBrands(ListBusinessBrandsRequest) returns (ListBusinessBrandsResponse);
+  rpc AddBusinessToBrand(AddBusinessToBrandRequest) returns (AddBusinessToBrandResponse);
+  rpc RemoveBusinessFromBrand(RemoveBusinessFromBrandRequest) returns (google.protobuf.Empty);
 
   // BusinessRelation
   rpc CreateBusinessRelation(CreateBusinessRelationRequest) returns (CreateBusinessRelationResponse);
@@ -116,7 +126,7 @@ message Business {
   google.protobuf.Struct key_words = 10;
   string email = 11;
   google.protobuf.Struct working_hours = 12;
-  string category_id = 13;
+  int32 category_id = 13;
   bool is_active = 14;
   VerificationStatus verification_status = 15;
   google.protobuf.Timestamp verified_at = 16;
@@ -159,7 +169,7 @@ message SocialPlatform {
 }
 
 message Category {
-    string id = 1;
+    int32 id = 1;
     string name = 2;
     google.protobuf.Timestamp created_at = 3;
     google.protobuf.Timestamp updated_at = 4;
@@ -194,6 +204,16 @@ message BusinessMembership {
   google.protobuf.Timestamp updated_at = 6;
 }
 
+
+message Brand {
+    string id = 1;
+    string name = 2;
+    string slug = 3;
+    string description = 4;
+    bool is_active = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}
 
 message BusinessBrand {
     string id = 1;
@@ -399,7 +419,7 @@ message CreateCategoryResponse {
 }
 
 message GetCategoryRequest {
-  string id = 1;
+  int32 id = 1;
 }
 
 message GetCategoryResponse {
@@ -549,6 +569,57 @@ message ListBusinessMembershipsResponse {
 }
 
 
+// Brand
+message CreateBrandRequest {
+    Brand brand = 1;
+}
+
+message CreateBrandResponse {
+    string brand_id = 1;
+}
+
+message GetBrandRequest {
+    string id = 1;
+}
+
+message GetBrandResponse {
+    Brand brand = 1;
+}
+
+message UpdateBrandRequest {
+    Brand brand = 1;
+}
+
+message UpdateBrandResponse {
+    string brand_id = 1;
+}
+
+message DeleteBrandRequest {
+    string id = 1;
+}
+
+message ListBrandsRequest {
+    int32 page_size = 1;
+    string page_token = 2;
+    string filter = 3;
+}
+
+message ListBrandsResponse {
+    repeated Brand brands = 1;
+    string next_page_token = 2;
+}
+
+message SearchBrandsRequest {
+    string query = 1;
+    int32 page_size = 2;
+    string page_token = 3;
+}
+
+message SearchBrandsResponse {
+    repeated Brand brands = 1;
+    string next_page_token = 2;
+}
+
 // BusinessBrand
 message CreateBusinessBrandRequest {
     BusinessBrand business_brand = 1;
@@ -587,6 +658,22 @@ message ListBusinessBrandsRequest {
 message ListBusinessBrandsResponse {
     repeated BusinessBrand business_brands = 1;
     string next_page_token = 2;
+}
+
+message AddBusinessToBrandRequest {
+    string brand_id = 1;
+    string business_id = 2;
+    string relationship = 3;
+    bool is_primary = 4;
+    google.protobuf.Struct metadata = 5;
+}
+
+message AddBusinessToBrandResponse {
+    string business_brand_id = 1;
+}
+
+message RemoveBusinessFromBrandRequest {
+    string business_brand_id = 1;
 }
 
 // BusinessRelation

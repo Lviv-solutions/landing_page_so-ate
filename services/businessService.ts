@@ -2,6 +2,7 @@ import { BusinessServiceClient } from '../grpc/business/v1/BusinessServiceClient
 const pb = require('../grpc/business/v1/business_pb.js');
 const { Struct } = require('google-protobuf/google/protobuf/struct_pb.js');
 
+// Proto exports are extended directly to module.exports
 const {
   CreateBusinessRequest,
   CreateBusinessResponse,
@@ -44,7 +45,7 @@ class BusinessService {
     if (business.phoneNumber) businessMsg.setPhoneNumber(business.phoneNumber);
     if (business.storageQuota !== undefined) businessMsg.setStorageQuota(business.storageQuota);
     if (business.email) businessMsg.setEmail(business.email);
-    if (business.categoryId) businessMsg.setCategoryId("d99ed962-89bb-41f0-8adb-fda8772e2cdb");
+    if (business.categoryId) businessMsg.setCategoryId(business.categoryId);
     if (business.isActive !== undefined) businessMsg.setIsActive(business.isActive);
 
     // Handle key_words as Struct
@@ -91,12 +92,14 @@ class BusinessService {
   }
 
   /**
-   * Get business by name (Arabic or English)
+   * Get business by brand name
+   * Searches for businesses associated with a brand
    */
-  async getBusinessByName(arName?: string, enName?: string): Promise<any> {
+  async getBusinessByBrandName(brandName: string): Promise<any> {
     const request = new GetBusinessByNameRequest();
-    if (arName) request.setArName(arName);
-    if (enName) request.setEnName(enName);
+    // Use the name fields to pass brand name for search
+    request.setEnName(brandName);
+    request.setArName(brandName);
 
     return new Promise((resolve, reject) => {
       this.client.getBusinessByName(request, {}, (err, response) => {
