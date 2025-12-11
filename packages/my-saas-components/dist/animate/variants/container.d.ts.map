@@ -1,0 +1,1 @@
+{"version":3,"file":"container.d.ts","sourceRoot":"","sources":["../../../src/animate/variants/container.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,QAAQ,EAAE,UAAU,EAAE,MAAM,eAAe,CAAC;AAI1D,KAAK,OAAO,GAAG;IACb,YAAY,CAAC,EAAE,UAAU,CAAC;IAC1B,aAAa,CAAC,EAAE,UAAU,CAAC;CAC5B,CAAC;AAEF,eAAO,MAAM,YAAY,GAAI,QAAQ,OAAO,KAAG,QAe7C,CAAC"}

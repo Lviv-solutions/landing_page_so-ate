@@ -1,0 +1,1 @@
+{"version":3,"file":"use-carousel.d.ts","sourceRoot":"","sources":["../../../src/carousel/hooks/use-carousel.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,eAAe,EAAE,MAAM,gBAAgB,CAAC;AACtD,OAAO,KAAK,EAAE,eAAe,EAAE,iBAAiB,EAAE,MAAM,UAAU,CAAC;AAiBnE,wBAAgB,WAAW,CACzB,OAAO,CAAC,EAAE,eAAe,EACzB,OAAO,CAAC,EAAE,eAAe,EAAE,GAC1B,iBAAiB,CAsDnB"}

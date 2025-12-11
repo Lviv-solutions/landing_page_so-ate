@@ -1,0 +1,10 @@
+'use client';
+import { jsx as _jsx } from "react/jsx-runtime";
+import FormHelperText from '@mui/material/FormHelperText';
+export function HelperText({ sx, helperText, errorMessage, disableGutters = false, ...other }) {
+    const message = errorMessage ?? helperText;
+    if (!message) {
+        return null;
+    }
+    return (_jsx(FormHelperText, { error: !!errorMessage, sx: [{ mx: disableGutters ? 0 : 1.5 }, ...(Array.isArray(sx) ? sx : [sx])], ...other, children: errorMessage || helperText }));
+}

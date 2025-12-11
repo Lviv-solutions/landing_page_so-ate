@@ -1,0 +1,8 @@
+
+> @my-saas/components@1.0.0 dev
+> tsc --watch
+
+[1G[0K[[90m10:23:08 AM[0m] Starting compilation in watch mode...
+
+[[90m10:23:11 AM[0m] Found 0 errors. Watching for file changes.
+

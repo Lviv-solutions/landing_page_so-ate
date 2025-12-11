@@ -1,0 +1,88 @@
+export const typography = {
+  fontFamily:
+    '"Public Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  fontWeightRegular: 400,
+  fontWeightMedium: 500,
+  fontWeightSemiBold: 600,
+  fontWeightBold: 700,
+  h1: {
+    fontWeight: 700,
+    lineHeight: 1.2,
+    fontSize: "3rem",
+    letterSpacing: "-0.01562em",
+  },
+  h2: {
+    fontWeight: 700,
+    lineHeight: 1.3,
+    fontSize: "2.5rem",
+    letterSpacing: "-0.00833em",
+  },
+  h3: {
+    fontWeight: 700,
+    lineHeight: 1.4,
+    fontSize: "2rem",
+    letterSpacing: 0,
+  },
+  h4: {
+    fontWeight: 700,
+    lineHeight: 1.5,
+    fontSize: "1.5rem",
+    letterSpacing: "0.00735em",
+  },
+  h5: {
+    fontWeight: 700,
+    lineHeight: 1.5,
+    fontSize: "1.25rem",
+    letterSpacing: 0,
+  },
+  h6: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    fontSize: "1.125rem",
+    letterSpacing: "0.0075em",
+  },
+  subtitle1: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    fontSize: "1rem",
+    letterSpacing: "0.00938em",
+  },
+  subtitle2: {
+    fontWeight: 600,
+    lineHeight: 1.57,
+    fontSize: "0.875rem",
+    letterSpacing: "0.00714em",
+  },
+  body1: {
+    fontWeight: 400,
+    lineHeight: 1.5,
+    fontSize: "1rem",
+    letterSpacing: "0.00938em",
+  },
+  body2: {
+    fontWeight: 400,
+    lineHeight: 1.57,
+    fontSize: "0.875rem",
+    letterSpacing: "0.00714em",
+  },
+  caption: {
+    fontWeight: 400,
+    lineHeight: 1.66,
+    fontSize: "0.75rem",
+    letterSpacing: "0.03333em",
+  },
+  overline: {
+    fontWeight: 700,
+    lineHeight: 1.5,
+    fontSize: "0.75rem",
+    letterSpacing: "0.08333em",
+    textTransform: "uppercase" as const,
+  },
+  button: {
+    fontWeight: 600,
+    lineHeight: 1.71429,
+    fontSize: "0.875rem",
+    letterSpacing: 0,
+    textTransform: "none" as const,
+  },
+};

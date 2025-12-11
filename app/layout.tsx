@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cairo } from "next/font/google";
 import { clashDisplay, theYearOfHandicrafts } from "./fonts";
 import DocumentHead from "./components/DocumentHead";
+import { ThemeProvider } from "../theme/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,7 +23,8 @@ const cairo = Cairo({
 
 export const metadata: Metadata = {
   title: "So-Eat - Restaurant Management Platform",
-  description: "An integrated platform for restaurant management and electronic orders",
+  description:
+    "An integrated platform for restaurant management and electronic orders",
 };
 
 export default function RootLayout({
@@ -36,7 +38,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} ${clashDisplay.variable} ${theYearOfHandicrafts.variable} antialiased`}
       >
         <DocumentHead />
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
