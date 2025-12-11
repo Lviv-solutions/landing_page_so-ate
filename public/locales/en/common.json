@@ -705,5 +705,29 @@
     "ads": "Ads",
     "announcements": "Announcements",
     "requests": "Requests"
+  },
+  "dashboard": {
+    "title": "Your restaurant is likely already",
+    "subtitle": "on So-Eat.",
+    "highlight": "Search for it now.",
+    "description": "Search for your restaurant, if you can't find it, you can add your restaurant name so we can help you with your So Eat page.",
+    "searchPlaceholder": "Your business name",
+    "searchButton": "Search",
+    "searchError": "Please enter a restaurant name",
+    "notFound": "Restaurant not found. You can add your restaurant now.",
+    "searchFailed": "An error occurred while searching. Please try again.",
+    "notFoundTitle": "Let's So-Eat with you",
+    "notFoundSubtitle": "Add your business with this name",
+    "addButton": "Add",
+    "foundTitle": "Restaurant Found!",
+    "nameLabel": "Name",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "manageButton": "Manage Restaurant",
+    "newSearchButton": "New Search"
+  },
+  "brand": {
+    "name": "So-Eat Business",
+    "tagline": "Manage your business with ease"
   }
 }

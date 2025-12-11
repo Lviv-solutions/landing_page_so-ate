@@ -1,0 +1,1 @@
+{"version":3,"file":"table-empty-rows.d.ts","sourceRoot":"","sources":["../../src/table/table-empty-rows.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,wBAAwB,CAAC;AAO5D,MAAM,MAAM,mBAAmB,GAAG,aAAa,GAAG;IAChD,MAAM,CAAC,EAAE,MAAM,CAAC;IAChB,SAAS,EAAE,MAAM,CAAC;CACnB,CAAC;AAEF,wBAAgB,cAAc,CAAC,EAAE,SAAS,EAAE,MAAM,EAAE,EAAE,EAAE,GAAG,KAAK,EAAE,EAAE,mBAAmB,kDAkBtF"}

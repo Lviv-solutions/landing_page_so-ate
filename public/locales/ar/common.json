@@ -705,5 +705,29 @@
     "ads": "الإعلانات",
     "announcements": "إعلانات",
     "requests": "طلبات"
+  },
+  "dashboard": {
+    "title": "من المحتمل أن يكون مطعمك موجودًا",
+    "subtitle": "بالفعل على سو إيت.",
+    "highlight": "ابحث عنه الآن.",
+    "description": "ابحث عن مطعمك، إذا لم تتمكن من العثور عليه، يمكنك إضافة اسم مطعمك حتى تتمكن من مساعدتك في صفحة So Eat الخاصة بك.",
+    "searchPlaceholder": "اسم عملك",
+    "searchButton": "بحث",
+    "searchError": "الرجاء إدخال اسم المطعم",
+    "notFound": "لم يتم العثور على المطعم. يمكنك إضافة مطعمك الآن.",
+    "searchFailed": "حدث خطأ أثناء البحث. يرجى المحاولة مرة أخرى.",
+    "notFoundTitle": "لفيف سوإيت معك",
+    "notFoundSubtitle": "أضف نشاط عملك بهذا الاسم",
+    "addButton": "إضافة",
+    "foundTitle": "تم العثور على المطعم!",
+    "nameLabel": "الاسم",
+    "addressLabel": "العنوان",
+    "phoneLabel": "رقم الهاتف",
+    "manageButton": "إدارة المطعم",
+    "newSearchButton": "بحث جديد"
+  },
+  "brand": {
+    "name": "سو - إيت بيزنس",
+    "tagline": "إدارة مطعمك بسهولة"
   }
 }

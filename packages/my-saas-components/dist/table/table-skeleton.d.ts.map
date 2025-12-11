@@ -1,0 +1,1 @@
+{"version":3,"file":"table-skeleton.d.ts","sourceRoot":"","sources":["../../src/table/table-skeleton.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,wBAAwB,CAAC;AAQ5D,KAAK,kBAAkB,GAAG,aAAa,GAAG;IACxC,QAAQ,CAAC,EAAE,MAAM,CAAC;IAClB,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB,CAAC;AAEF,wBAAgB,aAAa,CAAC,EAAE,QAAY,EAAE,SAAa,EAAE,GAAG,KAAK,EAAE,EAAE,kBAAkB,6CAU1F"}

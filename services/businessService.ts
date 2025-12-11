@@ -1,6 +1,6 @@
-import { BusinessServiceClient } from '../grpc/business/v1/BusinessServiceClientPb';
-const pb = require('../grpc/business/v1/business_pb.js');
-const { Struct } = require('google-protobuf/google/protobuf/struct_pb.js');
+import { BusinessServiceClient } from "../grpc/business/v1/BusinessServiceClientPb";
+const pb = require("../grpc/business/v1/business_pb.js");
+const { Struct } = require("google-protobuf/google/protobuf/struct_pb.js");
 
 // Proto exports are extended directly to module.exports
 const {
@@ -25,7 +25,8 @@ class BusinessService {
   private client: BusinessServiceClient;
 
   constructor() {
-    const envoyUrl = process.env.NEXT_PUBLIC_GRPC_WEB_URL || 'http://localhost:8085';
+    const envoyUrl =
+      process.env.NEXT_PUBLIC_GRPC_WEB_URL || "http://localhost:8085";
     this.client = new BusinessServiceClient(envoyUrl, null, null);
   }
 
@@ -35,18 +36,22 @@ class BusinessService {
   async createBusiness(business: any): Promise<any> {
     const request = new CreateBusinessRequest();
     const businessMsg = new Business();
-    
+
     if (business.createdBy) businessMsg.setCreatedBy(business.createdBy);
     if (business.arName) businessMsg.setArName(business.arName);
     if (business.enName) businessMsg.setEnName(business.enName);
-    if (business.arDescription) businessMsg.setArDescription(business.arDescription);
-    if (business.enDescription) businessMsg.setEnDescription(business.enDescription);
+    if (business.arDescription)
+      businessMsg.setArDescription(business.arDescription);
+    if (business.enDescription)
+      businessMsg.setEnDescription(business.enDescription);
     if (business.address) businessMsg.setAddress(business.address);
     if (business.phoneNumber) businessMsg.setPhoneNumber(business.phoneNumber);
-    if (business.storageQuota !== undefined) businessMsg.setStorageQuota(business.storageQuota);
+    if (business.storageQuota !== undefined)
+      businessMsg.setStorageQuota(business.storageQuota);
     if (business.email) businessMsg.setEmail(business.email);
     if (business.categoryId) businessMsg.setCategoryId(business.categoryId);
-    if (business.isActive !== undefined) businessMsg.setIsActive(business.isActive);
+    if (business.isActive !== undefined)
+      businessMsg.setIsActive(business.isActive);
 
     // Handle key_words as Struct
     if (business.keyWords) {
@@ -119,19 +124,23 @@ class BusinessService {
   async updateBusiness(business: any): Promise<any> {
     const request = new UpdateBusinessRequest();
     const businessMsg = new Business();
-    
+
     if (business.id) businessMsg.setId(business.id);
     if (business.createdBy) businessMsg.setCreatedBy(business.createdBy);
     if (business.arName) businessMsg.setArName(business.arName);
     if (business.enName) businessMsg.setEnName(business.enName);
-    if (business.arDescription) businessMsg.setArDescription(business.arDescription);
-    if (business.enDescription) businessMsg.setEnDescription(business.enDescription);
+    if (business.arDescription)
+      businessMsg.setArDescription(business.arDescription);
+    if (business.enDescription)
+      businessMsg.setEnDescription(business.enDescription);
     if (business.address) businessMsg.setAddress(business.address);
     if (business.phoneNumber) businessMsg.setPhoneNumber(business.phoneNumber);
-    if (business.storageQuota !== undefined) businessMsg.setStorageQuota(business.storageQuota);
+    if (business.storageQuota !== undefined)
+      businessMsg.setStorageQuota(business.storageQuota);
     if (business.email) businessMsg.setEmail(business.email);
     if (business.categoryId) businessMsg.setCategoryId(business.categoryId);
-    if (business.isActive !== undefined) businessMsg.setIsActive(business.isActive);
+    if (business.isActive !== undefined)
+      businessMsg.setIsActive(business.isActive);
 
     // Handle key_words as Struct
     if (business.keyWords) {
@@ -181,8 +190,8 @@ class BusinessService {
    */
   async listBusinesses(
     pageSize: number = 10,
-    pageToken: string = '',
-    filter: string = ''
+    pageToken: string = "",
+    filter: string = ""
   ): Promise<any> {
     const request = new ListBusinessesRequest();
     request.setPageSize(pageSize);
@@ -213,10 +222,13 @@ class BusinessService {
     if (location.state) locationMsg.setState(location.state);
     if (location.zipCode) locationMsg.setZipCode(location.zipCode);
     if (location.language) locationMsg.setLanguage(location.language);
-    if (location.latitude !== undefined) locationMsg.setLatitude(location.latitude);
-    if (location.longitude !== undefined) locationMsg.setLongitude(location.longitude);
+    if (location.latitude !== undefined)
+      locationMsg.setLatitude(location.latitude);
+    if (location.longitude !== undefined)
+      locationMsg.setLongitude(location.longitude);
     if (location.mapUrl) locationMsg.setMapUrl(location.mapUrl);
-    if (location.isPrimary !== undefined) locationMsg.setIsPrimary(location.isPrimary);
+    if (location.isPrimary !== undefined)
+      locationMsg.setIsPrimary(location.isPrimary);
 
     request.setBusinessLocation(locationMsg);
 
@@ -230,6 +242,60 @@ class BusinessService {
       });
     });
   }
+
+  /**
+   * Search business by name (Arabic or English)
+   */
+  async searchByName(
+    name: string,
+    isArabic: boolean
+  ): Promise<{ found: boolean; business?: any }> {
+    const request = new GetBusinessByNameRequest();
+
+    if (isArabic) {
+      request.setArName(name);
+      request.setEnName("");
+    } else {
+      request.setEnName(name);
+      request.setArName("");
+    }
+
+    return new Promise((resolve, reject) => {
+      this.client.getBusinessByName(request, {}, (err, response) => {
+        if (err) {
+          // If not found, return found: false instead of rejecting
+          if (err.code === 5 || err.message?.includes("not found")) {
+            resolve({ found: false });
+          } else {
+            reject(err);
+          }
+        } else {
+          const businessData = response.toObject();
+          if (businessData.business) {
+            resolve({ found: true, business: businessData.business });
+          } else {
+            resolve({ found: false });
+          }
+        }
+      });
+    });
+  }
+}
+
+// Export types
+export interface Business {
+  id: string;
+  createdBy: string;
+  arName: string;
+  enName: string;
+  arDescription: string;
+  enDescription: string;
+  address: string;
+  phoneNumber: string;
+  storageQuota: number;
+  email: string;
+  categoryId: number;
+  isActive: boolean;
 }
 
 // Export singleton instance

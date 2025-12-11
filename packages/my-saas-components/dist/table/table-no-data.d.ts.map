@@ -1,0 +1,1 @@
+{"version":3,"file":"table-no-data.d.ts","sourceRoot":"","sources":["../../src/table/table-no-data.tsx"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,KAAK,EAAE,OAAO,EAAE,MAAM,sBAAsB,CAAC;AAS3D,MAAM,MAAM,gBAAgB,GAAG;IAC7B,QAAQ,EAAE,OAAO,CAAC;IAClB,EAAE,CAAC,EAAE,OAAO,CAAC,KAAK,CAAC,CAAC;CACrB,CAAC;AAEF,wBAAgB,WAAW,CAAC,EAAE,QAAQ,EAAE,EAAE,EAAE,EAAE,gBAAgB,2CAY7D"}

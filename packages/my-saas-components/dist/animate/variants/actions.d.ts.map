@@ -1,0 +1,1 @@
+{"version":3,"file":"actions.d.ts","sourceRoot":"","sources":["../../../src/animate/variants/actions.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,UAAU,EAAE,MAAM,eAAe,CAAC;AAIhD,eAAO,MAAM,QAAQ,GAAI,cAAY;;CAEnC,CAAC;AAEH,eAAO,MAAM,MAAM,GAAI,cAAW;;CAEhC,CAAC;AAEH,eAAO,MAAM,aAAa,GAAI,QAAQ,UAAU,KAAG,UAKjD,CAAC;AAEH,eAAO,MAAM,eAAe,GAAI,QAAQ,UAAU,KAAG,UAInD,CAAC"}
