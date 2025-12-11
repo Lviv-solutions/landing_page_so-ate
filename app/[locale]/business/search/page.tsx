@@ -13,11 +13,12 @@ import CardContent from "@mui/material/CardContent";
 import InputAdornment from "@mui/material/InputAdornment";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
+import { Iconify } from "@my-saas/components";
 import { useTranslation } from "../../../hooks/useTranslation";
 import businessService, {
   type Business,
 } from "../../../../services/businessService";
+import Navigation from "../../../../components/Navigation";
 
 export default function Dashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,14 +30,6 @@ export default function Dashboard() {
   const router = useRouter();
   const { t, locale } = useTranslation();
   const isArabic = locale === "ar";
-
-  const toggleLocale = () => {
-    const newLocale = locale === "ar" ? "en" : "ar";
-    const currentPath = window.location.pathname;
-    const pathSegments = currentPath.split("/").filter(Boolean);
-    pathSegments[0] = newLocale;
-    router.push("/" + pathSegments.join("/"));
-  };
 
   useEffect(() => {
     // Temporarily disabled authentication check for testing
@@ -127,95 +120,7 @@ export default function Dashboard() {
       }}
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {/* Header */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          px: { xs: 3, md: 6 },
-          py: 3,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 10,
-        }}
-      >
-        {/* Left side - Logo */}
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Image
-            src="/assets/admin-console/Icon.svg"
-            alt="So-Eat Business"
-            width={48}
-            height={48}
-          />
-          <Typography
-            variant="subtitle1"
-            fontWeight="bold"
-            color="text.primary"
-            sx={{ textAlign: isArabic ? "right" : "left" }}
-            dir={isArabic ? "rtl" : "ltr"}
-          >
-            {t("brand.name")}
-          </Typography>
-        </Stack>
-
-        {/* Right side - Claims Link & Language Switcher */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Button
-            variant="outlined"
-            onClick={() => router.push(`/${locale}/business/claims`)}
-            startIcon={<Iconify icon="solar:document-text-linear" />}
-            sx={{
-              borderColor: "grey.300",
-              color: "text.primary",
-              "&:hover": {
-                borderColor: "primary.main",
-                bgcolor: "rgba(255, 86, 48, 0.08)",
-              },
-            }}
-          >
-            {t("claims.title") || "My Claims"}
-          </Button>
-          <Box
-            component="button"
-            onClick={toggleLocale}
-            sx={{
-              border: "none",
-              background: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              padding: "8px 12px",
-              borderRadius: 1,
-              transition: "all 0.2s",
-              "&:hover": {
-                bgcolor: "rgba(0, 0, 0, 0.04)",
-              },
-            }}
-          >
-            <Iconify
-              icon={
-                locale === "ar"
-                  ? "twemoji:flag-saudi-arabia"
-                  : "twemoji:flag-united-states"
-              }
-              width={20}
-            />
-            <Typography
-              sx={{
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                color: "#6B7280",
-              }}
-            >
-              {locale === "ar" ? "العربية" : "English"}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
+      <Navigation locale={locale} />
 
       {/* Main Content */}
       <Box
