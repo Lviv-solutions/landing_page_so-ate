@@ -728,6 +728,44 @@
   },
   "brand": {
     "name": "سو - إيت بيزنس",
-    "tagline": "إدارة مطعمك بسهولة"
-  }
+    "tagline": "إدارة عملك بسهولة"
+  },
+  "claims": {
+  "title": "طلبات المطالبة الخاصة بي",
+  "subtitle": "تتبع حالة طلبات المطالبة بالأعمال الخاصة بك",
+  "backToSearch": "العودة للبحث",
+  "createClaim": "إنشاء طلب جديد",
+  "noClaims": "لا توجد طلبات بعد",
+  "noClaimsDescription": "لم تقم بتقديم أي طلبات مطالبة بعد",
+  "tableBusinessName": "اسم النشاط التجاري",
+  "tableStatus": "الحالة",
+  "tableSubmitted": "تاريخ التقديم",
+  "tableActions": "الإجراءات",
+  "viewDetails": "عرض التفاصيل",
+  "statusPending": "قيد المراجعة",
+  "statusApproved": "تمت الموافقة",
+  "statusRejected": "مرفوض",
+  "statusUnspecified": "غير محدد",
+  "detailTitle": "تفاصيل طلب المطالبة",
+  "claimId": "رقم الطلب",
+  "statusTitle": "الحالة",
+  "pendingMessage": "طلبك قيد المراجعة حالياً. سنقوم بإخطارك بمجرد معالجته.",
+  "approvedMessage": "تهانينا! تمت الموافقة على طلبك. يمكنك الآن إدارة نشاطك التجاري.",
+  "rejectedMessage": "تم رفض طلبك. يرجى مراجعة السبب أدناه وتقديم طلب جديد إذا لزم الأمر.",
+  "submittedOn": "تاريخ التقديم",
+  "reviewedOn": "تاريخ المراجعة",
+  "reviewedBy": "تمت المراجعة بواسطة",
+  "businessId": "معرف النشاط التجاري",
+  "viewBusiness": "عرض لوحة التحكم",
+  "evidence": "الأدلة الداعمة",
+  "backToClaims": "العودة للطلبات",
+  "submitNewClaim": "تقديم طلب جديد",
+  "errorTitle": "خطأ في تحميل الطلب",
+  "errorMessage": "الطلب غير موجود"
+},
+"admin": {
+  "claimsTitle": "مراجعة طلبات الأعمال",
+  "claimsSubtitle": "مراجعة والموافقة على طلبات المطالبة بالأعمال",
+  "noClaims": "لا توجد طلبات في هذه الفئة"
+}
 }

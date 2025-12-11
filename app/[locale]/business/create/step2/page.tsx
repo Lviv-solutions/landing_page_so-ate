@@ -9,15 +9,18 @@ import { businessFormDB } from "../../../../../lib/businessFormDB";
 
 export default function CreateBusinessStep2() {
   const router = useRouter();
-  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-  
+  const locale =
+    typeof window !== "undefined"
+      ? window.location.pathname.split("/")[1]
+      : "ar";
+
   const [locationData, setLocationData] = useState({
-    country: '',
-    city: '',
-    street: '',
-    postalCode: '',
-    latitude: '',
-    longitude: '',
+    country: "",
+    city: "",
+    street: "",
+    postalCode: "",
+    latitude: "",
+    longitude: "",
   });
 
   useEffect(() => {
@@ -31,28 +34,36 @@ export default function CreateBusinessStep2() {
           setLocationData(savedData.location);
         }
       } catch (error) {
-        console.error('Failed to load form data:', error);
+        console.error("Failed to load form data:", error);
       }
     };
     loadData();
   }, [router, locale]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setLocationData(prev => ({
+    setLocationData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleNext = async () => {
+    // Validate required fields
+    if (!locationData.country || !locationData.city || !locationData.street) {
+      alert("الرجاء إكمال جميع الحقول المطلوبة (الدولة، المدينة، الشارع)");
+      return;
+    }
+
     try {
       // Save location data to IndexedDB
       await businessFormDB.updateStep(2, { location: locationData });
       router.push(`/${locale}/business/create/step3`);
     } catch (error) {
-      console.error('Failed to save location data:', error);
-      alert('حدث خطأ أثناء حفظ البيانات. الرجاء المحاولة مرة أخرى.');
+      console.error("Failed to save location data:", error);
+      alert("حدث خطأ أثناء حفظ البيانات. الرجاء المحاولة مرة أخرى.");
     }
   };
 
@@ -60,7 +71,7 @@ export default function CreateBusinessStep2() {
     <LocaleLayout>
       <div className="min-h-screen bg-white">
         <Header />
-        
+
         <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
           <div className="max-w-4xl mx-auto w-full">
             {/* Header Banner */}
@@ -71,24 +82,53 @@ export default function CreateBusinessStep2() {
             </div>
 
             {/* Main Content Card */}
-            <div className="bg-white shadow-2xl rounded-b-2xl p-8 md:p-12" dir="rtl">
+            <div
+              className="bg-white shadow-2xl rounded-b-2xl p-8 md:p-12"
+              dir="rtl"
+            >
               {/* Top Bar */}
               <div className="flex items-center justify-between mb-8 pb-4 border-b">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    <svg
+                      className="w-6 h-6 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
                     </svg>
                   </div>
                   <div className="w-8 h-5 rounded overflow-hidden">
-                    <Image src="/image/uk-flag.png" alt="English" width={32} height={20} className="object-cover" />
+                    <Image
+                      src="/image/uk-flag.png"
+                      alt="English"
+                      width={32}
+                      height={20}
+                      className="object-cover"
+                    />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-600">سو - إيت بيزنس</span>
                   <div className="w-8 h-8 bg-gradient-to-r from-[#ED614A] to-[#E6446F] rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    <svg
+                      className="w-5 h-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -99,9 +139,12 @@ export default function CreateBusinessStep2() {
                 {/* Form */}
                 <div className="space-y-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-black mb-2">أضف عنوان مطعمك بدقة</h2>
+                    <h2 className="text-2xl font-bold text-black mb-2">
+                      أضف عنوان مطعمك بدقة
+                    </h2>
                     <p className="text-sm text-black leading-relaxed mb-6">
-                      عشان العملاء يقدرون يوصلون لك بسهولة، عطنا التفاصيل الصحيحة لموقعك.
+                      عشان العملاء يقدرون يوصلون لك بسهولة، عطنا التفاصيل
+                      الصحيحة لموقعك.
                     </p>
                   </div>
 

@@ -161,8 +161,23 @@ export default function Dashboard() {
           </Typography>
         </Stack>
 
-        {/* Right side - Language Switcher */}
-        <Box sx={{ display: "flex", alignItems: "center" }}>
+        {/* Right side - Claims Link & Language Switcher */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Button
+            variant="outlined"
+            onClick={() => router.push(`/${locale}/business/claims`)}
+            startIcon={<Iconify icon="solar:document-text-linear" />}
+            sx={{
+              borderColor: "grey.300",
+              color: "text.primary",
+              "&:hover": {
+                borderColor: "primary.main",
+                bgcolor: "rgba(255, 86, 48, 0.08)",
+              },
+            }}
+          >
+            {t("claims.title") || "My Claims"}
+          </Button>
           <Box
             component="button"
             onClick={toggleLocale}

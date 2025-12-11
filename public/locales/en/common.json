@@ -729,5 +729,43 @@
   "brand": {
     "name": "So-Eat Business",
     "tagline": "Manage your business with ease"
+  },
+  "claims": {
+    "title": "My Business Claims",
+    "subtitle": "Track the status of your business claim requests",
+    "backToSearch": "Back to Search",
+    "createClaim": "Create New Claim",
+    "noClaims": "No Claims Yet",
+    "noClaimsDescription": "You haven't submitted any business claim requests yet",
+    "tableBusinessName": "Business Name",
+    "tableStatus": "Status",
+    "tableSubmitted": "Submitted",
+    "tableActions": "Actions",
+    "viewDetails": "View Details",
+    "statusPending": "Pending Review",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "statusUnspecified": "Unknown",
+    "detailTitle": "Claim Request Details",
+    "claimId": "Claim ID",
+    "statusTitle": "Status",
+    "pendingMessage": "Your claim is currently under review. We'll notify you once it's been processed.",
+    "approvedMessage": "Congratulations! Your claim has been approved. You can now manage your business.",
+    "rejectedMessage": "Your claim has been rejected. Please review the reason below and submit a new claim if needed.",
+    "submittedOn": "Submitted On",
+    "reviewedOn": "Reviewed On",
+    "reviewedBy": "Reviewed By",
+    "businessId": "Business ID",
+    "viewBusiness": "View Business Dashboard",
+    "evidence": "Supporting Evidence",
+    "backToClaims": "Back to Claims",
+    "submitNewClaim": "Submit New Claim",
+    "errorTitle": "Error Loading Claim",
+    "errorMessage": "Claim not found"
+  },
+  "admin": {
+    "claimsTitle": "Business Claims Review",
+    "claimsSubtitle": "Review and approve business claim requests",
+    "noClaims": "No claims in this category"
   }
 }
