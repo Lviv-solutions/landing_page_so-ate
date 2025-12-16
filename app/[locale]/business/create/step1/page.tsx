@@ -362,7 +362,7 @@ export default function CreateBusinessStep1() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-full py-3 bg-[#FF5630] text-white rounded-lg font-medium hover:bg-[#E64A2B] transition-colors mt-6"
+                  className="w-full py-3 bg-[#ED614A] text-white rounded-lg font-medium hover:bg-[#DC5139] transition-colors mt-6"
                 >
                   {t("businessForm.submitButton")}
                 </button>

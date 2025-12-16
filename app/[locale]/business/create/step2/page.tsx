@@ -74,7 +74,7 @@ export default function CreateBusinessStep2() {
 
   const handleNext = async () => {
     if (!locationData.country || !locationData.city || !locationData.street) {
-      alert(t("businessForm.locationValidationError") || "الرجاء إكمال جميع الحقول المطلوبة");
+      alert(t("businessForm.locationValidationError"));
       return;
     }
 
@@ -83,7 +83,7 @@ export default function CreateBusinessStep2() {
       router.push(`/${locale}/business/create/step3`);
     } catch (error) {
       console.error("Failed to save location data:", error);
-      alert(t("businessForm.saveError") || "حدث خطأ أثناء حفظ البيانات");
+      alert(t("businessForm.saveError"));
     }
   };
 
@@ -159,7 +159,7 @@ export default function CreateBusinessStep2() {
                   variant="contained"
                   onClick={handleConfirm}
                   sx={{
-                    bgcolor: "#FF5630",
+                    bgcolor: "#ED614A",
                     color: "white",
                     px: 4,
                     py: 1.5,
@@ -167,11 +167,11 @@ export default function CreateBusinessStep2() {
                     textTransform: "none",
                     fontWeight: 600,
                     "&:hover": {
-                      bgcolor: "#E64A2B",
+                      bgcolor: "#DC5139",
                     },
                   }}
                 >
-                  {t("businessForm.confirmLocation") || "تأكيد"}
+                  {t("businessForm.confirmLocation")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -190,7 +190,7 @@ export default function CreateBusinessStep2() {
                     },
                   }}
                 >
-                  {t("businessForm.editLocation") || "تعديل"}
+                  {t("businessForm.editLocation")}
                 </Button>
               </Box>
 
@@ -208,7 +208,7 @@ export default function CreateBusinessStep2() {
                 }}
               >
                 <Typography variant="body2" sx={{ color: "#666", fontSize: "0.875rem" }}>
-                  {t("businessForm.pinLocation") || "قم بتحديد موقعك على الخريطة بدقة"}
+                  {t("businessForm.pinLocation")}
                 </Typography>
               </Box>
             </div>
@@ -238,7 +238,7 @@ export default function CreateBusinessStep2() {
                   textAlign: locale === "ar" ? "right" : "left",
                 }}
               >
-                {t("businessForm.step2Title") || "أضف عنوان مطعمك بدقة"}
+                {t("businessForm.step2Title")}
               </Typography>
               <Typography
                 variant="body2"
@@ -248,7 +248,7 @@ export default function CreateBusinessStep2() {
                   textAlign: locale === "ar" ? "right" : "left",
                 }}
               >
-                {t("businessForm.step2Subtitle") || "عشان العملاء يقدرون يوصلون لك بسهولة، عطنا التفاصيل الصحيحة لموقعك."}
+                {t("businessForm.step2Subtitle")}
               </Typography>
             </Box>
 
@@ -258,7 +258,7 @@ export default function CreateBusinessStep2() {
                 name="country"
                 value={locationData.country}
                 onChange={handleInputChange}
-                placeholder={t("businessForm.countryPlaceholder") || "الدولة / المنطقة"}
+                placeholder={t("businessForm.countryPlaceholder")}
                 fullWidth
                 InputProps={{
                   sx: {
@@ -284,12 +284,12 @@ export default function CreateBusinessStep2() {
                   },
                 }}
               >
-                <MenuItem value="" disabled>{t("businessForm.countryPlaceholder") || "الدولة / المنطقة"}</MenuItem>
-                <MenuItem value="saudi">{t("businessForm.countrySaudi") || "المملكة العربية السعودية"}</MenuItem>
-                <MenuItem value="uae">{t("businessForm.countryUAE") || "الإمارات العربية المتحدة"}</MenuItem>
-                <MenuItem value="kuwait">{t("businessForm.countryKuwait") || "الكويت"}</MenuItem>
-                <MenuItem value="qatar">{t("businessForm.countryQatar") || "قطر"}</MenuItem>
-                <MenuItem value="bahrain">{t("businessForm.countryBahrain") || "البحرين"}</MenuItem>
+                <MenuItem value="" disabled>{t("businessForm.countryPlaceholder")}</MenuItem>
+                <MenuItem value="saudi">{t("businessForm.countrySaudi")}</MenuItem>
+                <MenuItem value="uae">{t("businessForm.countryUAE")}</MenuItem>
+                <MenuItem value="kuwait">{t("businessForm.countryKuwait")}</MenuItem>
+                <MenuItem value="qatar">{t("businessForm.countryQatar")}</MenuItem>
+                <MenuItem value="bahrain">{t("businessForm.countryBahrain")}</MenuItem>
                 <MenuItem value="oman">{t("businessForm.countryOman") || "عمان"}</MenuItem>
               </TextField>
 
@@ -298,7 +298,7 @@ export default function CreateBusinessStep2() {
                 name="city"
                 value={locationData.city}
                 onChange={handleInputChange}
-                placeholder={t("businessForm.cityPlaceholder") || "البلدية"}
+                placeholder={t("businessForm.cityPlaceholder")}
                 fullWidth
                 InputProps={{
                   sx: {
@@ -324,18 +324,18 @@ export default function CreateBusinessStep2() {
                   },
                 }}
               >
-                <MenuItem value="" disabled>{t("businessForm.cityPlaceholder") || "البلدية"}</MenuItem>
-                <MenuItem value="riyadh">{t("businessForm.cityRiyadh") || "الرياض"}</MenuItem>
-                <MenuItem value="jeddah">{t("businessForm.cityJeddah") || "جدة"}</MenuItem>
-                <MenuItem value="dammam">{t("businessForm.cityDammam") || "الدمام"}</MenuItem>
-                <MenuItem value="mecca">{t("businessForm.cityMecca") || "مكة المكرمة"}</MenuItem>
+                <MenuItem value="" disabled>{t("businessForm.cityPlaceholder")}</MenuItem>
+                <MenuItem value="riyadh">{t("businessForm.cityRiyadh")}</MenuItem>
+                <MenuItem value="jeddah">{t("businessForm.cityJeddah")}</MenuItem>
+                <MenuItem value="dammam">{t("businessForm.cityDammam")}</MenuItem>
+                <MenuItem value="mecca">{t("businessForm.cityMecca")}</MenuItem>
               </TextField>
 
               <TextField
                 name="street"
                 value={locationData.street}
                 onChange={handleInputChange}
-                placeholder={t("businessForm.streetLabel") || "عنوان الشارع"}
+                placeholder={t("businessForm.streetLabel")}
                 fullWidth
                 InputProps={{
                   sx: {
@@ -356,7 +356,7 @@ export default function CreateBusinessStep2() {
                 name="postalCode"
                 value={locationData.postalCode}
                 onChange={handleInputChange}
-                placeholder={t("businessForm.postalCodeLabel") || "الرقم البريدي"}
+                placeholder={t("businessForm.postalCodeLabel")}
                 fullWidth
                 InputProps={{
                   sx: {
@@ -379,7 +379,7 @@ export default function CreateBusinessStep2() {
               onClick={handleNext}
               fullWidth
               sx={{
-                bgcolor: "#FF5630",
+                bgcolor: "#ED614A",
                 color: "white",
                 py: 1.5,
                 borderRadius: "8px",
@@ -387,11 +387,11 @@ export default function CreateBusinessStep2() {
                 fontWeight: 600,
                 fontSize: "1rem",
                 "&:hover": {
-                  bgcolor: "#E64A2B",
+                  bgcolor: "#DC5139",
                 },
               }}
             >
-              {t("businessForm.nextButton") || "التالي"}
+              {t("businessForm.nextButton")}
             </Button>
           </Box>
         </div>

@@ -1,13 +1,18 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LocaleLayout from "../../../../components/LocaleLayout";
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
 import Image from "next/image";
+import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import claimRequestService from "../../../../../services/claimRequestService";
 import { getCurrentUserId } from "../../../../../lib/auth";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import MenuItem from "@mui/material/MenuItem";
+import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
 
 interface DaySchedule {
   isOpen: boolean;
@@ -21,10 +26,12 @@ interface WeekSchedule {
 
 export default function CreateBusinessStep3() {
   const router = useRouter();
-  const locale =
+  const { t } = useTranslation();
+  const [locale, setLocale] = useState(
     typeof window !== "undefined"
       ? window.location.pathname.split("/")[1]
-      : "ar";
+      : "ar"
+  );
 
   const [schedule, setSchedule] = useState<WeekSchedule>({
     saturday: { isOpen: true, from: "09:00", to: "23:00" },
@@ -107,467 +114,318 @@ export default function CreateBusinessStep3() {
         alwaysOpen: alwaysOpen,
       });
 
-      // Get all form data from IndexedDB
-      const savedData = await businessFormDB.getFormData();
-
-      if (!savedData) {
-        setError("لم يتم العثور على بيانات النموذج. الرجاء البدء من جديد.");
-        setLoading(false);
-        return;
-      }
-
-      // Validate required fields
-      if (!savedData.arName || !savedData.phoneNumber) {
-        setError("الرجاء إكمال جميع الحقول المطلوبة");
-        setLoading(false);
-        return;
-      }
-
-      // Prepare keywords from description
-      const keywords = savedData.arDescription
-        ? savedData.arDescription
-            .split(/[\s,،]+/)
-            .filter((word) => word.length > 2)
-            .slice(0, 10)
-        : [];
-
-      // Prepare working hours from schedule
-      const workingHours: { [key: string]: string } = {};
-      if (schedule) {
-        Object.entries(schedule).forEach(([day, daySchedule]) => {
-          if (daySchedule.isOpen) {
-            workingHours[day] = `${daySchedule.from} - ${daySchedule.to}`;
-          }
-        });
-      }
-
-      // Prepare business data for claim request (using snake_case for backend)
-      const businessData = {
-        ar_name: savedData.arName,
-        en_name: savedData.enName || savedData.arName,
-        ar_description: savedData.arDescription || "",
-        en_description: savedData.arDescription || "",
-        address: savedData.location
-          ? `${savedData.location.street}, ${savedData.location.city}, ${savedData.location.country}`
-          : "",
-        phone_number: savedData.phoneNumber,
-        email: savedData.email || "",
-        category_id: parseInt(savedData.categoryId) || 1,
-        working_hours: workingHours,
-        key_words: {
-          keywords: keywords,
-        },
-      };
-
-      // Prepare evidence data
-      const evidenceJson = {
-        ownershipProof: "Form submission",
-        phoneNumber: savedData.phoneNumber,
-        submittedAt: new Date().toISOString(),
-        location: savedData.location || {},
-        schedule: schedule || {},
-        alwaysOpen: alwaysOpen,
-      };
-
-      // Submit claim request
-      const response = await claimRequestService.createClaimRequest({
-        requesterId: getCurrentUserId(),
-        businessData: businessData,
-        evidenceJson: evidenceJson,
-      });
-
-      const claimRequestId = response.claimRequestId;
-
-      // Clear IndexedDB after successful submission
-      await businessFormDB.clearFormData();
-
-      // Redirect to claim detail page
-      router.push(`/${locale}/business/claims/${claimRequestId}`);
-    } catch (err: any) {
-      console.error("Error submitting claim request:", err);
-      setError(
-        `حدث خطأ أثناء إرسال طلب المطالبة: ${err.message || "خطأ غير معروف"}`
-      );
+      // Navigate to step 4
+      router.push(`/${locale}/business/create/step4`);
+    } catch (error) {
+      console.error("Failed to save schedule data:", error);
+      setError(t("businessForm.saveError") || "حدث خطأ أثناء حفظ البيانات");
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const newLocale = window.location.pathname.split("/")[1];
+      if (newLocale !== locale) {
+        setLocale(newLocale);
+      }
+    };
+
+    window.addEventListener("popstate", handleRouteChange);
+    handleRouteChange();
+
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, [router, locale]);
+
   return (
-    <LocaleLayout>
-      <div className="min-h-screen bg-white">
-        <Header />
+    <div
+      className="min-h-screen bg-white"
+      dir={locale === "ar" ? "rtl" : "ltr"}
+    >
+      <Navigation locale={locale} />
 
-        <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="max-w-4xl mx-auto w-full">
-            {/* Header Banner - Removed as per image */}
+      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+        <Box
+          sx={{
+            width: "1152px",
+            height: "518px",
+            marginTop: "60px",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "24px",
+            mx: "auto",
+            flexDirection: locale === "ar" ? "row-reverse" : "row",
+          }}
+        >
+          {/* Image Section */}
+          <Box
+            sx={{
+              width: "450px",
+              height: "409px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              src="/assets/admin-console/waiter.png"
+              alt="Restaurant staff"
+              width={450}
+              height={409}
+              style={{ objectFit: "contain" }}
+            />
+          </Box>
 
-            {/* Main Content Card */}
-            <div
-              className="bg-white shadow-2xl rounded-2xl p-8 md:p-12"
-              dir="rtl"
+          {/* Form Section */}
+          <Box
+            sx={{
+              width: "617px",
+              height: "518px",
+              borderRadius: "16px",
+              border: "1px solid #E0E0E0",
+              padding: "24px",
+              bgcolor: "white",
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
+            }}
+          >
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 700,
+                  color: "#1A1A1A",
+                  mb: 1,
+                  textAlign: locale === "ar" ? "right" : "left",
+                }}
+              >
+                {t("businessForm.step3Title") || "حدد أوقات عمل مطعمك"}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#666",
+                  lineHeight: 1.6,
+                  textAlign: locale === "ar" ? "right" : "left",
+                }}
+              >
+                {t("businessForm.step3Subtitle") || "حل عملائك يعرفون متى تفتح ومتى تكون مشغول او مقفل."}
+              </Typography>
+            </Box>
+
+            {/* Days Tabs */}
+            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+              {Object.keys(schedule).map((day) => (
+                <Button
+                  key={day}
+                  onClick={() => handleDayToggle(day)}
+                  sx={{
+                    px: 2,
+                    py: 1,
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    bgcolor: schedule[day].isOpen ? "#ED614A" : "#E0E0E0",
+                    color: schedule[day].isOpen ? "white" : "#666",
+                    "&:hover": {
+                      bgcolor: schedule[day].isOpen ? "#DC5139" : "#D0D0D0",
+                    },
+                  }}
+                >
+                  {dayNames[day]}
+                </Button>
+              ))}
+            </Box>
+
+            {/* Always Open Toggle */}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                p: 2,
+                bgcolor: "#F5F5F5",
+                borderRadius: "8px",
+              }}
             >
-              {/* Top Bar */}
-              <div className="flex items-center justify-between mb-8 pb-4 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-6 h-6 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="w-8 h-5 rounded overflow-hidden">
-                    <Image
-                      src="/image/uk-flag.png"
-                      alt="English"
-                      width={32}
-                      height={20}
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-black">سو - إيت بيزنس</span>
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#ED614A] to-[#E6446F] rounded-lg flex items-center justify-center">
-                    <svg
-                      className="w-5 h-5 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <Typography sx={{ fontWeight: 500, color: "#1A1A1A" }}>
+                {t("businessForm.workingDay") || "يوم عمل"}
+              </Typography>
+              <Switch
+                checked={alwaysOpen}
+                onChange={(e) => setAlwaysOpen(e.target.checked)}
+                sx={{
+                  "& .MuiSwitch-switchBase.Mui-checked": {
+                    color: "#ED614A",
+                  },
+                  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+                    backgroundColor: "#ED614A",
+                  },
+                }}
+              />
+            </Box>
 
-              {/* Form Content */}
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Left Side - Illustration */}
-                <div className="flex items-center justify-center">
-                  <div className="relative w-full max-w-sm">
-                    {/* Illustration */}
-                    <svg viewBox="0 0 300 300" className="w-full h-auto">
-                      {/* Background elements */}
-                      <circle
-                        cx="80"
-                        cy="80"
-                        r="15"
-                        fill="#FED7AA"
-                        opacity="0.6"
-                      />
-                      <circle
-                        cx="220"
-                        cy="100"
-                        r="15"
-                        fill="#FED7AA"
-                        opacity="0.6"
-                      />
-
-                      {/* Man figure */}
-                      <g transform="translate(100, 120)">
-                        {/* Head */}
-                        <circle cx="0" cy="0" r="25" fill="#F3E8D7" />
-                        {/* Beard */}
-                        <path
-                          d="M-15 5 Q-15 25, 0 30 Q15 25, 15 5"
-                          fill="#8B4513"
-                        />
-                        {/* Body */}
-                        <rect
-                          x="-30"
-                          y="30"
-                          width="60"
-                          height="80"
-                          rx="10"
-                          fill="#DC2626"
-                        />
-                        {/* Arms */}
-                        <rect
-                          x="-45"
-                          y="40"
-                          width="15"
-                          height="50"
-                          rx="7"
-                          fill="#DC2626"
-                        />
-                        <rect
-                          x="30"
-                          y="40"
-                          width="15"
-                          height="50"
-                          rx="7"
-                          fill="#DC2626"
-                        />
-                        {/* Legs */}
-                        <rect
-                          x="-25"
-                          y="110"
-                          width="20"
-                          height="50"
-                          rx="10"
-                          fill="#1F2937"
-                        />
-                        <rect
-                          x="5"
-                          y="110"
-                          width="20"
-                          height="50"
-                          rx="10"
-                          fill="#1F2937"
-                        />
-                      </g>
-
-                      {/* Woman figure */}
-                      <g transform="translate(200, 120)">
-                        {/* Head with hijab */}
-                        <ellipse cx="0" cy="0" rx="30" ry="35" fill="#F3E8D7" />
-                        <path
-                          d="M-30 -10 Q-30 -40, 0 -40 Q30 -40, 30 -10 L30 20 Q30 30, 0 30 Q-30 30, -30 20 Z"
-                          fill="#1F2937"
-                        />
-                        {/* Face */}
-                        <circle cx="0" cy="5" r="20" fill="#F3E8D7" />
-                        {/* Body */}
-                        <path
-                          d="M-35 40 L-35 120 Q-35 130, -25 130 L25 130 Q35 130, 35 120 L35 40 Z"
-                          fill="#059669"
-                        />
-                        {/* Arms */}
-                        <rect
-                          x="-50"
-                          y="50"
-                          width="15"
-                          height="50"
-                          rx="7"
-                          fill="#059669"
-                        />
-                        <rect
-                          x="35"
-                          y="50"
-                          width="15"
-                          height="50"
-                          rx="7"
-                          fill="#059669"
-                        />
-                      </g>
-
-                      {/* Wine bottle and glass */}
-                      <g transform="translate(150, 80)">
-                        <rect
-                          x="0"
-                          y="0"
-                          width="8"
-                          height="30"
-                          rx="1"
-                          fill="#7C2D12"
-                        />
-                        <rect
-                          x="-2"
-                          y="-5"
-                          width="12"
-                          height="5"
-                          rx="1"
-                          fill="#7C2D12"
-                        />
-                        <ellipse
-                          cx="20"
-                          cy="15"
-                          rx="8"
-                          ry="12"
-                          fill="#DC2626"
-                          opacity="0.3"
-                        />
-                        <path
-                          d="M12 20 L12 25 L28 25 L28 20"
-                          fill="none"
-                          stroke="#DC2626"
-                          strokeWidth="2"
-                        />
-                      </g>
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Right Side - Form */}
-                <div className="space-y-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-black mb-2">
-                      حدد أوقات عمل مطعمك
-                    </h2>
-                    <p className="text-sm text-black leading-relaxed mb-6">
-                      حل عملائك يعرفون متى تفتح ومتى تكون مشغول او مقفل.
-                    </p>
-                  </div>
-
-                  {/* Days Tabs */}
-                  <div className="flex gap-2 mb-4 overflow-x-auto pb-2">
-                    {Object.keys(schedule).map((day) => (
-                      <button
-                        key={day}
-                        onClick={() => handleDayToggle(day)}
-                        className={`px-4 py-2 rounded-lg font-bold whitespace-nowrap transition-all ${
-                          schedule[day].isOpen
-                            ? "bg-gradient-to-r from-[#ED614A] to-[#E6446F] text-white"
-                            : "bg-gray-200 text-black"
-                        }`}
+            {/* Time Selection */}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1, overflowY: "auto" }}>
+              {Object.entries(schedule)
+                .filter(([_, day]) => day.isOpen)
+                .map(([dayKey, day]) => (
+                  <Box key={dayKey} sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Typography sx={{ fontSize: "0.875rem", fontWeight: 500, minWidth: "60px", textAlign: locale === "ar" ? "right" : "left" }}>
+                      {dayNames[dayKey]}
+                    </Typography>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1 }}>
+                      <Typography sx={{ fontSize: "0.875rem", color: "#666" }}>
+                        {locale === "ar" ? "من" : "From"}
+                      </Typography>
+                      <TextField
+                        select
+                        value={day.from}
+                        onChange={(e) => handleTimeChange(dayKey, "from", e.target.value)}
+                        size="small"
+                        SelectProps={{
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 200,
+                              },
+                            },
+                          },
+                        }}
+                        sx={{
+                          flex: 1,
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px",
+                          },
+                        }}
                       >
-                        {dayNames[day]}
-                      </button>
-                    ))}
-                  </div>
+                        {Array.from({ length: 24 }, (_, i) => {
+                          const hour = i.toString().padStart(2, "0");
+                          return (
+                            <MenuItem key={hour} value={`${hour}:00`}>
+                              {hour}:00
+                            </MenuItem>
+                          );
+                        })}
+                      </TextField>
+                      <Typography sx={{ fontSize: "0.875rem", color: "#666" }}>
+                        {locale === "ar" ? "إلى" : "To"}
+                      </Typography>
+                      <TextField
+                        select
+                        value={day.to}
+                        onChange={(e) => handleTimeChange(dayKey, "to", e.target.value)}
+                        size="small"
+                        SelectProps={{
+                          MenuProps: {
+                            PaperProps: {
+                              sx: {
+                                maxHeight: 200,
+                              },
+                            },
+                          },
+                        }}
+                        sx={{
+                          flex: 1,
+                          "& .MuiOutlinedInput-root": {
+                            borderRadius: "8px",
+                          },
+                        }}
+                      >
+                        {Array.from({ length: 24 }, (_, i) => {
+                          const hour = i.toString().padStart(2, "0");
+                          return (
+                            <MenuItem key={hour} value={`${hour}:00`}>
+                              {hour}:00
+                            </MenuItem>
+                          );
+                        })}
+                      </TextField>
+                    </Box>
+                  </Box>
+                ))}
+            </Box>
 
-                  {/* Always Open Toggle */}
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4">
-                    <span className="text-black font-medium">يوم عمل</span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={alwaysOpen}
-                        onChange={(e) => setAlwaysOpen(e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#ED614A] peer-checked:to-[#E6446F]"></div>
-                    </label>
-                  </div>
+            {/* Add Break Time Button */}
+            <Button
+              variant="outlined"
+              sx={{
+                borderStyle: "dashed",
+                borderColor: "#E0E0E0",
+                color: "#ED614A",
+                textTransform: "none",
+                fontWeight: 600,
+                py: 1.5,
+                borderRadius: "8px",
+                "&:hover": {
+                  borderColor: "#ED614A",
+                  bgcolor: "rgba(237, 97, 74, 0.04)",
+                },
+              }}
+            >
+              + {t("businessForm.addBreak") || "إضافة فترة"}
+            </Button>
 
-                  {/* Time Selection */}
-                  <div className="space-y-3">
-                    {Object.entries(schedule)
-                      .filter(([_, day]) => day.isOpen)
-                      .map(([dayKey, day]) => (
-                        <div key={dayKey} className="flex items-center gap-3">
-                          <span className="text-sm font-medium text-black w-20">
-                            {dayNames[dayKey]}
-                          </span>
-                          <div className="flex-1 flex items-center gap-2">
-                            <select
-                              value={day.to}
-                              onChange={(e) =>
-                                handleTimeChange(dayKey, "to", e.target.value)
-                              }
-                              className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-center bg-white"
-                            >
-                              {Array.from({ length: 24 }, (_, i) => {
-                                const hour = i.toString().padStart(2, "0");
-                                return (
-                                  <option key={hour} value={`${hour}:00`}>
-                                    {hour}:00
-                                  </option>
-                                );
-                              })}
-                            </select>
-                            <span className="text-black">إلى</span>
-                            <select
-                              value={day.from}
-                              onChange={(e) =>
-                                handleTimeChange(dayKey, "from", e.target.value)
-                              }
-                              className="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-center bg-white"
-                            >
-                              {Array.from({ length: 24 }, (_, i) => {
-                                const hour = i.toString().padStart(2, "0");
-                                return (
-                                  <option key={hour} value={`${hour}:00`}>
-                                    {hour}:00
-                                  </option>
-                                );
-                              })}
-                            </select>
-                            <span className="text-black">من</span>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
+            {/* Error Message */}
+            {error && (
+              <Box sx={{ p: 2, bgcolor: "#FEE2E2", borderRadius: "8px", border: "1px solid #FCA5A5" }}>
+                <Typography sx={{ color: "#DC2626", fontSize: "0.875rem" }}>{error}</Typography>
+              </Box>
+            )}
 
-                  {/* Add Break Time */}
-                  <button
-                    type="button"
-                    className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-[#ED614A] font-medium hover:border-[#ED614A] transition-all flex items-center justify-center gap-2"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
-                    إضافة فترة
-                  </button>
-
-                  {/* Error Message */}
-                  {error && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
-                      <p className="text-red-600 text-sm">{error}</p>
-                    </div>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={handleNext}
-                    disabled={loading}
-                    className={`w-full py-3 rounded-lg font-bold transition-all ${
-                      loading
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-gradient-to-r from-[#ED614A] to-[#E6446F] text-white hover:shadow-lg"
-                    }`}
-                  >
-                    {loading ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <svg
-                          className="animate-spin h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        جاري الإرسال...
-                      </div>
-                    ) : (
-                      "إرسال الطلب"
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <Footer />
-      </div>
-    </LocaleLayout>
+            {/* Submit Button */}
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              disabled={loading}
+              fullWidth
+              sx={{
+                bgcolor: "#ED614A",
+                color: "white",
+                py: 1.5,
+                borderRadius: "8px",
+                textTransform: "none",
+                fontWeight: 600,
+                fontSize: "1rem",
+                "&:hover": {
+                  bgcolor: "#DC5139",
+                },
+                "&:disabled": {
+                  bgcolor: "#E0E0E0",
+                  color: "#999",
+                },
+              }}
+            >
+              {loading ? (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      border: "2px solid",
+                      borderColor: "white transparent white transparent",
+                      borderRadius: "50%",
+                      animation: "spin 1s linear infinite",
+                      "@keyframes spin": {
+                        "0%": { transform: "rotate(0deg)" },
+                        "100%": { transform: "rotate(360deg)" },
+                      },
+                    }}
+                  />
+                  {t("businessForm.loading") || "جاري التحميل..."}
+                </Box>
+              ) : (
+                t("businessForm.nextButton") || "التالي"
+              )}
+            </Button>
+          </Box>
+        </Box>
+      </main>
+    </div>
   );
 }
