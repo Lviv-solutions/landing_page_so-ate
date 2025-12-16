@@ -1,7 +1,7 @@
 import type { SettingsState } from './types';
 
-import { CONFIG } from 'src/global-config';
-import { themeConfig } from 'src/theme/theme-config';
+import { CONFIG } from '../config/global-config';
+import { themeConfig } from '../config/theme-config';
 
 // ----------------------------------------------------------------------
 

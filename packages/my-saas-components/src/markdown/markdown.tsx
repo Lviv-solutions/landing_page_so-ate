@@ -13,7 +13,7 @@ import { mergeClasses, isExternalLink } from 'minimal-shared/utils';
 
 import Link from '@mui/material/Link';
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from '../routes/components';
 
 import { Image } from '../image';
 import { MarkdownRoot } from './styles';

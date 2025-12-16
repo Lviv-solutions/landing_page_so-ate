@@ -8,7 +8,7 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
 
-import { fData } from 'src/utils/format-number';
+import { fData } from '../../utils/format-number';
 
 import { Iconify } from '../../iconify';
 import { uploadClasses } from '../classes';

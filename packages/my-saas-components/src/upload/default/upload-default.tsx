@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { UploadIllustration } from 'src/assets/illustrations';
+import { UploadIllustration } from '../../illustrations';
 
 import { Iconify } from '../../iconify';
 import { uploadClasses } from '../classes';
