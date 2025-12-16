@@ -1,27 +1,52 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LocaleLayout from "../../../../components/LocaleLayout";
-import Header from "../../../../components/Header";
-import Footer from "../../../../components/Footer";
-import Image from "next/image";
+import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 
 export default function CreateBusinessStep2() {
   const router = useRouter();
-  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'ar';
-  
+  const { t } = useTranslation();
+  const [locale, setLocale] = useState(
+    typeof window !== "undefined"
+      ? window.location.pathname.split("/")[1]
+      : "ar"
+  );
+
   const [locationData, setLocationData] = useState({
-    country: '',
-    city: '',
-    street: '',
-    postalCode: '',
-    latitude: '',
-    longitude: '',
+    country: "",
+    city: "",
+    street: "",
+    postalCode: "",
+    latitude: "24.7136",
+    longitude: "46.6753",
   });
 
+  const [markerPosition, setMarkerPosition] = useState({ lat: 24.7136, lng: 46.6753 });
+
   useEffect(() => {
-    // Check if previous step data exists and load location data
+    const handleRouteChange = () => {
+      const newLocale = window.location.pathname.split("/")[1];
+      if (newLocale !== locale) {
+        setLocale(newLocale);
+      }
+    };
+
+    window.addEventListener("popstate", handleRouteChange);
+    handleRouteChange();
+
+    return () => {
+      window.removeEventListener("popstate", handleRouteChange);
+    };
+  }, [router, locale]);
+
+  useEffect(() => {
     const loadData = async () => {
       try {
         const savedData = await businessFormDB.getFormData();
@@ -31,143 +56,346 @@ export default function CreateBusinessStep2() {
           setLocationData(savedData.location);
         }
       } catch (error) {
-        console.error('Failed to load form data:', error);
+        console.error("Failed to load form data:", error);
       }
     };
     loadData();
   }, [router, locale]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setLocationData(prev => ({
+    setLocationData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleNext = async () => {
+    if (!locationData.country || !locationData.city || !locationData.street) {
+      alert(t("businessForm.locationValidationError"));
+      return;
+    }
+
     try {
-      // Save location data to IndexedDB
       await businessFormDB.updateStep(2, { location: locationData });
       router.push(`/${locale}/business/create/step3`);
     } catch (error) {
-      console.error('Failed to save location data:', error);
-      alert('حدث خطأ أثناء حفظ البيانات. الرجاء المحاولة مرة أخرى.');
+      console.error("Failed to save location data:", error);
+      alert(t("businessForm.saveError"));
     }
   };
 
+  const handleConfirm = () => {
+    console.log("Location confirmed:", markerPosition);
+  };
+
+  const handleEdit = () => {
+    console.log("Edit location");
+  };
+
   return (
-    <LocaleLayout>
-      <div className="min-h-screen bg-white">
-        <Header />
-        
-        <section className="relative min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="max-w-4xl mx-auto w-full">
-            {/* Header Banner */}
-            <div className="bg-gradient-to-r from-[#ED614A] to-[#E6446F] rounded-t-2xl py-12 text-center">
-              <h1 className="text-4xl md:text-5xl font-bold text-white">
-                add location
-              </h1>
-            </div>
+    <div
+      className="min-h-screen bg-white"
+      dir={locale === "ar" ? "rtl" : "ltr"}
+    >
+      <Navigation locale={locale} />
 
-            {/* Main Content Card */}
-            <div className="bg-white shadow-2xl rounded-b-2xl p-8 md:p-12" dir="rtl">
-              {/* Top Bar */}
-              <div className="flex items-center justify-between mb-8 pb-4 border-b">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <div className="w-8 h-5 rounded overflow-hidden">
-                    <Image src="/image/uk-flag.png" alt="English" width={32} height={20} className="object-cover" />
-                  </div>
+      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+        <div className="flex gap-6" style={{ flexDirection: locale === "ar" ? "row-reverse" : "row", marginTop: "60px" }}>
+          {/* Map Section */}
+          <Box
+            sx={{
+              width: "690px",
+              height: "556px",
+              borderRadius: "16px",
+              overflow: "hidden",
+              position: "relative",
+              bgcolor: "#F5F5F5",
+              border: "1px solid #E0E0E0",
+            }}
+          >
+            {/* Map Placeholder */}
+            <div className="w-full h-full relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-green-50 to-yellow-50">
+                {/* Grid pattern to simulate map */}
+                <svg className="w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="gray" strokeWidth="0.5"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+                </svg>
+                
+                {/* Map marker */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#FF5630"/>
+                    <circle cx="12" cy="9" r="2.5" fill="white"/>
+                  </svg>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600">سو - إيت بيزنس</span>
-                  <div className="w-8 h-8 bg-gradient-to-r from-[#ED614A] to-[#E6446F] rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                </div>
+
+                {/* Route lines */}
+                <svg className="absolute inset-0 w-full h-full" style={{ pointerEvents: "none" }}>
+                  <path d="M 100 150 Q 200 200 350 280" stroke="#4A90E2" strokeWidth="3" fill="none" opacity="0.6"/>
+                  <path d="M 450 100 Q 400 250 350 280" stroke="#4A90E2" strokeWidth="3" fill="none" opacity="0.6"/>
+                </svg>
               </div>
 
-              {/* Form Content */}
-              <div className="max-w-2xl mx-auto">
-                {/* Form */}
-                <div className="space-y-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-black mb-2">أضف عنوان مطعمك بدقة</h2>
-                    <p className="text-sm text-black leading-relaxed mb-6">
-                      عشان العملاء يقدرون يوصلون لك بسهولة، عطنا التفاصيل الصحيحة لموقعك.
-                    </p>
-                  </div>
+              {/* Map Controls */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 16,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  display: "flex",
+                  gap: 2,
+                }}
+              >
+                <Button
+                  variant="contained"
+                  onClick={handleConfirm}
+                  sx={{
+                    bgcolor: "#ED614A",
+                    color: "white",
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    "&:hover": {
+                      bgcolor: "#DC5139",
+                    },
+                  }}
+                >
+                  {t("businessForm.confirmLocation")}
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleEdit}
+                  sx={{
+                    borderColor: "#E0E0E0",
+                    color: "#666",
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: "8px",
+                    textTransform: "none",
+                    fontWeight: 600,
+                    "&:hover": {
+                      borderColor: "#666",
+                      bgcolor: "rgba(0,0,0,0.04)",
+                    },
+                  }}
+                >
+                  {t("businessForm.editLocation")}
+                </Button>
+              </Box>
 
-                  <div className="space-y-4">
-                    <select
-                      name="country"
-                      value={locationData.country}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right bg-white text-black"
-                    >
-                      <option value="">الدولة / المنطقة</option>
-                      <option value="saudi">المملكة العربية السعودية</option>
-                      <option value="uae">الإمارات العربية المتحدة</option>
-                      <option value="kuwait">الكويت</option>
-                      <option value="qatar">قطر</option>
-                      <option value="bahrain">البحرين</option>
-                      <option value="oman">عمان</option>
-                    </select>
-
-                    <select
-                      name="city"
-                      value={locationData.city}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right bg-white text-black"
-                    >
-                      <option value="">البلدية</option>
-                      <option value="riyadh">الرياض</option>
-                      <option value="jeddah">جدة</option>
-                      <option value="dammam">الدمام</option>
-                      <option value="mecca">مكة المكرمة</option>
-                    </select>
-
-                    <input
-                      type="text"
-                      name="street"
-                      value={locationData.street}
-                      onChange={handleInputChange}
-                      placeholder="عنوان الشارع"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right text-black"
-                    />
-
-                    <input
-                      type="text"
-                      name="postalCode"
-                      value={locationData.postalCode}
-                      onChange={handleInputChange}
-                      placeholder="الرقم البريدي"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-[#ED614A] focus:outline-none text-right text-black"
-                    />
-
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="w-full py-3 rounded-lg font-bold transition-all bg-gradient-to-r from-[#ED614A] to-[#E6446F] text-white hover:shadow-lg"
-                    >
-                      التالي
-                    </button>
-                  </div>
-                </div>
-              </div>
+              {/* Map Info */}
+              <Box
+                sx={{
+                  position: "absolute",
+                  top: 16,
+                  right: 16,
+                  bgcolor: "white",
+                  px: 2,
+                  py: 1,
+                  borderRadius: "8px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                }}
+              >
+                <Typography variant="body2" sx={{ color: "#666", fontSize: "0.875rem" }}>
+                  {t("businessForm.pinLocation")}
+                </Typography>
+              </Box>
             </div>
-          </div>
-        </section>
+          </Box>
 
-        <Footer />
-      </div>
-    </LocaleLayout>
+          {/* Form Section */}
+          <Box
+            sx={{
+              width: "419px",
+              height: "556px",
+              borderRadius: "16px",
+              border: "1px solid #E0E0E0",
+              padding: "24px",
+              bgcolor: "white",
+              display: "flex",
+              flexDirection: "column",
+              gap: "24px",
+            }}
+          >
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 700,
+                  color: "#1A1A1A",
+                  mb: 1,
+                  textAlign: locale === "ar" ? "right" : "left",
+                }}
+              >
+                {t("businessForm.step2Title")}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "#666",
+                  lineHeight: 1.6,
+                  textAlign: locale === "ar" ? "right" : "left",
+                }}
+              >
+                {t("businessForm.step2Subtitle")}
+              </Typography>
+            </Box>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
+              <TextField
+                select
+                name="country"
+                value={locationData.country}
+                onChange={handleInputChange}
+                placeholder={t("businessForm.countryPlaceholder")}
+                fullWidth
+                InputProps={{
+                  sx: {
+                    borderRadius: "8px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#E0E0E0",
+                    },
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                }}
+                SelectProps={{
+                  displayEmpty: true,
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    textAlign: locale === "ar" ? "right" : "left",
+                    color: "#000",
+                  },
+                  "& .MuiSelect-select": {
+                    color: locationData.country ? "#000" : "#999",
+                  },
+                }}
+              >
+                <MenuItem value="" disabled>{t("businessForm.countryPlaceholder")}</MenuItem>
+                <MenuItem value="saudi">{t("businessForm.countrySaudi")}</MenuItem>
+                <MenuItem value="uae">{t("businessForm.countryUAE")}</MenuItem>
+                <MenuItem value="kuwait">{t("businessForm.countryKuwait")}</MenuItem>
+                <MenuItem value="qatar">{t("businessForm.countryQatar")}</MenuItem>
+                <MenuItem value="bahrain">{t("businessForm.countryBahrain")}</MenuItem>
+                <MenuItem value="oman">{t("businessForm.countryOman") || "عمان"}</MenuItem>
+              </TextField>
+
+              <TextField
+                select
+                name="city"
+                value={locationData.city}
+                onChange={handleInputChange}
+                placeholder={t("businessForm.cityPlaceholder")}
+                fullWidth
+                InputProps={{
+                  sx: {
+                    borderRadius: "8px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#E0E0E0",
+                    },
+                  },
+                }}
+                InputLabelProps={{
+                  shrink: false,
+                }}
+                SelectProps={{
+                  displayEmpty: true,
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    textAlign: locale === "ar" ? "right" : "left",
+                    color: "#000",
+                  },
+                  "& .MuiSelect-select": {
+                    color: locationData.city ? "#000" : "#999",
+                  },
+                }}
+              >
+                <MenuItem value="" disabled>{t("businessForm.cityPlaceholder")}</MenuItem>
+                <MenuItem value="riyadh">{t("businessForm.cityRiyadh")}</MenuItem>
+                <MenuItem value="jeddah">{t("businessForm.cityJeddah")}</MenuItem>
+                <MenuItem value="dammam">{t("businessForm.cityDammam")}</MenuItem>
+                <MenuItem value="mecca">{t("businessForm.cityMecca")}</MenuItem>
+              </TextField>
+
+              <TextField
+                name="street"
+                value={locationData.street}
+                onChange={handleInputChange}
+                placeholder={t("businessForm.streetLabel")}
+                fullWidth
+                InputProps={{
+                  sx: {
+                    borderRadius: "8px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#E0E0E0",
+                    },
+                  },
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    textAlign: locale === "ar" ? "right" : "left",
+                  },
+                }}
+              />
+
+              <TextField
+                name="postalCode"
+                value={locationData.postalCode}
+                onChange={handleInputChange}
+                placeholder={t("businessForm.postalCodeLabel")}
+                fullWidth
+                InputProps={{
+                  sx: {
+                    borderRadius: "8px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "#E0E0E0",
+                    },
+                  },
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    textAlign: locale === "ar" ? "right" : "left",
+                  },
+                }}
+              />
+            </Box>
+
+            <Button
+              variant="contained"
+              onClick={handleNext}
+              fullWidth
+              sx={{
+                bgcolor: "#ED614A",
+                color: "white",
+                py: 1.5,
+                borderRadius: "8px",
+                textTransform: "none",
+                fontWeight: 600,
+                fontSize: "1rem",
+                "&:hover": {
+                  bgcolor: "#DC5139",
+                },
+              }}
+            >
+              {t("businessForm.nextButton")}
+            </Button>
+          </Box>
+        </div>
+      </main>
+    </div>
   );
 }

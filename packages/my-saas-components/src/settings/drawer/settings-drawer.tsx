@@ -14,8 +14,8 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { useColorScheme } from '@mui/material/styles';
 
-import { themeConfig } from 'src/theme/theme-config';
-import { primaryColorPresets } from 'src/theme/with-settings';
+import { themeConfig } from '../../config/theme-config';
+import { primaryColorPresets } from '../../config/with-settings';
 
 import { Label } from '../../label';
 import { settingIcons } from './icons';

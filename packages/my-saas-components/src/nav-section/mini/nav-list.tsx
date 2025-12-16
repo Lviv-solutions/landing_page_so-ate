@@ -8,7 +8,7 @@ import { isActiveLink, isExternalLink } from 'minimal-shared/utils';
 
 import { useTheme } from '@mui/material/styles';
 
-import { usePathname } from 'src/routes/hooks';
+import { usePathname } from '../../routes/hooks';
 
 import { NavItem } from './nav-item';
 import { navSectionClasses } from '../styles';
