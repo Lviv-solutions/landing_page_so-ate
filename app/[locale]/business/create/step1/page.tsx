@@ -117,13 +117,14 @@ export default function CreateBusinessStep1() {
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-6 pt-32 pb-12">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="grid md:grid-cols-2 gap-0">
-            {/* Preview Side */}
-            <div
-              className={`bg-gray-50 p-8 ${locale === "ar" ? "border-l md:order-2" : "border-r md:order-1"} border-gray-200`}
-            >
-              <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Preview Side */}
+          <div
+            className={`${locale === "ar" ? "md:order-2" : "md:order-1"}`}
+          >
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="bg-gray-50 p-8">
+                <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
                 <div className="text-center mb-6">
                   <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-3"></div>
                   <h3 className="text-lg font-bold text-gray-800">
@@ -207,11 +208,14 @@ export default function CreateBusinessStep1() {
                 </div>
               </div>
             </div>
+          </div>
+          </div>
 
-            {/* Form Side */}
-            <div
-              className={`p-8 ${locale === "ar" ? "md:order-1" : "md:order-2"}`}
-            >
+          {/* Form Side */}
+          <div
+            className={`${locale === "ar" ? "md:order-1" : "md:order-2"}`}
+          >
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <div className="mb-8">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
                   {t("businessForm.step1Title")}
