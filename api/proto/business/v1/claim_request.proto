@@ -36,6 +36,8 @@ message ClaimRequest {
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
   google.protobuf.Timestamp reviewed_at = 9;
+  string ar_name = 10;
+  string en_name = 11;
 }
 
 // Request and Response messages

@@ -21,7 +21,8 @@
       "contact": "تواصل معنا",
       "ClientPage": "سو إيت للعملاء",
       "BusinessPage": "سو إيت للأعمال",
-      "HomePage": "العودة للرئيسية"
+      "HomePage": "العودة للرئيسية",
+      "AdminPanel": "لوحة الإدارة"
     }
   },
   "clientPage": {
@@ -847,6 +848,45 @@
   "admin": {
     "claimsTitle": "مراجعة طلبات الأعمال",
     "claimsSubtitle": "مراجعة والموافقة على طلبات المطالبة بالأعمال",
-    "noClaims": "لا توجد طلبات في هذه الفئة"
+    "noClaims": "لا توجد طلبات في هذه الفئة",
+    "loginTitle": "تسجيل دخول المسؤول",
+    "loginSubtitle": "قم بتسجيل الدخول للوصول إلى لوحة التحكم الإدارية",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "signingIn": "جاري تسجيل الدخول...",
+    "loginFooter": "للموظفين المصرح لهم فقط",
+    "logout": "تسجيل الخروج",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "reviewed": "تمت المراجعة",
+    "claimId": "رقم الطلب",
+    "businessName": "اسم النشاط التجاري",
+    "contactInfo": "معلومات الاتصال",
+    "requesterId": "رقم مقدم الطلب",
+    "status": "الحالة",
+    "submitted": "تاريخ التقديم",
+    "actions": "الإجراءات",
+    "viewEvidence": "الأدلة",
+    "evidenceDetails": "تفاصيل الأدلة",
+    "claimInformation": "معلومات الطلب",
+    "evidenceData": "بيانات الأدلة",
+    "locationInfo": "معلومات الموقع",
+    "city": "المدينة",
+    "country": "الدولة",
+    "street": "الشارع",
+    "postalCode": "الرمز البريدي",
+    "phoneNumber": "رقم الهاتف",
+    "close": "إغلاق",
+    "businessDetails": "تفاصيل النشاط التجاري",
+    "tableCount": "عدد الطاولات",
+    "alwaysOpen": "مفتوح دائماً",
+    "ownershipProof": "إثبات الملكية",
+    "workingHours": "ساعات العمل",
+    "createdAt": "تاريخ الإنشاء",
+    "reviewedAt": "تاريخ المراجعة",
+    "reviewedBy": "تمت المراجعة بواسطة",
+    "latitude": "خط العرض",
+    "longitude": "خط الطول"
   }
 }
