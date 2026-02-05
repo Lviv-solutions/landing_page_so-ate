@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { isAdmin } from "../../lib/auth";
 // import HeaderThreeBackground from "./HeaderThreeBackground";
 import MobileHeader from "./MobileHeader";
 import PromoBanner from "./PromoBanner";
@@ -17,6 +18,7 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
+  const [isAdminUser, setIsAdminUser] = useState(false);
   
   // Extract current locale from pathname - common for both ar and en
   const getLocaleFromPath = () => {
@@ -34,6 +36,10 @@ export default function Header() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    setIsAdminUser(isAdmin());
   }, []);
 
   const navItems = [
@@ -96,6 +102,11 @@ export default function Header() {
   const handleBusinessPageClick = () => {
     const basePath = `/${currentLocale}`;
     router.push(`${basePath}/business`);
+  };
+
+  const handleAdminPanelClick = () => {
+    const basePath = `/${currentLocale}`;
+    router.push(`${basePath}/admin/claims`);
   };
 
   // Show mobile header on small screens

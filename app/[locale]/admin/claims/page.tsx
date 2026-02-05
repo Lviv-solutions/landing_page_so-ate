@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import AdminRoute from "../../../components/AdminRoute";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -29,12 +30,13 @@ import Tab from "@mui/material/Tab";
 
 import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../hooks/useTranslation";
+import { getAdminId, getAdminInfo, logoutAdmin } from "../../../../lib/auth";
 import claimRequestService, {
   ClaimStatus,
   type ClaimRequest,
 } from "../../../../services/claimRequestService";
 
-export default function AdminClaimsReview() {
+function AdminClaimsReviewContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [claims, setClaims] = useState<ClaimRequest[]>([]);
   const [filteredClaims, setFilteredClaims] = useState<ClaimRequest[]>([]);
@@ -49,10 +51,44 @@ export default function AdminClaimsReview() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
   const [adminId, setAdminId] = useState<string>("");
+  const [evidenceDialog, setEvidenceDialog] = useState<{
+    open: boolean;
+    claim: ClaimRequest | null;
+  }>({ open: false, claim: null });
 
   const router = useRouter();
   const { t, locale } = useTranslation();
   const isArabic = locale === "ar";
+  const [adminInfo, setAdminInfo] = useState<{ id: string; email?: string; name?: string } | null>(null);
+
+  // Helper function to parse protobuf Struct data
+  const parseEvidenceJson = (evidenceJson: any): any => {
+    if (!evidenceJson) return {};
+    
+    // If it's already a plain object, return it
+    if (!evidenceJson.fieldsMap) return evidenceJson;
+    
+    // Parse protobuf Struct format
+    const result: any = {};
+    if (Array.isArray(evidenceJson.fieldsMap)) {
+      evidenceJson.fieldsMap.forEach((field: any) => {
+        const key = field[0];
+        const value = field[1];
+        
+        if (value?.structValue?.fieldsMap) {
+          // Nested object
+          result[key] = parseEvidenceJson(value.structValue);
+        } else if (value?.stringValue !== undefined) {
+          result[key] = value.stringValue;
+        } else if (value?.numberValue !== undefined) {
+          result[key] = value.numberValue;
+        } else if (value?.boolValue !== undefined) {
+          result[key] = value.boolValue;
+        }
+      });
+    }
+    return result;
+  };
 
   const toggleLocale = () => {
     const newLocale = locale === "ar" ? "en" : "ar";
@@ -65,9 +101,15 @@ export default function AdminClaimsReview() {
   useEffect(() => {
     const loadClaims = async () => {
       try {
-        const storedAdminId =
-          localStorage.getItem("admin_id") || "admin-user-id";
-        setAdminId(storedAdminId);
+        const loggedInAdminId = getAdminId();
+        if (!loggedInAdminId) {
+          setError("Admin not logged in");
+          setIsLoading(false);
+          router.push(`/${locale}/admin`);
+          return;
+        }
+        setAdminId(loggedInAdminId);
+        setAdminInfo(getAdminInfo());
 
         const response = await claimRequestService.listClaimRequests({
           pageSize: 100,
@@ -84,7 +126,12 @@ export default function AdminClaimsReview() {
     };
 
     loadClaims();
-  }, []);
+  }, [router, locale]);
+
+  const handleLogout = () => {
+    logoutAdmin();
+    router.push(`/${locale}/admin`);
+  };
 
   const filterClaimsByTab = (allClaims: ClaimRequest[], tabIndex: number) => {
     let filtered: ClaimRequest[];
@@ -168,6 +215,14 @@ export default function AdminClaimsReview() {
     setActionDialog({ open: false, type: null });
     setSelectedClaim(null);
     setRejectionReason("");
+  };
+
+  const handleOpenEvidenceDialog = (claim: ClaimRequest) => {
+    setEvidenceDialog({ open: true, claim });
+  };
+
+  const handleCloseEvidenceDialog = () => {
+    setEvidenceDialog({ open: false, claim: null });
   };
 
   const handleApproveClaim = async () => {
@@ -287,51 +342,74 @@ export default function AdminClaimsReview() {
             width={48}
             height={48}
           />
-          <Typography
-            variant="subtitle1"
-            fontWeight="bold"
-            color="text.primary"
-          >
-            {t("brand.name")} - Admin Panel
-          </Typography>
+          <Stack>
+            <Typography
+              variant="subtitle1"
+              fontWeight="bold"
+              color="text.primary"
+            >
+              {t("brand.name")} - Admin Panel
+            </Typography>
+            {adminInfo && (
+              <Typography variant="caption" color="text.secondary">
+                {adminInfo.email || adminInfo.name || adminInfo.id}
+              </Typography>
+            )}
+          </Stack>
         </Stack>
 
-        <Box
-          component="button"
-          onClick={toggleLocale}
-          sx={{
-            border: "none",
-            background: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            padding: "8px 12px",
-            borderRadius: 1,
-            transition: "all 0.2s",
-            "&:hover": {
-              bgcolor: "rgba(0, 0, 0, 0.04)",
-            },
-          }}
-        >
-          <Iconify
-            icon={
-              locale === "ar"
-                ? "twemoji:flag-saudi-arabia"
-                : "twemoji:flag-united-states"
-            }
-            width={20}
-          />
-          <Typography
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Box
+            component="button"
+            onClick={toggleLocale}
             sx={{
-              fontSize: "0.875rem",
-              fontWeight: 500,
-              color: "#6B7280",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              padding: "8px 12px",
+              borderRadius: 1,
+              transition: "all 0.2s",
+              "&:hover": {
+                bgcolor: "rgba(0, 0, 0, 0.04)",
+              },
             }}
           >
-            {locale === "ar" ? "العربية" : "English"}
-          </Typography>
-        </Box>
+            <Iconify
+              icon={
+                locale === "ar"
+                  ? "twemoji:flag-saudi-arabia"
+                  : "twemoji:flag-united-states"
+              }
+              width={20}
+            />
+            <Typography
+              sx={{
+                fontSize: "0.875rem",
+                fontWeight: 500,
+                color: "#6B7280",
+              }}
+            >
+              {locale === "ar" ? "العربية" : "English"}
+            </Typography>
+          </Box>
+
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<Iconify icon="solar:logout-2-bold" />}
+            onClick={handleLogout}
+            sx={{
+              borderRadius: 2,
+              textTransform: "none",
+              fontWeight: 600,
+            }}
+          >
+            {t("admin.logout") || "Logout"}
+          </Button>
+        </Stack>
       </Box>
 
       <Box
@@ -436,11 +514,13 @@ export default function AdminClaimsReview() {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Claim ID</TableCell>
-                        <TableCell>Requester ID</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Submitted</TableCell>
-                        <TableCell align="right">Actions</TableCell>
+                        <TableCell>{t("admin.claimId") || "Claim ID"}</TableCell>
+                        <TableCell>{t("admin.businessName") || "Business Name"}</TableCell>
+                        <TableCell>{t("admin.contactInfo") || "Contact Info"}</TableCell>
+                        <TableCell>{t("admin.requesterId") || "Requester ID"}</TableCell>
+                        <TableCell>{t("admin.status") || "Status"}</TableCell>
+                        <TableCell>{t("admin.submitted") || "Submitted"}</TableCell>
+                        <TableCell align={isArabic ? "left" : "right"}>{t("admin.actions") || "Actions"}</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -460,6 +540,19 @@ export default function AdminClaimsReview() {
                               }}
                             >
                               {claim.id}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" fontWeight="medium">
+                              {claim.enName || claim.arName || "N/A"}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" color="text.secondary">
+                              {claim.evidenceJson?.email ||
+                               claim.evidenceJson?.phoneNumber || 
+                               claim.evidenceJson?.ownershipProof || 
+                               "N/A"}
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -485,12 +578,27 @@ export default function AdminClaimsReview() {
                               {claim.createdAt.toLocaleDateString()}
                             </Typography>
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align={isArabic ? "left" : "right"}>
                             <Stack
                               direction="row"
                               spacing={1}
-                              justifyContent="flex-end"
+                              justifyContent={isArabic ? "flex-start" : "flex-end"}
+                              sx={{ 
+                                flexDirection: isArabic ? "row-reverse" : "row" 
+                              }}
                             >
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                color="info"
+                                startIcon={
+                                  <Iconify icon="solar:document-text-bold" />
+                                }
+                                onClick={() => handleOpenEvidenceDialog(claim)}
+                                sx={{ minWidth: 100 }}
+                              >
+                                {t("admin.viewEvidence") || "Evidence"}
+                              </Button>
                               {claim.status ===
                                 ClaimStatus.CLAIM_STATUS_PENDING && (
                                 <>
@@ -504,8 +612,9 @@ export default function AdminClaimsReview() {
                                     onClick={() =>
                                       handleOpenActionDialog(claim, "approve")
                                     }
+                                    sx={{ minWidth: 100 }}
                                   >
-                                    Approve
+                                    {t("admin.approve") || "Approve"}
                                   </Button>
                                   <Button
                                     size="small"
@@ -517,8 +626,9 @@ export default function AdminClaimsReview() {
                                     onClick={() =>
                                       handleOpenActionDialog(claim, "reject")
                                     }
+                                    sx={{ minWidth: 100 }}
                                   >
-                                    Reject
+                                    {t("admin.reject") || "Reject"}
                                   </Button>
                                 </>
                               )}
@@ -528,7 +638,7 @@ export default function AdminClaimsReview() {
                                   variant="caption"
                                   color="text.secondary"
                                 >
-                                  Reviewed
+                                  {t("admin.reviewed") || "Reviewed"}
                                 </Typography>
                               )}
                             </Stack>
@@ -672,6 +782,305 @@ export default function AdminClaimsReview() {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Evidence Dialog */}
+      <Dialog
+        open={evidenceDialog.open}
+        onClose={handleCloseEvidenceDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Iconify icon="solar:document-text-bold" width={24} />
+            <Typography variant="h6">
+              {t("admin.evidenceDetails") || "Evidence Details"}
+            </Typography>
+          </Stack>
+        </DialogTitle>
+        <DialogContent>
+          {evidenceDialog.claim && (() => {
+            const evidence = parseEvidenceJson(evidenceDialog.claim.evidenceJson);
+            return (
+            <Stack spacing={3}>
+              {/* Claim Info */}
+              <Box
+                sx={{
+                  bgcolor: "#f8f9fa",
+                  p: 2,
+                  borderRadius: 2,
+                  border: "1px solid #e0e0e0",
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                  {t("admin.claimInformation") || "Claim Information"}
+                </Typography>
+                <Stack spacing={1.5}>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {t("admin.claimId") || "Claim ID"}:
+                    </Typography>
+                    <Typography variant="body2" fontWeight="medium" fontFamily="monospace" sx={{ wordBreak: "break-all" }}>
+                      {evidenceDialog.claim.id}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {t("admin.businessName") || "Business Name"}:
+                    </Typography>
+                    <Typography variant="body2" fontWeight="medium">
+                      {evidenceDialog.claim.enName || evidenceDialog.claim.arName || "N/A"}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {t("admin.requesterId") || "Requester ID"}:
+                    </Typography>
+                    <Typography variant="body2" fontWeight="medium" fontFamily="monospace" sx={{ wordBreak: "break-all" }}>
+                      {evidenceDialog.claim.requesterId}
+                    </Typography>
+                  </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {t("admin.createdAt") || "Created At"}:
+                    </Typography>
+                    <Typography variant="body2" fontWeight="medium">
+                      {evidenceDialog.claim.createdAt.toLocaleString(isArabic ? "ar-SA" : "en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: true
+                      })}
+                    </Typography>
+                  </Box>
+                  {evidenceDialog.claim.reviewedAt && (
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" gutterBottom>
+                        {t("admin.reviewedAt") || "Reviewed At"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidenceDialog.claim.reviewedAt.toLocaleString(isArabic ? "ar-SA" : "en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit",
+                          hour12: true
+                        })}
+                      </Typography>
+                    </Box>
+                  )}
+                  {evidenceDialog.claim.reviewedBy && (
+                    <Box>
+                      <Typography variant="body2" color="text.secondary" gutterBottom>
+                        {t("admin.reviewedBy") || "Reviewed By"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium" fontFamily="monospace" sx={{ wordBreak: "break-all" }}>
+                        {evidenceDialog.claim.reviewedBy}
+                      </Typography>
+                    </Box>
+                  )}
+                </Stack>
+              </Box>
+
+              {/* Location Info */}
+              {evidence?.location && (
+                <Box
+                  sx={{
+                    bgcolor: "#fff",
+                    p: 2,
+                    borderRadius: 2,
+                    border: "1px solid #e0e0e0",
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                    <Iconify icon="solar:map-point-bold" width={20} color="primary.main" />
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {t("admin.locationInfo") || "Location Information"}
+                    </Typography>
+                  </Stack>
+                  <Stack spacing={1.5}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.country") || "Country"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.location.country || "N/A"}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.city") || "City"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.location.city || "N/A"}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.street") || "Street"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.location.street || "N/A"}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.postalCode") || "Postal Code"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.location.postalCode || "N/A"}
+                      </Typography>
+                    </Box>
+                    {evidence.location.latitude && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.latitude") || "Latitude"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium" fontFamily="monospace">
+                          {evidence.location.latitude}
+                        </Typography>
+                      </Box>
+                    )}
+                    {evidence.location.longitude && (
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.longitude") || "Longitude"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium" fontFamily="monospace">
+                          {evidence.location.longitude}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Stack>
+                </Box>
+              )}
+
+              {/* Business Details */}
+              <Box
+                sx={{
+                  bgcolor: "#fff",
+                  p: 2,
+                  borderRadius: 2,
+                  border: "1px solid #e0e0e0",
+                }}
+              >
+                <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                  <Iconify icon="solar:shop-bold" width={20} color="primary.main" />
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    {t("admin.businessDetails") || "Business Details"}
+                  </Typography>
+                </Stack>
+                <Stack spacing={1.5}>
+                  {evidence?.phoneNumber && (
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.phoneNumber") || "Phone Number"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.phoneNumber}
+                      </Typography>
+                    </Box>
+                  )}
+                  {evidence?.tableCount && (
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.tableCount") || "Table Count"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.tableCount}
+                      </Typography>
+                    </Box>
+                  )}
+                  {evidence?.alwaysOpen !== undefined && (
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.alwaysOpen") || "Always Open"}:
+                      </Typography>
+                      <Chip
+                        label={evidence.alwaysOpen ? "Yes" : "No"}
+                        size="small"
+                        color={evidence.alwaysOpen ? "success" : "default"}
+                      />
+                    </Box>
+                  )}
+                  {evidence?.ownershipProof && (
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {t("admin.ownershipProof") || "Ownership Proof"}:
+                      </Typography>
+                      <Typography variant="body2" fontWeight="medium">
+                        {evidence.ownershipProof}
+                      </Typography>
+                    </Box>
+                  )}
+                </Stack>
+              </Box>
+
+              {/* Working Schedule */}
+              {evidence?.schedule && (
+                <Box
+                  sx={{
+                    bgcolor: "#fff",
+                    p: 2,
+                    borderRadius: 2,
+                    border: "1px solid #e0e0e0",
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                    <Iconify icon="solar:calendar-bold" width={20} color="primary.main" />
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {t("admin.workingHours") || "Working Hours"}
+                    </Typography>
+                  </Stack>
+                  <Stack spacing={1}>
+                    {Object.entries(evidence.schedule).map(([day, hours]: [string, any]) => (
+                      <Box
+                        key={day}
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          py: 0.5,
+                        }}
+                      >
+                        <Typography variant="body2" sx={{ textTransform: "capitalize", minWidth: 100 }}>
+                          {day}:
+                        </Typography>
+                        {hours?.isOpen ? (
+                          <Typography variant="body2" fontWeight="medium" color="success.main">
+                            {hours.from} - {hours.to}
+                          </Typography>
+                        ) : (
+                          <Chip label="Closed" size="small" color="error" variant="outlined" />
+                        )}
+                      </Box>
+                    ))}
+                  </Stack>
+                </Box>
+              )}
+            </Stack>
+            );
+          })()}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEvidenceDialog} variant="contained">
+            {t("admin.close") || "Close"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
+  );
+}
+
+export default function AdminClaimsReview() {
+  return (
+    <AdminRoute>
+      <AdminClaimsReviewContent />
+    </AdminRoute>
   );
 }

@@ -21,7 +21,8 @@
       "contact": "Contact Us",
       "ClientPage": "So-Eat for Customers",
       "BusinessPage": "So-Eat for Business",
-      "HomePage": "Back to Home"
+      "HomePage": "Back to Home",
+      "AdminPanel": "Admin Panel"
     }
   },
   "clientPage": {
@@ -847,6 +848,45 @@
   "admin": {
     "claimsTitle": "Business Claims Review",
     "claimsSubtitle": "Review and approve business claim requests",
-    "noClaims": "No claims in this category"
+    "noClaims": "No claims in this category",
+    "loginTitle": "Admin Login",
+    "loginSubtitle": "Sign in to access the admin control panel",
+    "email": "Email Address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "loginFooter": "Authorized personnel only",
+    "logout": "Logout",
+    "approve": "Approve",
+    "reject": "Reject",
+    "reviewed": "Reviewed",
+    "claimId": "Claim ID",
+    "businessName": "Business Name",
+    "contactInfo": "Contact Info",
+    "requesterId": "Requester ID",
+    "status": "Status",
+    "submitted": "Submitted",
+    "actions": "Actions",
+    "viewEvidence": "Evidence",
+    "evidenceDetails": "Evidence Details",
+    "claimInformation": "Claim Information",
+    "evidenceData": "Evidence Data",
+    "locationInfo": "Location Information",
+    "city": "City",
+    "country": "Country",
+    "street": "Street",
+    "postalCode": "Postal Code",
+    "phoneNumber": "Phone Number",
+    "close": "Close",
+    "businessDetails": "Business Details",
+    "tableCount": "Table Count",
+    "alwaysOpen": "Always Open",
+    "ownershipProof": "Ownership Proof",
+    "workingHours": "Working Hours",
+    "createdAt": "Created At",
+    "reviewedAt": "Reviewed At",
+    "reviewedBy": "Reviewed By",
+    "latitude": "Latitude",
+    "longitude": "Longitude"
   }
 }

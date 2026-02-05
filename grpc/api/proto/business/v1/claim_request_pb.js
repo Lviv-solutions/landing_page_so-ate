@@ -1,4 +1,4 @@
-// source: business/v1/claim_request.proto
+// source: api/proto/business/v1/claim_request.proto
 /**
  * @fileoverview
  * @enhanceable

@@ -19,6 +19,8 @@ export interface ClaimRequest {
   createdAt: Date;
   updatedAt: Date;
   reviewedAt?: Date;
+  arName?: string;
+  enName?: string;
 }
 
 export interface CreateClaimRequestParams {
@@ -236,6 +238,11 @@ class ClaimRequestService {
 
   private parseClaimRequest(claimRequest: any): ClaimRequest {
     const obj = claimRequest.toObject();
+    
+    // Try to get arName and enName using both getter methods and direct property access
+    const arName = claimRequest.getArName?.() || claimRequest.getArname?.() || obj.arName || obj.arname;
+    const enName = claimRequest.getEnName?.() || claimRequest.getEnname?.() || obj.enName || obj.enname;
+    
     return {
       id: obj.id,
       businessId: obj.businessId,
@@ -252,6 +259,8 @@ class ClaimRequestService {
       reviewedAt: obj.reviewedAt
         ? new Date(obj.reviewedAt.seconds * 1000)
         : undefined,
+      arName: arName,
+      enName: enName,
     };
   }
 }
