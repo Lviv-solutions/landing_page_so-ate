@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// SubscriptionManagement service handles subscription lifecycle
+service SubscriptionManagement {
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (CreateSubscriptionResponse);
+  rpc GetSubscription(GetSubscriptionRequest) returns (SubscriptionResponse);
+  rpc FindActiveByBusiness(FindActiveByBusinessRequest) returns (SubscriptionResponse);
+  rpc ListByBusiness(ListByBusinessRequest) returns (ListSubscriptionsResponse);
+  rpc ListByPlan(ListByPlanRequest) returns (ListSubscriptionsResponse);
+  rpc UpdatePlan(UpdatePlanRequest) returns (SubscriptionResponse);
+  rpc ActivateSubscription(ActivateSubscriptionRequest) returns (SubscriptionResponse);
+  rpc MarkPastDue(MarkPastDueRequest) returns (SubscriptionResponse);
+  rpc CancelSubscription(CancelSubscriptionRequest) returns (SubscriptionResponse);
+  rpc ExpireSubscription(ExpireSubscriptionRequest) returns (SubscriptionResponse);
+  rpc UpdateEntitlements(UpdateEntitlementsRequest) returns (SubscriptionResponse);
+  rpc ExtendEndDate(ExtendEndDateRequest) returns (SubscriptionResponse);
+  rpc DeleteSubscription(DeleteSubscriptionRequest) returns (google.protobuf.Empty);
+}
+
+// Status enum
+enum SubscriptionStatus {
+  SUBSCRIPTION_STATUS_UNSPECIFIED = 0;
+  SUBSCRIPTION_STATUS_ACTIVE = 1;
+  SUBSCRIPTION_STATUS_PAST_DUE = 2;
+  SUBSCRIPTION_STATUS_CANCELED = 3;
+  SUBSCRIPTION_STATUS_EXPIRED = 4;
+}
+
+// Subscription message
+message Subscription {
+  string id = 1;
+  string user_id = 2;
+  string business_id = 3;
+  string plan_code = 4;
+  google.protobuf.Timestamp start_at = 5;
+  google.protobuf.Timestamp end_at = 6;
+  SubscriptionStatus status = 7;
+  google.protobuf.Struct entitlements_effective = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Request/Response messages
+message CreateSubscriptionRequest {
+  string user_id = 1;
+  string business_id = 2;
+  string plan_code = 3;
+  google.protobuf.Timestamp start_at = 4;
+  google.protobuf.Timestamp end_at = 5;
+}
+
+message CreateSubscriptionResponse {
+  Subscription subscription = 1;
+}
+
+message GetSubscriptionRequest {
+  string id = 1;
+}
+
+message SubscriptionResponse {
+  Subscription subscription = 1;
+}
+
+message FindActiveByBusinessRequest {
+  string business_id = 1;
+}
+
+message ListByBusinessRequest {
+  string business_id = 1;
+  repeated SubscriptionStatus statuses = 2;
+  int32 page_size = 3;
+  string page_token = 4;
+}
+
+message ListByPlanRequest {
+  string plan_code = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListSubscriptionsResponse {
+  repeated Subscription subscriptions = 1;
+  string next_page_token = 2;
+}
+
+message UpdatePlanRequest {
+  string id = 1;
+  string new_plan_code = 2;
+}
+
+message ActivateSubscriptionRequest {
+  string id = 1;
+}
+
+message MarkPastDueRequest {
+  string id = 1;
+}
+
+message CancelSubscriptionRequest {
+  string id = 1;
+}
+
+message ExpireSubscriptionRequest {
+  string id = 1;
+}
+
+message UpdateEntitlementsRequest {
+  string id = 1;
+  google.protobuf.Struct entitlements = 2;
+}
+
+message ExtendEndDateRequest {
+  string id = 1;
+  google.protobuf.Timestamp new_end_at = 2;
+}
+
+message DeleteSubscriptionRequest {
+  string id = 1;
+}

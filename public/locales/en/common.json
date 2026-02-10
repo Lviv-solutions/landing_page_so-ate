@@ -887,6 +887,17 @@
     "reviewedAt": "Reviewed At",
     "reviewedBy": "Reviewed By",
     "latitude": "Latitude",
-    "longitude": "Longitude"
+    "longitude": "Longitude",
+    "subscriptionInfo": "Subscription Information",
+    "planCode": "Plan Code",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "subscriptionId": "Subscription ID",
+    "subscriptionActive": "Active",
+    "subscriptionPastDue": "Past Due",
+    "subscriptionCanceled": "Canceled",
+    "subscriptionExpired": "Expired",
+    "subscriptionUnspecified": "Unknown",
+    "noActiveSubscription": "No active subscription found for this business"
   }
 }

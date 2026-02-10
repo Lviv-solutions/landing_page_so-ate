@@ -32,9 +32,13 @@ import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { getAdminId, getAdminInfo, logoutAdmin } from "../../../../lib/auth";
 import claimRequestService, {
+  ClaimRequest,
   ClaimStatus,
-  type ClaimRequest,
 } from "../../../../services/claimRequestService";
+import subscriptionService, {
+  Subscription,
+  SubscriptionStatus,
+} from "../../../../services/subscriptionService";
 
 function AdminClaimsReviewContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +59,8 @@ function AdminClaimsReviewContent() {
     open: boolean;
     claim: ClaimRequest | null;
   }>({ open: false, claim: null });
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [subscriptionLoading, setSubscriptionLoading] = useState(false);
 
   const router = useRouter();
   const { t, locale } = useTranslation();
@@ -201,6 +207,35 @@ function AdminClaimsReviewContent() {
     }
   };
 
+  const getSubscriptionStatusText = (status: SubscriptionStatus) => {
+    switch (status) {
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_ACTIVE:
+        return t("admin.subscriptionActive") || "Active";
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_PAST_DUE:
+        return t("admin.subscriptionPastDue") || "Past Due";
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_CANCELED:
+        return t("admin.subscriptionCanceled") || "Canceled";
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_EXPIRED:
+        return t("admin.subscriptionExpired") || "Expired";
+      default:
+        return t("admin.subscriptionUnspecified") || "Unknown";
+    }
+  };
+
+  const getSubscriptionStatusColor = (status: SubscriptionStatus): "success" | "warning" | "error" | "default" => {
+    switch (status) {
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_ACTIVE:
+        return "success";
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_PAST_DUE:
+        return "warning";
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_CANCELED:
+      case SubscriptionStatus.SUBSCRIPTION_STATUS_EXPIRED:
+        return "error";
+      default:
+        return "default";
+    }
+  };
+
   const handleOpenActionDialog = (
     claim: ClaimRequest,
     type: "approve" | "reject"
@@ -217,8 +252,22 @@ function AdminClaimsReviewContent() {
     setRejectionReason("");
   };
 
-  const handleOpenEvidenceDialog = (claim: ClaimRequest) => {
+  const handleOpenEvidenceDialog = async (claim: ClaimRequest) => {
     setEvidenceDialog({ open: true, claim });
+    setSubscription(null);
+    
+    // Fetch subscription data if claim is approved and has a business ID
+    if (claim.status === ClaimStatus.CLAIM_STATUS_APPROVED && claim.businessId) {
+      setSubscriptionLoading(true);
+      try {
+        const sub = await subscriptionService.findActiveByBusiness(claim.businessId);
+        setSubscription(sub);
+      } catch (error) {
+        console.error("Failed to fetch subscription:", error);
+      } finally {
+        setSubscriptionLoading(false);
+      }
+    }
   };
 
   const handleCloseEvidenceDialog = () => {
@@ -1061,6 +1110,88 @@ function AdminClaimsReviewContent() {
                       </Box>
                     ))}
                   </Stack>
+                </Box>
+              )}
+
+              {/* Subscription Information - Only for approved claims */}
+              {evidenceDialog.claim.status === ClaimStatus.CLAIM_STATUS_APPROVED && (
+                <Box
+                  sx={{
+                    bgcolor: "#fff",
+                    p: 2,
+                    borderRadius: 2,
+                    border: "1px solid #e0e0e0",
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+                    <Iconify icon="solar:card-bold" width={20} color="primary.main" />
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {t("admin.subscriptionInfo") || "Subscription Information"}
+                    </Typography>
+                  </Stack>
+                  
+                  {subscriptionLoading ? (
+                    <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
+                      <CircularProgress size={24} />
+                    </Box>
+                  ) : subscription ? (
+                    <Stack spacing={1.5}>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.planCode") || "Plan Code"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium">
+                          {subscription.planCode}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.status") || "Status"}:
+                        </Typography>
+                        <Chip
+                          label={getSubscriptionStatusText(subscription.status)}
+                          size="small"
+                          color={getSubscriptionStatusColor(subscription.status)}
+                        />
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.startDate") || "Start Date"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium">
+                          {subscription.startAt.toLocaleDateString(isArabic ? "ar-SA" : "en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                          })}
+                        </Typography>
+                      </Box>
+                      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography variant="body2" color="text.secondary">
+                          {t("admin.endDate") || "End Date"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium">
+                          {subscription.endAt.toLocaleDateString(isArabic ? "ar-SA" : "en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric"
+                          })}
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                          {t("admin.subscriptionId") || "Subscription ID"}:
+                        </Typography>
+                        <Typography variant="body2" fontWeight="medium" fontFamily="monospace" sx={{ wordBreak: "break-all" }}>
+                          {subscription.id}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  ) : (
+                    <Alert severity="info" icon={<Iconify icon="solar:info-circle-bold" />}>
+                      {t("admin.noActiveSubscription") || "No active subscription found for this business"}
+                    </Alert>
+                  )}
                 </Box>
               )}
             </Stack>
