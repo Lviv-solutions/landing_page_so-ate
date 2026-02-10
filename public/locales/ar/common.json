@@ -887,6 +887,17 @@
     "reviewedAt": "تاريخ المراجعة",
     "reviewedBy": "تمت المراجعة بواسطة",
     "latitude": "خط العرض",
-    "longitude": "خط الطول"
+    "longitude": "خط الطول",
+    "subscriptionInfo": "معلومات الاشتراك",
+    "planCode": "كود الخطة",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ الانتهاء",
+    "subscriptionId": "رقم الاشتراك",
+    "subscriptionActive": "نشط",
+    "subscriptionPastDue": "متأخر",
+    "subscriptionCanceled": "ملغي",
+    "subscriptionExpired": "منتهي",
+    "subscriptionUnspecified": "غير محدد",
+    "noActiveSubscription": "لا يوجد اشتراك نشط لهذا النشاط التجاري"
   }
 }
