@@ -905,6 +905,24 @@ function AdminClaimsReviewContent() {
                       })}
                     </Typography>
                   </Box>
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      {t("admin.selectedPlan") || "Selected Plan"}:
+                    </Typography>
+                    {evidenceDialog.claim.planCode ? (
+                      <Chip
+                        label={evidenceDialog.claim.planCode.toUpperCase()}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        sx={{ fontWeight: 600 }}
+                      />
+                    ) : (
+                      <Typography variant="body2" color="warning.main" fontStyle="italic">
+                        {t("admin.notSpecified") || "Not available (backend not returning planCode)"}
+                      </Typography>
+                    )}
+                  </Box>
                   {evidenceDialog.claim.reviewedAt && (
                     <Box>
                       <Typography variant="body2" color="text.secondary" gutterBottom>

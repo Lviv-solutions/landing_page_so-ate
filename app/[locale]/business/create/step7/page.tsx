@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
@@ -22,6 +22,7 @@ export default function CreateBusinessStep7() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const hasSubmittedRef = useRef(false);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -41,6 +42,12 @@ export default function CreateBusinessStep7() {
 
   useEffect(() => {
     const submitForm = async () => {
+      // Prevent duplicate submissions using ref
+      if (hasSubmittedRef.current) {
+        return;
+      }
+      hasSubmittedRef.current = true;
+      
       try {
         setIsSubmitting(true);
         setError(null);
@@ -118,13 +125,17 @@ export default function CreateBusinessStep7() {
         }
 
         // Submit claim request
+        const planCode = formData.planCode || 'free';
+        console.log("Submitting claim with planCode:", planCode);
+        
         const response = await claimRequestService.createClaimRequest({
           requesterId: userId,
           businessData,
           evidenceJson,
+          planCode: planCode,
         });
 
-        console.log("Claim request created:", response.claimRequestId);
+        console.log("Claim request created:", response.claimRequestId, "with plan:", planCode);
         
         setIsSubmitted(true);
         setIsSubmitting(false);

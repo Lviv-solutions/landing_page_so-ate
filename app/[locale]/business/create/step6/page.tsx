@@ -78,7 +78,7 @@ export default function CreateBusinessStep6() {
   };
 
   const handleSkip = () => {
-    router.push(`/${locale}/business/create/step7`);
+    router.push(`/${locale}/business/create/step6-plans`);
   };
 
   const handleContinue = async () => {
@@ -87,7 +87,7 @@ export default function CreateBusinessStep6() {
       await businessFormDB.saveFormData({
         // Add images data to form
       });
-      router.push(`/${locale}/business/create/step7`);
+      router.push(`/${locale}/business/create/step6-plans`);
     } catch (error) {
       console.error("Failed to save images:", error);
     }
