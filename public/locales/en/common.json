@@ -843,7 +843,41 @@
     "step6Subtitle": "Customers love to see your restaurant organized and tidy, always keep it elegant and worthy of your customers!",
     "step7Title": "Ready to Launch!",
     "step7Subtitle": "Your account and business are now being reviewed. Once approved, you will be notified and your business can appear publicly",
-    "goToDashboard": "Go to Dashboard"
+    "goToDashboard": "Go to Dashboard",
+    "selectPlanTitle": "Select Subscription Plan",
+    "selectPlanSubtitle": "Choose the plan that suits your business",
+    "popular": "Most Popular",
+    "perMonth": "/month",
+    "freeTrial": "Free Trial",
+    "days": "days",
+    "moreFeatures": "more features",
+    "back": "Back",
+    "continue": "Continue",
+    "saving": "Saving...",
+    "submissionError": "An error occurred",
+    "tryAgain": "Try Again"
+  },
+  "plans": {
+    "features": {
+      "menu.basic": "Basic menu",
+      "orders.limited": "Limited orders",
+      "menu.max_items.50": "Up to 50 menu items",
+      "menu.max_categories.10": "Up to 10 categories",
+      "orders.online_ordering": "Online ordering",
+      "menu.qr_code_generation": "QR code menu",
+      "menu.max_items.200": "Up to 200 menu items",
+      "menu.max_categories.50": "Up to 50 categories",
+      "menu.custom_branding": "Custom branding",
+      "orders.delivery_integration": "Delivery integration",
+      "analytics.reports": "Analytics reports",
+      "analytics.custom_reports": "Custom reports",
+      "menu.unlimited": "Unlimited menu items",
+      "orders.unlimited": "Unlimited orders",
+      "analytics.advanced": "Advanced analytics",
+      "analytics.export_data": "Export data",
+      "api.access": "API access",
+      "support.priority": "Priority support"
+    }
   },
   "admin": {
     "claimsTitle": "Business Claims Review",
@@ -898,6 +932,8 @@
     "subscriptionCanceled": "Canceled",
     "subscriptionExpired": "Expired",
     "subscriptionUnspecified": "Unknown",
-    "noActiveSubscription": "No active subscription found for this business"
+    "noActiveSubscription": "No active subscription found for this business",
+    "selectedPlan": "Selected Plan",
+    "notSpecified": "Not specified (legacy claim)"
   }
 }

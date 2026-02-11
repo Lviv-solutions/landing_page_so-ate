@@ -306,7 +306,8 @@ createdAt: (f = msg.getCreatedAt()) && google_protobuf_timestamp_pb.Timestamp.to
 updatedAt: (f = msg.getUpdatedAt()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
 reviewedAt: (f = msg.getReviewedAt()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
 arName: jspb.Message.getFieldWithDefault(msg, 10, ""),
-enName: jspb.Message.getFieldWithDefault(msg, 11, "")
+enName: jspb.Message.getFieldWithDefault(msg, 11, ""),
+planCode: jspb.Message.getFieldWithDefault(msg, 12, "")
   };
 
   if (includeInstance) {
@@ -390,6 +391,10 @@ proto.business.v1.ClaimRequest.deserializeBinaryFromReader = function(msg, reade
     case 11:
       var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setEnName(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setPlanCode(value);
       break;
     default:
       reader.skipField();
@@ -498,6 +503,13 @@ proto.business.v1.ClaimRequest.serializeBinaryToWriter = function(message, write
   if (f.length > 0) {
     writer.writeString(
       11,
+      f
+    );
+  }
+  f = message.getPlanCode();
+  if (f.length > 0) {
+    writer.writeString(
+      12,
       f
     );
   }
@@ -778,6 +790,24 @@ proto.business.v1.ClaimRequest.prototype.setEnName = function(value) {
 };
 
 
+/**
+ * optional string plan_code = 12;
+ * @return {string}
+ */
+proto.business.v1.ClaimRequest.prototype.getPlanCode = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.business.v1.ClaimRequest} returns this
+ */
+proto.business.v1.ClaimRequest.prototype.setPlanCode = function(value) {
+  return jspb.Message.setProto3StringField(this, 12, value);
+};
+
+
 
 
 
@@ -812,7 +842,8 @@ proto.business.v1.CreateClaimRequestRequest.toObject = function(includeInstance,
   var f, obj = {
 requesterId: jspb.Message.getFieldWithDefault(msg, 1, ""),
 businessData: (f = msg.getBusinessData()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
-evidenceJson: (f = msg.getEvidenceJson()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f)
+evidenceJson: (f = msg.getEvidenceJson()) && google_protobuf_struct_pb.Struct.toObject(includeInstance, f),
+planCode: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -862,6 +893,10 @@ proto.business.v1.CreateClaimRequestRequest.deserializeBinaryFromReader = functi
       var value = new google_protobuf_struct_pb.Struct;
       reader.readMessage(value,google_protobuf_struct_pb.Struct.deserializeBinaryFromReader);
       msg.setEvidenceJson(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.setPlanCode(value);
       break;
     default:
       reader.skipField();
@@ -913,6 +948,13 @@ proto.business.v1.CreateClaimRequestRequest.serializeBinaryToWriter = function(m
       3,
       f,
       google_protobuf_struct_pb.Struct.serializeBinaryToWriter
+    );
+  }
+  f = message.getPlanCode();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
     );
   }
 };
@@ -1007,6 +1049,24 @@ proto.business.v1.CreateClaimRequestRequest.prototype.clearEvidenceJson = functi
  */
 proto.business.v1.CreateClaimRequestRequest.prototype.hasEvidenceJson = function() {
   return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional string plan_code = 4;
+ * @return {string}
+ */
+proto.business.v1.CreateClaimRequestRequest.prototype.getPlanCode = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.business.v1.CreateClaimRequestRequest} returns this
+ */
+proto.business.v1.CreateClaimRequestRequest.prototype.setPlanCode = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 

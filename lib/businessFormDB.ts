@@ -34,6 +34,7 @@ export interface BusinessFormData {
     };
   };
   alwaysOpen?: boolean;
+  planCode?: string;
   currentStep: number;
   createdAt: number;
   updatedAt: number;
