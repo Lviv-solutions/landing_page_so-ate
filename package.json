@@ -28,6 +28,7 @@
     "@react-three/fiber": "^9.3.0",
     "@reactour/tour": "^3.8.0",
     "@t3-oss/env-nextjs": "^0.13.8",
+    "@tomtom-international/web-sdk-maps": "^6.25.0",
     "@types/three": "^0.180.0",
     "@vercel/otel": "^1.13.1",
     "animate.css": "^4.1.1",

@@ -25,6 +25,8 @@ export interface BusinessFormData {
     postalCode: string;
     latitude: string;
     longitude: string;
+    /** Formatted address from map picker (e.g. TomTom reverse geocode) */
+    formattedAddress?: string;
   };
   schedule?: {
     [key: string]: {

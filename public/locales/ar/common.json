@@ -811,6 +811,7 @@
     "confirmLocation": "تأكيد",
     "editLocation": "تعديل",
     "pinLocation": "قم بتحديد موقعك على الخريطة بدقة",
+    "searchAddressPlaceholder": "ابحث عن عنوان...",
     "nextButton": "التالي",
     "locationValidationError": "الرجاء إكمال جميع الحقول المطلوبة",
     "step3Title": "حدد أوقات عمل مطعمك",

@@ -811,6 +811,7 @@
     "confirmLocation": "Confirm",
     "editLocation": "Edit",
     "pinLocation": "Pin your location on the map accurately",
+    "searchAddressPlaceholder": "Search for an address...",
     "nextButton": "Next",
     "locationValidationError": "Please complete all required fields",
     "step3Title": "Set Your Restaurant Working Hours",
