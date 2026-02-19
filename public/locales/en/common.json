@@ -17,6 +17,10 @@
       "cta": "Subscribe Now"
     },
     "actions": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "signOut": "Logout",
+      "logout": "Logout",
       "subscribe": "Subscribe Now",
       "contact": "Contact Us",
       "ClientPage": "So-Eat for Customers",
