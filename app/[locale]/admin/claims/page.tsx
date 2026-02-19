@@ -31,6 +31,7 @@ import Tab from "@mui/material/Tab";
 import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { getAdminId, getAdminInfo, logoutAdmin } from "../../../../lib/auth";
+import { webClientAuthService } from "../../../../lib/auth-service";
 import claimRequestService, {
   ClaimRequest,
   ClaimStatus,
@@ -117,9 +118,11 @@ function AdminClaimsReviewContent() {
         setAdminId(loggedInAdminId);
         setAdminInfo(getAdminInfo());
 
-        const response = await claimRequestService.listClaimRequests({
-          pageSize: 100,
-        });
+        const token = webClientAuthService.getToken();
+        const response = await claimRequestService.listClaimRequests(
+          { pageSize: 100 },
+          { accessToken: token ?? undefined }
+        );
 
         setClaims(response.claimRequests);
         filterClaimsByTab(response.claimRequests, 0);
@@ -136,6 +139,7 @@ function AdminClaimsReviewContent() {
 
   const handleLogout = () => {
     logoutAdmin();
+    webClientAuthService.logout();
     router.push(`/${locale}/admin`);
   };
 
@@ -281,10 +285,11 @@ function AdminClaimsReviewContent() {
     setError(null);
 
     try {
-      const response = await claimRequestService.approveClaimRequest({
-        id: selectedClaim.id,
-        reviewedBy: adminId,
-      });
+      const token = webClientAuthService.getToken();
+      const response = await claimRequestService.approveClaimRequest(
+        { id: selectedClaim.id, reviewedBy: adminId },
+        { accessToken: token ?? undefined }
+      );
 
       setSuccessMessage(
         `Claim approved successfully! Business ID: ${response.businessId}`
@@ -319,11 +324,15 @@ function AdminClaimsReviewContent() {
     setError(null);
 
     try {
-      await claimRequestService.rejectClaimRequest({
-        id: selectedClaim.id,
-        reviewedBy: adminId,
-        rejectionReason: rejectionReason,
-      });
+      const token = webClientAuthService.getToken();
+      await claimRequestService.rejectClaimRequest(
+        {
+          id: selectedClaim.id,
+          reviewedBy: adminId,
+          rejectionReason: rejectionReason,
+        },
+        { accessToken: token ?? undefined }
+      );
 
       setSuccessMessage("Claim rejected successfully");
 

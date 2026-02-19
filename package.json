@@ -7,6 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "generate:auth-proto": "mkdir -p grpc/auth/v1 && protoc -I api/proto -I /opt/homebrew/include api/proto/auth/v1/auth.proto --js_out=import_style=commonjs,binary:grpc && protoc -I api/proto -I /opt/homebrew/include auth/v1/auth.proto --grpc-web_out=import_style=typescript,mode=grpcwebtext:grpc",
     "postinstall": "node -e \"try{require('lightningcss');console.log('lightningcss ok')}catch(e){console.log('Rebuilding lightningcss from source…');require('child_process').execSync('npm rebuild lightningcss --build-from-source', {stdio:'inherit'})}\""
   },
   "dependencies": {

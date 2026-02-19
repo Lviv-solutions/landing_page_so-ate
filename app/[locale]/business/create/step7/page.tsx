@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
+import { webClientAuthService } from "../../../../../lib/auth-service";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { claimRequestService } from "../../../../../services/claimRequestService";
 import Box from "@mui/material/Box";
@@ -59,10 +60,11 @@ export default function CreateBusinessStep7() {
           return;
         }
 
-        // Get user ID from session/auth (you'll need to implement this)
-        // For now, generating a valid UUID format
-        // TODO: Replace with actual user ID from auth context
-        const userId = crypto.randomUUID();
+        // Use logged-in user ID when available; otherwise fallback to a generated id (backend may still require auth)
+        const accessToken = webClientAuthService.getToken();
+        const authUserJson = typeof window !== "undefined" ? localStorage.getItem("auth_user") : null;
+        const authUser = authUserJson ? (JSON.parse(authUserJson) as { id?: string }) : null;
+        const userId = authUser?.id ?? crypto.randomUUID();
 
         // Prepare business data for claim request - only include defined values
         const businessData: any = {
@@ -128,12 +130,15 @@ export default function CreateBusinessStep7() {
         const planCode = formData.planCode || 'free';
         console.log("Submitting claim with planCode:", planCode);
         
-        const response = await claimRequestService.createClaimRequest({
-          requesterId: userId,
-          businessData,
-          evidenceJson,
-          planCode: planCode,
-        });
+        const response = await claimRequestService.createClaimRequest(
+          {
+            requesterId: userId,
+            businessData,
+            evidenceJson,
+            planCode: planCode,
+          },
+          { accessToken: accessToken ?? undefined }
+        );
 
         console.log("Claim request created:", response.claimRequestId, "with plan:", planCode);
         

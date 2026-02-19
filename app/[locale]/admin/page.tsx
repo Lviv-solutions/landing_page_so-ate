@@ -16,7 +16,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { Iconify } from "../../../packages/my-saas-components/src/iconify";
-import { loginAsAdmin, setAdminToken, generateUUID, isAdminLoggedIn } from "../../../lib/auth";
+import { loginAsAdmin, isAdminLoggedIn } from "../../../lib/auth";
+import { webClientAuthService } from "../../../lib/auth-service";
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffect } from "react";
 
@@ -45,26 +46,18 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      // TODO: Replace with actual backend authentication
-      // For now, using mock authentication with proper UUID
       if (formData.email && formData.password) {
-        // In production, call your backend API:
-        // const response = await fetch('/api/admin/login', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({ email: formData.email, password: formData.password })
-        // });
-        // const { adminId, token, name } = await response.json();
-        
-        // For now, generate a proper UUID for admin ID
-        const adminId = generateUUID();
-        const mockToken = `token-${generateUUID()}`;
-        
-        // Store admin info and token
-        loginAsAdmin(adminId, formData.email, "Admin User");
-        setAdminToken(mockToken);
-        
-        // Redirect to claims page
+        const result = await webClientAuthService.login({
+          email: formData.email,
+          password: formData.password,
+        });
+        if (!result.success) {
+          setError(result.message ?? "Login failed");
+          return;
+        }
+        const userJson = typeof window !== "undefined" ? localStorage.getItem("auth_user") : null;
+        const user = userJson ? (JSON.parse(userJson) as { id?: string; username?: string }) : null;
+        loginAsAdmin(user?.id ?? "", formData.email, user?.username ?? "Admin User");
         router.push(`/${locale}/admin/claims`);
       } else {
         setError("Please enter both email and password");
