@@ -29,6 +29,32 @@
       "AdminPanel": "Admin Panel"
     }
   },
+  "auth": {
+    "signInTitle": "Sign In",
+    "signUpTitle": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signingIn": "Signing in...",
+    "creating": "Creating account...",
+    "createAccount": "Create Account",
+    "noAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "or": "or",
+    "loginFailed": "Login failed. Please check your email and password.",
+    "registrationFailed": "Registration failed. Please try again.",
+    "networkError": "Network error. Please try again.",
+    "passwordMismatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "signUpSuccess": "Account created successfully! Please check your email to verify your account.",
+    "ok": "OK"
+  },
   "clientPage": {
     "title": "So-Eat for Customers",
     "subtitle": "Download our mobile app and enjoy the best restaurant experience",
