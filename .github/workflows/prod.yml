@@ -24,19 +24,17 @@ jobs:
           port: ${{ secrets.PROD_PORT || 22 }}
           script: |
             mkdir -p /opt/so-eat
-            cd /opt/so-eat
-            rm -rf *
             
       - name: Copy files to server
-        uses: appleboy/scp-action@v0.1.7
+        uses: burnett01/rsync-deployments@7.0.1
         with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          port: ${{ secrets.PROD_PORT || 22 }}
-          source: ".,!node_modules,!.git,!.next"
-          target: "/opt/so-eat"
-          rm: false
+          switches: -avzr --delete --exclude=node_modules --exclude=.git --exclude=.next --exclude=.github
+          path: ./
+          remote_path: /opt/so-eat/
+          remote_host: ${{ secrets.PROD_HOST }}
+          remote_user: ${{ secrets.PROD_USER }}
+          remote_key: ${{ secrets.PROD_SSH_KEY }}
+          remote_port: ${{ secrets.PROD_PORT || 22 }}
 
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@v1.0.3
