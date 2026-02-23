@@ -31,23 +31,27 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs \
+ && adduser --system --uid 1001 nextjs
 
-# Copy necessary files
+# Copy build artifacts and node_modules
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/next.config.ts ./next.config.ts
 
-# Set correct permissions
+# Fix permissions for all copied files
 RUN chown -R nextjs:nodejs /app
 
+# Switch to non-root user
 USER nextjs
 
+# Expose the port
 EXPOSE 3000
 
-ENV PORT=3000
-
-CMD ["npm", "start"]
+# Use shell form to ensure the user’s PATH is correct
+CMD ["sh", "-c", "npm start"]
