@@ -26,11 +26,8 @@ jobs:
             mkdir -p ~/client
             sudo apt update && sudo apt install -y rsync
             cd ~/client
-            # Create basic .env file if it doesn't exist
-            if [ ! -f .env ]; then
-              echo "NODE_ENV=production" > .env
-              echo "PORT=3000" >> .env
-            fi
+            # Create .env file from GitHub secret
+            echo "${{ secrets.PROD_ENV_VARS }}" > .env
             
       - name: Copy files to server
         uses: burnett01/rsync-deployments@7.0.1
