@@ -102,13 +102,15 @@ export default function CreateBusinessStep2() {
     >
       <Navigation locale={locale} />
 
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
-        <div className="flex gap-6" style={{ flexDirection: locale === "ar" ? "row-reverse" : "row", marginTop: "60px" }}>
+      <main className="max-w-7xl mx-auto px-6 pt-14 pb-4">
+        <div className="flex flex-wrap lg:flex-nowrap gap-4" style={{ flexDirection: locale === "ar" ? "row-reverse" : "row" }}>
           {/* Map Section */}
           <Box
             sx={{
-              width: "690px",
-              height: "556px",
+              width: { xs: "100%", lg: "690px" },
+              minHeight: "300px",
+              height: "calc(100vh - 120px)",
+              maxHeight: "450px",
               borderRadius: "16px",
               overflow: "hidden",
               position: "relative",
@@ -148,24 +150,26 @@ export default function CreateBusinessStep2() {
               <Box
                 sx={{
                   position: "absolute",
-                  bottom: 16,
+                  bottom: 12,
                   left: "50%",
                   transform: "translateX(-50%)",
                   display: "flex",
-                  gap: 2,
+                  gap: 1.5,
                 }}
               >
                 <Button
                   variant="contained"
+                  size="small"
                   onClick={handleConfirm}
                   sx={{
                     bgcolor: "#ED614A",
                     color: "white",
-                    px: 4,
-                    py: 1.5,
+                    px: 3,
+                    py: 1,
                     borderRadius: "8px",
                     textTransform: "none",
                     fontWeight: 600,
+                    fontSize: "0.875rem",
                     "&:hover": {
                       bgcolor: "#DC5139",
                     },
@@ -175,15 +179,17 @@ export default function CreateBusinessStep2() {
                 </Button>
                 <Button
                   variant="outlined"
+                  size="small"
                   onClick={handleEdit}
                   sx={{
                     borderColor: "#E0E0E0",
                     color: "#666",
-                    px: 4,
-                    py: 1.5,
+                    px: 3,
+                    py: 1,
                     borderRadius: "8px",
                     textTransform: "none",
                     fontWeight: 600,
+                    fontSize: "0.875rem",
                     "&:hover": {
                       borderColor: "#666",
                       bgcolor: "rgba(0,0,0,0.04)",
@@ -217,24 +223,27 @@ export default function CreateBusinessStep2() {
           {/* Form Section */}
           <Box
             sx={{
-              width: "419px",
-              height: "556px",
+              width: { xs: "100%", lg: "419px" },
+              minHeight: "300px",
+              height: "calc(100vh - 120px)",
+              maxHeight: "450px",
               borderRadius: "16px",
               border: "1px solid #E0E0E0",
-              padding: "24px",
+              padding: "16px",
               bgcolor: "white",
               display: "flex",
               flexDirection: "column",
-              gap: "24px",
+              gap: "12px",
             }}
           >
             <Box>
               <Typography
-                variant="h5"
+                variant="h6"
                 sx={{
                   fontWeight: 700,
                   color: "#1A1A1A",
-                  mb: 1,
+                  mb: 0.5,
+                  fontSize: "1.1rem",
                   textAlign: locale === "ar" ? "right" : "left",
                 }}
               >
@@ -244,7 +253,8 @@ export default function CreateBusinessStep2() {
                 variant="body2"
                 sx={{
                   color: "#666",
-                  lineHeight: 1.6,
+                  lineHeight: 1.4,
+                  fontSize: "0.875rem",
                   textAlign: locale === "ar" ? "right" : "left",
                 }}
               >
@@ -252,9 +262,10 @@ export default function CreateBusinessStep2() {
               </Typography>
             </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "16px", flex: 1 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", flex: 1, overflowY: "auto" }}>
               <TextField
                 select
+                size="small"
                 name="country"
                 value={locationData.country}
                 onChange={handleInputChange}
@@ -295,6 +306,7 @@ export default function CreateBusinessStep2() {
 
               <TextField
                 select
+                size="small"
                 name="city"
                 value={locationData.city}
                 onChange={handleInputChange}
@@ -332,6 +344,7 @@ export default function CreateBusinessStep2() {
               </TextField>
 
               <TextField
+                size="small"
                 name="street"
                 value={locationData.street}
                 onChange={handleInputChange}
@@ -353,6 +366,7 @@ export default function CreateBusinessStep2() {
               />
 
               <TextField
+                size="small"
                 name="postalCode"
                 value={locationData.postalCode}
                 onChange={handleInputChange}
@@ -378,14 +392,15 @@ export default function CreateBusinessStep2() {
               variant="contained"
               onClick={handleNext}
               fullWidth
+              size="medium"
               sx={{
                 bgcolor: "#ED614A",
                 color: "white",
-                py: 1.5,
+                py: 1.2,
                 borderRadius: "8px",
                 textTransform: "none",
                 fontWeight: 600,
-                fontSize: "1rem",
+                fontSize: "0.95rem",
                 "&:hover": {
                   bgcolor: "#DC5139",
                 },

@@ -18,14 +18,14 @@ export default function Navigation({ locale }: NavigationProps) {
   };
 
   return (
-    <header className="flex justify-between items-center px-6 md:px-12 lg:px-24 py-6 absolute top-0 left-0 right-0 z-10">
+    <header className="flex justify-between items-center px-6 md:px-12 lg:px-24 py-3 absolute top-0 left-0 right-0 z-10">
       {/* Left side - Logo & Brand */}
       <div className="flex items-center gap-3">
         <Image
           src="/assets/admin-console/Icon.svg"
           alt="So-Eat Business"
-          width={48}
-          height={48}
+          width={36}
+          height={36}
         />
         <span className="text-base font-bold text-gray-900">
           {locale === "ar" ? "سو - إيت بيزنس" : "So-Eat Business"}
