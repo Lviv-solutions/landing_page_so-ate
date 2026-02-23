@@ -25,6 +25,12 @@ jobs:
           script: |
             mkdir -p ~/client
             sudo apt update && sudo apt install -y rsync
+            cd ~/client
+            # Create basic .env file if it doesn't exist
+            if [ ! -f .env ]; then
+              echo "NODE_ENV=production" > .env
+              echo "PORT=3000" >> .env
+            fi
             
       - name: Copy files to server
         uses: burnett01/rsync-deployments@7.0.1
@@ -46,7 +52,6 @@ jobs:
           port: ${{ secrets.PROD_PORT || 22 }}
           script: |
             cd ~/client
-            docker-compose down
-            docker-compose build
-            docker-compose up -d
-            docker image prune -f
+            docker compose down
+            docker compose build
+            docker compose up -d
