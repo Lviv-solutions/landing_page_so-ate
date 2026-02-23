@@ -24,6 +24,7 @@ jobs:
           port: ${{ secrets.PROD_PORT || 22 }}
           script: |
             mkdir -p ~/client
+            sudo apt update && sudo apt install -y rsync
             
       - name: Copy files to server
         uses: burnett01/rsync-deployments@7.0.1
