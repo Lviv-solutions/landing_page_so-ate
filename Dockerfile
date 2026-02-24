@@ -42,6 +42,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
+# Debug: Check if server.js exists and show directory contents
+RUN ls -la /app/ && ls -la /app/.next/ || echo "No .next directory"
+
 # Fix permissions for all copied files
 RUN chown -R nextjs:nodejs /app
 
@@ -55,4 +58,4 @@ EXPOSE 3000
 ENV HOSTNAME="0.0.0.0"
 
 # Use shell form to ensure the user’s PATH is correct
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "echo 'Starting server...' && ls -la server.js && node server.js"]
