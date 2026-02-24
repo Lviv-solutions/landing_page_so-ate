@@ -51,5 +51,8 @@ USER nextjs
 # Expose the port
 EXPOSE 3000
 
+# Set hostname to bind to all interfaces
+ENV HOSTNAME="0.0.0.0"
+
 # Use shell form to ensure the user’s PATH is correct
 CMD ["node", "server.js"]
