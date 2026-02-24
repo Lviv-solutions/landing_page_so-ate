@@ -37,12 +37,10 @@ ENV PORT=3000
 RUN addgroup --system --gid 1001 nodejs \
  && adduser --system --uid 1001 nextjs
 
-# Copy build artifacts and node_modules
+# Copy build artifacts from standalone output
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/next.config.ts ./next.config.ts
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 # Fix permissions for all copied files
 RUN chown -R nextjs:nodejs /app
@@ -54,4 +52,4 @@ USER nextjs
 EXPOSE 3000
 
 # Use shell form to ensure the user’s PATH is correct
-CMD ["sh", "-c", "npm start"]
+CMD ["node", "server.js"]
