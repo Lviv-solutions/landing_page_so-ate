@@ -23,8 +23,6 @@ jobs:
           key: ${{ secrets.PROD_SSH_KEY }}
           port: ${{ secrets.PROD_PORT || 22 }}
           script: |
-            mkdir -p ~/client
-            sudo apt update && sudo apt install -y rsync
             cd ~/client
             # Create .env file from GitHub secret with fallback values
             echo "NODE_ENV=${{ secrets.PROD_ENV_VARS || 'production' }}" > .env

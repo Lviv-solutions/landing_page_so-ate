@@ -8,8 +8,8 @@ services:
     ports:
       - "3500:3000"
     environment:
-      - NODE_ENV=production
-      - PORT=3000
+      - NODE_ENV=${NODE_ENV}
+      - PORT=${PORT}
     env_file:
       - .env
     networks:
