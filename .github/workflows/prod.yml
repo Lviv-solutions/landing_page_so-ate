@@ -15,30 +15,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Prepare server directory
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          port: ${{ secrets.PROD_PORT || 22 }}
-          script: |
-            cd ~/client
-            # Create .env file from GitHub secret with fallback values
-            echo "NODE_ENV=${{ secrets.PROD_ENV_VARS || 'production' }}" > .env
-            echo "PORT=${{ secrets.PROD_PORT || '3000' }}" >> .env
-            echo "${{ secrets.PROD_ENV_VARS }}" >> .env
-            
       - name: Copy files to server
         uses: burnett01/rsync-deployments@7.0.1
         with:
-          switches: -avzr --delete --exclude=node_modules --exclude=.git --exclude=.next --exclude=.github
+          switches: -avzr --delete --exclude=node_modules --exclude=.git --exclude=.next --exclude=.github --exclude=.env
           path: ./
           remote_path: ~/client/
           remote_host: ${{ secrets.PROD_HOST }}
           remote_user: ${{ secrets.PROD_USER }}
           remote_key: ${{ secrets.PROD_SSH_KEY }}
-          remote_port: ${{ secrets.PROD_PORT || 22 }}
+          remote_port: 22
 
       - name: Deploy with Docker Compose
         uses: appleboy/ssh-action@v1.0.3
@@ -46,9 +32,11 @@ jobs:
           host: ${{ secrets.PROD_HOST }}
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          port: ${{ secrets.PROD_PORT || 22 }}
+          port: 22
           script: |
             cd ~/client
+            echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
             docker compose down
             docker compose build
             docker compose up -d
