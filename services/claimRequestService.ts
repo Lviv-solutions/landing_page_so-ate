@@ -19,6 +19,9 @@ export interface ClaimRequest {
   createdAt: Date;
   updatedAt: Date;
   reviewedAt?: Date;
+  arName?: string;
+  enName?: string;
+  planCode?: string;
 }
 
 export interface CreateClaimRequestParams {
@@ -40,6 +43,7 @@ export interface CreateClaimRequestParams {
     ownershipProof?: string;
     [key: string]: any;
   };
+  planCode?: string;
 }
 
 export interface ListClaimRequestsParams {
@@ -94,6 +98,10 @@ class ClaimRequestService {
 
         const evidenceStruct = Struct.fromJavaScript(params.evidenceJson);
         request.setEvidenceJson(evidenceStruct);
+
+        if (params.planCode) {
+          request.setPlanCode(params.planCode);
+        }
 
         (this.client as any).createClaimRequest(
           request,
@@ -236,6 +244,12 @@ class ClaimRequestService {
 
   private parseClaimRequest(claimRequest: any): ClaimRequest {
     const obj = claimRequest.toObject();
+    
+    // Try to get arName and enName using both getter methods and direct property access
+    const arName = claimRequest.getArName?.() || claimRequest.getArname?.() || obj.arName || obj.arname;
+    const enName = claimRequest.getEnName?.() || claimRequest.getEnname?.() || obj.enName || obj.enname;
+    const planCode = claimRequest.getPlanCode?.() || obj.planCode || obj.plancode || undefined;
+    
     return {
       id: obj.id,
       businessId: obj.businessId,
@@ -252,6 +266,9 @@ class ClaimRequestService {
       reviewedAt: obj.reviewedAt
         ? new Date(obj.reviewedAt.seconds * 1000)
         : undefined,
+      arName: arName,
+      enName: enName,
+      planCode: planCode,
     };
   }
 }

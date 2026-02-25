@@ -36,6 +36,9 @@ message ClaimRequest {
   google.protobuf.Timestamp created_at = 7;
   google.protobuf.Timestamp updated_at = 8;
   google.protobuf.Timestamp reviewed_at = 9;
+  string ar_name = 10;
+  string en_name = 11;
+  string plan_code = 12;  // Selected subscription plan code
 }
 
 // Request and Response messages
@@ -43,6 +46,7 @@ message CreateClaimRequestRequest {
   string requester_id = 1;
   google.protobuf.Struct business_data = 2;  // Business information to be created
   google.protobuf.Struct evidence_json = 3;  // Supporting documents/proof
+  string plan_code = 4;  // Subscription plan code (e.g., "free", "basic", "premium", "enterprise")
 }
 
 message CreateClaimRequestResponse {

@@ -74,11 +74,13 @@ export function isAuthenticated(): boolean {
 /**
  * User information interface
  */
+export type UserRole = 'USER' | 'ADMIN' | 'BUSINESS_OWNER';
+
 export interface UserInfo {
   id: string;
   email?: string;
   name?: string;
-  role?: string;
+  role: UserRole;
 }
 
 /**
@@ -89,14 +91,98 @@ export interface UserInfo {
 export function getCurrentUser(): UserInfo | null {
   if (typeof window !== 'undefined') {
     const userId = localStorage.getItem('temp_user_id');
+    const userRole = (localStorage.getItem('user_role') as UserRole) || 'USER';
     
     if (userId && isValidUUID(userId)) {
       return {
         id: userId,
-        // Add other user fields when authentication is implemented
+        role: userRole,
       };
     }
   }
   
   return null;
+}
+
+export function setUserRole(role: UserRole): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('user_role', role);
+  }
+}
+
+export function getUserRole(): UserRole {
+  if (typeof window !== 'undefined') {
+    return (localStorage.getItem('user_role') as UserRole) || 'USER';
+  }
+  return 'USER';
+}
+
+export function isAdmin(): boolean {
+  return getUserRole() === 'ADMIN';
+}
+
+export function isBusinessOwner(): boolean {
+  return getUserRole() === 'BUSINESS_OWNER';
+}
+
+export function loginAsAdmin(adminId: string, email?: string, name?: string): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('admin_id', adminId);
+    localStorage.setItem('user_role', 'ADMIN');
+    if (email) localStorage.setItem('admin_email', email);
+    if (name) localStorage.setItem('admin_name', name);
+  }
+}
+
+export function getAdminId(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('admin_id');
+  }
+  return null;
+}
+
+export function getAdminInfo(): { id: string; email?: string; name?: string } | null {
+  if (typeof window !== 'undefined') {
+    const id = localStorage.getItem('admin_id');
+    if (!id) return null;
+    
+    return {
+      id,
+      email: localStorage.getItem('admin_email') || undefined,
+      name: localStorage.getItem('admin_name') || undefined,
+    };
+  }
+  return null;
+}
+
+export function logoutAdmin(): void {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('admin_id');
+    localStorage.removeItem('admin_email');
+    localStorage.removeItem('admin_name');
+    localStorage.removeItem('user_role');
+    localStorage.removeItem('admin_token');
+  }
+}
+
+export function setAdminToken(token: string): void {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('admin_token', token);
+  }
+}
+
+export function getAdminToken(): string | null {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('admin_token');
+  }
+  return null;
+}
+
+export function isAdminLoggedIn(): boolean {
+  if (typeof window !== 'undefined') {
+    const adminId = localStorage.getItem('admin_id');
+    const token = localStorage.getItem('admin_token');
+    return !!(adminId && token && isValidUUID(adminId));
+  }
+  return false;
 }
