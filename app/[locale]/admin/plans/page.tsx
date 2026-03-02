@@ -40,6 +40,7 @@ import { AdminInfo, PlanFormData, DEFAULT_PLAN_FORM_DATA, TabConfig } from "../.
 const NAV_BUTTONS = [
   { label: "Claims", icon: "solar:list-bold", path: "claims" },
   { label: "Assignments", icon: "solar:user-check-bold", path: "assignments" },
+  { label: "Billing", icon: "solar:wallet-money-bold", path: "billing" },
 ];
 
 const getPlanStatusColor = (status: PlanStatus) => {

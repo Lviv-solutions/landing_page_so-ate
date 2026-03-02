@@ -242,6 +242,7 @@ function AdminClaimsReviewContent() {
   const navButtons = [
     { label: "Plans", icon: "solar:bill-list-bold", path: "plans" },
     { label: "Assignments", icon: "solar:user-check-bold", path: "assignments" },
+    { label: "Billing", icon: "solar:wallet-money-bold", path: "billing" },
   ];
 
   return (

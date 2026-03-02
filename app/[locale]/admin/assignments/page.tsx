@@ -337,6 +337,7 @@ function AdminAssignmentsContent() {
   const navButtons = [
     { label: "Claims", icon: "solar:list-bold", path: "claims" },
     { label: "Plans", icon: "solar:bill-list-bold", path: "plans" },
+    { label: "Billing", icon: "solar:wallet-money-bold", path: "billing" },
   ];
 
   return (
