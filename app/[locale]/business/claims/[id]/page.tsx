@@ -48,9 +48,9 @@ export default function ClaimDetailPage() {
           accessToken: webClientAuthService.getToken() ?? undefined,
         });
         setClaim(claimData);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Failed to load claim:", err);
-        setError(err.message || "Failed to load claim details");
+        setError(err instanceof Error ? err.message : "Failed to load claim details");
       } finally {
         setIsLoading(false);
       }

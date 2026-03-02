@@ -10,7 +10,6 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
-import CircularProgress from "@mui/material/CircularProgress";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -25,6 +24,8 @@ import claimRequestService, {
   ClaimStatus,
   type ClaimRequest,
 } from "../../../../services/claimRequestService";
+import { LoadingScreen, LocaleToggleButton } from "../../../components/business";
+import { getClaimStatusColor, getClaimStatusText, getClaimStatusIcon } from "../../../utils/claimStatus";
 
 export default function ClaimsDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -68,62 +69,8 @@ export default function ClaimsDashboard() {
     loadClaims();
   }, []);
 
-  const getStatusColor = (status: ClaimStatus) => {
-    switch (status) {
-      case ClaimStatus.CLAIM_STATUS_PENDING:
-        return "warning";
-      case ClaimStatus.CLAIM_STATUS_APPROVED:
-        return "success";
-      case ClaimStatus.CLAIM_STATUS_REJECTED:
-        return "error";
-      default:
-        return "default";
-    }
-  };
-
-  const getStatusText = (status: ClaimStatus) => {
-    switch (status) {
-      case ClaimStatus.CLAIM_STATUS_PENDING:
-        return t("claims.statusPending") || "Pending Review";
-      case ClaimStatus.CLAIM_STATUS_APPROVED:
-        return t("claims.statusApproved") || "Approved";
-      case ClaimStatus.CLAIM_STATUS_REJECTED:
-        return t("claims.statusRejected") || "Rejected";
-      default:
-        return t("claims.statusUnspecified") || "Unknown";
-    }
-  };
-
-  const getStatusIcon = (status: ClaimStatus) => {
-    switch (status) {
-      case ClaimStatus.CLAIM_STATUS_PENDING:
-        return "solar:clock-circle-bold";
-      case ClaimStatus.CLAIM_STATUS_APPROVED:
-        return "solar:check-circle-bold";
-      case ClaimStatus.CLAIM_STATUS_REJECTED:
-        return "solar:close-circle-bold";
-      default:
-        return "solar:question-circle-bold";
-    }
-  };
-
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "background.default",
-        }}
-      >
-        <Stack spacing={2} alignItems="center">
-          <CircularProgress size={64} />
-          <Typography color="text.secondary">{t("common.loading")}</Typography>
-        </Stack>
-      </Box>
-    );
+    return <LoadingScreen message={t("common.loading")} />;
   }
 
   if (!isAuthenticated) {
@@ -175,42 +122,7 @@ export default function ClaimsDashboard() {
           >
             {t("claims.backToSearch") || "Back to Search"}
           </Button>
-          <Box
-            component="button"
-            onClick={toggleLocale}
-            sx={{
-              border: "none",
-              background: "none",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-              padding: "8px 12px",
-              borderRadius: 1,
-              transition: "all 0.2s",
-              "&:hover": {
-                bgcolor: "rgba(0, 0, 0, 0.04)",
-              },
-            }}
-          >
-            <Iconify
-              icon={
-                locale === "ar"
-                  ? "twemoji:flag-saudi-arabia"
-                  : "twemoji:flag-united-states"
-              }
-              width={20}
-            />
-            <Typography
-              sx={{
-                fontSize: "0.875rem",
-                fontWeight: 500,
-                color: "#6B7280",
-              }}
-            >
-              {locale === "ar" ? "العربية" : "English"}
-            </Typography>
-          </Box>
+          <LocaleToggleButton locale={locale} onToggle={toggleLocale} />
         </Box>
       </Box>
 
@@ -310,12 +222,12 @@ export default function ClaimsDashboard() {
                         <Chip
                           icon={
                             <Iconify
-                              icon={getStatusIcon(claim.status)}
+                              icon={getClaimStatusIcon(claim.status)}
                               width={18}
                             />
                           }
-                          label={getStatusText(claim.status)}
-                          color={getStatusColor(claim.status)}
+                          label={getClaimStatusText(claim.status, t)}
+                          color={getClaimStatusColor(claim.status)}
                           size="small"
                         />
                       </TableCell>

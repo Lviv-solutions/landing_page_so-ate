@@ -1,18 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
-import Navigation from "../../../../../components/Navigation";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { BusinessStepLayout, PrimaryButton } from "../../../../components/business";
 
 export default function CreateBusinessStep1() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
 
   const [formData, setFormData] = useState({
     arName: "",
@@ -24,26 +19,6 @@ export default function CreateBusinessStep1() {
   });
 
   const [currentKeyword, setCurrentKeyword] = useState("");
-
-  useEffect(() => {
-    // Update locale when URL changes
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    // Listen for popstate (browser back/forward) and route changes
-    window.addEventListener("popstate", handleRouteChange);
-
-    // Also check on mount and when router changes
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -109,14 +84,7 @@ export default function CreateBusinessStep1() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale}>
         <div className="grid md:grid-cols-2 gap-8">
           {/* Preview Side */}
           <div
@@ -359,18 +327,13 @@ export default function CreateBusinessStep1() {
                 </div>
 
                 {/* Submit Button */}
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="w-full py-3 bg-[#ED614A] text-white rounded-lg font-medium hover:bg-[#DC5139] transition-colors mt-6"
-                >
+                <PrimaryButton onClick={handleNext} className="mt-6">
                   {t("businessForm.submitButton")}
-                </button>
+                </PrimaryButton>
               </div>
             </div>
           </div>
         </div>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }

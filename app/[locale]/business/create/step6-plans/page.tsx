@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { useBusinessFormGuard } from "../../../../hooks/useBusinessFormGuard";
+import { BusinessStepLayout, FormCard } from "../../../../components/business";
 import { MEMBERSHIP_PLANS, PlanCode } from "../../../../constants/plans";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,48 +13,18 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 
 export default function CreateBusinessStep6Plans() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
+  const { savedData } = useBusinessFormGuard(locale, router);
 
   const [selectedPlan, setSelectedPlan] = useState<PlanCode | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const savedData = await businessFormDB.getFormData();
-        if (!savedData || !savedData.arName) {
-          router.push(`/${locale}/business/create/step1`);
-        } else if (savedData.planCode && ['free', 'basic', 'premium', 'enterprise'].includes(savedData.planCode)) {
-          setSelectedPlan(savedData.planCode as PlanCode);
-        }
-      } catch (error) {
-        console.error("Failed to load form data:", error);
-      }
-    };
-    loadData();
-  }, [router, locale]);
+    if (savedData?.planCode && ['free', 'basic', 'premium', 'enterprise'].includes(savedData.planCode)) {
+      setSelectedPlan(savedData.planCode as PlanCode);
+    }
+  }, [savedData]);
 
   const handlePlanSelect = (planCode: PlanCode) => {
     setSelectedPlan(planCode);
@@ -79,13 +50,7 @@ export default function CreateBusinessStep6Plans() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <Box
           sx={{
             display: "flex",
@@ -94,19 +59,7 @@ export default function CreateBusinessStep6Plans() {
             minHeight: "calc(100vh - 200px)",
           }}
         >
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: "1200px",
-              borderRadius: "16px",
-              border: "1px solid #E0E0E0",
-              padding: "24px",
-              bgcolor: "white",
-              display: "flex",
-              flexDirection: "column",
-              gap: "36px",
-            }}
-          >
+          <FormCard sx={{ width: "100%", maxWidth: "1200px", gap: "36px" }}>
             <Box
               sx={{
                 textAlign: locale === "ar" ? "right" : "left",
@@ -387,9 +340,8 @@ export default function CreateBusinessStep6Plans() {
                   : t("businessForm.continue") || "متابعة"}
               </Button>
             </Box>
-          </Box>
+          </FormCard>
         </Box>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }
