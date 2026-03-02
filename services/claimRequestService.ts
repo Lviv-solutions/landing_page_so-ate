@@ -85,8 +85,22 @@ class ClaimRequestService {
     this.client = new ClaimRequestServiceClient(envoyUrl, null, null);
   }
 
+  /**
+   * Build gRPC metadata with optional Bearer token for authorization.
+   * Normalizes token: trims whitespace and ensures a single "Bearer " prefix
+   * (backend typically expects "Authorization: Bearer <jwt>").
+   */
+  private metadata(accessToken?: string | null): Record<string, string> {
+    if (!accessToken) return {};
+    const raw = String(accessToken).trim();
+    if (!raw) return {};
+    const value = raw.toLowerCase().startsWith("bearer ") ? raw : `Bearer ${raw}`;
+    return { authorization: value };
+  }
+
   async createClaimRequest(
-    params: CreateClaimRequestParams
+    params: CreateClaimRequestParams,
+    options?: { accessToken?: string | null }
   ): Promise<{ claimRequestId: string }> {
     return new Promise((resolve, reject) => {
       try {
@@ -103,9 +117,11 @@ class ClaimRequestService {
           request.setPlanCode(params.planCode);
         }
 
+        const metadata = this.metadata(options?.accessToken);
+
         (this.client as any).createClaimRequest(
           request,
-          {},
+          metadata,
           (err: any, response: any) => {
             if (err) {
               reject(err);
@@ -122,15 +138,20 @@ class ClaimRequestService {
     });
   }
 
-  async getClaimRequest(claimRequestId: string): Promise<ClaimRequest> {
+  async getClaimRequest(
+    claimRequestId: string,
+    options?: { accessToken?: string | null }
+  ): Promise<ClaimRequest> {
     return new Promise((resolve, reject) => {
       try {
         const request = new (pb as any).GetClaimRequestRequest();
         request.setId(claimRequestId);
 
+        const metadata = this.metadata(options?.accessToken);
+
         (this.client as any).getClaimRequest(
           request,
-          {},
+          metadata,
           (err: any, response: any) => {
             if (err) {
               reject(err);
@@ -147,7 +168,8 @@ class ClaimRequestService {
   }
 
   async listClaimRequests(
-    params: ListClaimRequestsParams = {}
+    params: ListClaimRequestsParams = {},
+    options?: { accessToken?: string | null }
   ): Promise<ListClaimRequestsResponse> {
     return new Promise((resolve, reject) => {
       try {
@@ -159,9 +181,11 @@ class ClaimRequestService {
         if (params.status !== undefined) request.setStatus(params.status);
         if (params.businessId) request.setBusinessId(params.businessId);
 
+        const metadata = this.metadata(options?.accessToken);
+
         (this.client as any).listClaimRequests(
           request,
-          {},
+          metadata,
           (err: any, response: any) => {
             if (err) {
               reject(err);
@@ -185,7 +209,8 @@ class ClaimRequestService {
   }
 
   async approveClaimRequest(
-    params: ApproveClaimRequestParams
+    params: ApproveClaimRequestParams,
+    options?: { accessToken?: string | null }
   ): Promise<ApproveClaimRequestResponse> {
     return new Promise((resolve, reject) => {
       try {
@@ -193,9 +218,11 @@ class ClaimRequestService {
         request.setId(params.id);
         request.setReviewedBy(params.reviewedBy);
 
+        const metadata = this.metadata(options?.accessToken);
+
         (this.client as any).approveClaimRequest(
           request,
-          {},
+          metadata,
           (err: any, response: any) => {
             if (err) {
               reject(err);
@@ -214,7 +241,8 @@ class ClaimRequestService {
   }
 
   async rejectClaimRequest(
-    params: RejectClaimRequestParams
+    params: RejectClaimRequestParams,
+    options?: { accessToken?: string | null }
   ): Promise<{ claimRequestId: string }> {
     return new Promise((resolve, reject) => {
       try {
@@ -223,9 +251,11 @@ class ClaimRequestService {
         request.setReviewedBy(params.reviewedBy);
         request.setRejectionReason(params.rejectionReason);
 
+        const metadata = this.metadata(options?.accessToken);
+
         (this.client as any).rejectClaimRequest(
           request,
-          {},
+          metadata,
           (err: any, response: any) => {
             if (err) {
               reject(err);

@@ -1,0 +1,332 @@
+syntax = "proto3";
+
+package lviv.auth.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "lviv_backend/api/gen/auth/v1;auth_v1";
+
+// AuthService provides authentication and authorization operations
+service AuthService {
+  // User registration
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  
+  // User login with credentials
+  rpc Login(LoginRequest) returns (LoginResponse);
+  
+  // User logout
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  
+  // Refresh access token
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  
+  // Validate token
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+  
+  // Email verification
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+  
+  // Resend verification email
+  rpc ResendVerificationEmail(ResendVerificationEmailRequest) returns (ResendVerificationEmailResponse);
+  
+  // Get user profile
+  rpc GetProfile(GetProfileRequest) returns (GetProfileResponse);
+  
+  // Update user profile
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileResponse);
+  
+  // Enable Multi-Factor Authentication
+  rpc EnableMFA(EnableMFARequest) returns (EnableMFAResponse);
+  
+  // Verify MFA code
+  rpc VerifyMFA(VerifyMFARequest) returns (VerifyMFAResponse);
+  
+  // Disable MFA
+  rpc DisableMFA(DisableMFARequest) returns (google.protobuf.Empty);
+  
+  // Change password
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  
+  // Reset password request
+  rpc RequestPasswordReset(PasswordResetRequest) returns (PasswordResetResponse);
+  
+  // Validate reset token
+  rpc ValidateResetToken(ValidateResetTokenRequest) returns (ValidateResetTokenResponse);
+  
+  // Confirm password reset
+  rpc ConfirmPasswordReset(ConfirmPasswordResetRequest) returns (ConfirmPasswordResetResponse);
+  
+  // Get verification token for development/testing
+  rpc GetDevVerificationToken(GetDevVerificationTokenRequest) returns (GetDevVerificationTokenResponse);
+  
+  // Phone-based authentication for orders
+  // Initiate phone authentication - checks if phone exists, creates account if needed, sends OTP
+  rpc InitiatePhoneAuth(InitiatePhoneAuthRequest) returns (InitiatePhoneAuthResponse);
+  
+  // Verify phone OTP and get authentication token
+  rpc VerifyPhoneAuth(VerifyPhoneAuthRequest) returns (VerifyPhoneAuthResponse);
+
+  // WhatsApp-based authentication for customers
+  // Initiate WhatsApp authentication - sends OTP via WhatsApp
+  rpc InitiateWhatsAppAuth(InitiateWhatsAppAuthRequest) returns (InitiateWhatsAppAuthResponse);
+  
+  // Verify WhatsApp OTP and get authentication token
+  rpc VerifyWhatsAppAuth(VerifyWhatsAppAuthRequest) returns (VerifyWhatsAppAuthResponse);
+}
+
+// AuthUser represents authenticated user information
+message AuthUser {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  bool mfa_enabled = 4;
+  string company_id = 5;
+  repeated string permissions = 6;
+}
+
+// Token information
+message TokenInfo {
+  string access_token = 1;
+  string refresh_token = 2;
+  int64 expires_in = 3;
+  string token_type = 4;
+  google.protobuf.Timestamp expires_at = 5;
+}
+
+// Request messages
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  string otp_code = 3;
+  bool remember_me = 4;
+}
+
+message LoginResponse {
+  TokenInfo token_info = 1;
+  AuthUser user = 2;
+  bool requires_mfa = 3;
+  string mfa_challenge_id = 4;
+}
+
+message LogoutRequest {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+message LogoutResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  TokenInfo token_info = 1;
+}
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  AuthUser user = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  repeated string permissions = 4;
+}
+
+message EnableMFARequest {
+  string user_id = 1;
+}
+
+message EnableMFAResponse {
+  string secret = 1;
+  string qr_code_url = 2;
+  repeated string backup_codes = 3;
+}
+
+message VerifyMFARequest {
+  string user_id = 1;
+  string code = 2;
+  string challenge_id = 3;
+}
+
+message VerifyMFAResponse {
+  bool valid = 1;
+  TokenInfo token_info = 2;
+  AuthUser user = 3;
+}
+
+message DisableMFARequest {
+  string user_id = 1;
+  string password = 2;
+  string mfa_code = 3;
+}
+
+message ChangePasswordRequest {
+  string user_id = 1;
+  string current_password = 2;
+  string new_password = 3;
+  string mfa_code = 4;
+}
+
+message ChangePasswordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PasswordResetRequest {
+  string email = 1;
+}
+
+message PasswordResetResponse {
+  bool success = 1;
+  string message = 2;
+  string reset_token = 3;
+}
+
+message ConfirmPasswordResetRequest {
+  string reset_token = 1;
+  string new_password = 2;
+}
+
+message ConfirmPasswordResetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Registration messages
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message RegisterResponse {
+  string message = 1;
+  AuthUser user = 2;
+}
+
+// Email verification messages
+message VerifyEmailRequest {
+  string token = 1;
+}
+
+message VerifyEmailResponse {
+  string message = 1;
+}
+
+message ResendVerificationEmailRequest {
+  // User ID extracted from auth token
+}
+
+message ResendVerificationEmailResponse {
+  string message = 1;
+}
+
+// Profile management messages
+message GetProfileRequest {
+  // User ID extracted from auth token
+}
+
+message GetProfileResponse {
+  string id = 1;
+  string username = 2;
+  string email = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+  string profile_picture = 6;
+  google.protobuf.Timestamp active_at = 7;
+  google.protobuf.Timestamp verified_at = 8;
+}
+
+message UpdateProfileRequest {
+  string username = 1;
+  string profile_picture = 2;
+}
+
+message UpdateProfileResponse {
+  string message = 1;
+}
+
+// Reset token validation messages
+message ValidateResetTokenRequest {
+  string token = 1;
+}
+
+message ValidateResetTokenResponse {
+  string message = 1;
+}
+
+// Dev verification token messages (development/testing only)
+message GetDevVerificationTokenRequest {
+  string email = 1;
+}
+
+message GetDevVerificationTokenResponse {
+  string email = 1;
+  string token = 2;
+  string expires_at = 3;
+  string type = 4;
+  string verification_url = 5;
+  string note = 6;
+}
+
+// Phone authentication messages
+message InitiatePhoneAuthRequest {
+  string phone_number = 1;
+}
+
+message InitiatePhoneAuthResponse {
+  string phone_number = 1;
+  bool otp_sent = 2;
+  bool is_new_user = 3;
+  string message = 4;
+}
+
+message VerifyPhoneAuthRequest {
+  string phone_number = 1;
+  string otp = 2;
+}
+
+message VerifyPhoneAuthResponse {
+  string token = 1;
+  string refresh_token = 2;
+  string account_id = 3;
+  string phone_number = 4;
+  bool is_phone_verified = 5;
+  int64 expires_at = 6;
+}
+
+// WhatsApp authentication messages
+message InitiateWhatsAppAuthRequest {
+  string phone_number = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message InitiateWhatsAppAuthResponse {
+  string phone_number = 1;
+  bool otp_sent = 2;
+  bool is_new_user = 3;
+  string message = 4;
+  string session_id = 5;
+}
+
+message VerifyWhatsAppAuthRequest {
+  string phone_number = 1;
+  string otp = 2;
+  string session_id = 3;
+}
+
+message VerifyWhatsAppAuthResponse {
+  TokenInfo token_info = 1;
+  string account_id = 2;
+  string phone_number = 3;
+  bool is_phone_verified = 4;
+  bool is_new_user = 5;
+  AuthUser user = 6;
+}

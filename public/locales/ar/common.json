@@ -17,6 +17,10 @@
       "cta": "اشترك الآن"
     },
     "actions": {
+      "signIn": "تسجيل الدخول",
+      "signUp": "إنشاء حساب",
+      "signOut": "تسجيل الخروج",
+      "logout": "تسجيل الخروج",
       "subscribe": "اشترك الآن",
       "contact": "تواصل معنا",
       "ClientPage": "سو إيت للعملاء",
@@ -24,6 +28,32 @@
       "HomePage": "العودة للرئيسية",
       "AdminPanel": "لوحة الإدارة"
     }
+  },
+  "auth": {
+    "signInTitle": "تسجيل الدخول",
+    "signUpTitle": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "phoneNumber": "رقم الهاتف",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "signingIn": "جاري تسجيل الدخول...",
+    "creating": "جاري إنشاء الحساب...",
+    "createAccount": "إنشاء حساب",
+    "noAccount": "ليس لديك حساب؟",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "or": "أو",
+    "loginFailed": "فشل تسجيل الدخول. تحقق من البريد الإلكتروني وكلمة المرور.",
+    "registrationFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "passwordMismatch": "كلمات المرور غير متطابقة.",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل.",
+    "signUpSuccess": "تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك.",
+    "ok": "موافق"
   },
   "clientPage": {
     "title": "سو إيت للعملاء",
@@ -811,6 +841,7 @@
     "confirmLocation": "تأكيد",
     "editLocation": "تعديل",
     "pinLocation": "قم بتحديد موقعك على الخريطة بدقة",
+    "searchAddressPlaceholder": "ابحث عن عنوان...",
     "nextButton": "التالي",
     "locationValidationError": "الرجاء إكمال جميع الحقول المطلوبة",
     "step3Title": "حدد أوقات عمل مطعمك",

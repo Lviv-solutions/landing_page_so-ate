@@ -16,6 +16,7 @@ import Alert from "@mui/material/Alert";
 
 import { Iconify } from "../../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { webClientAuthService } from "../../../../../lib/auth-service";
 import claimRequestService, {
   ClaimStatus,
   type ClaimRequest,
@@ -43,7 +44,9 @@ export default function ClaimDetailPage() {
   useEffect(() => {
     const loadClaim = async () => {
       try {
-        const claimData = await claimRequestService.getClaimRequest(claimId);
+        const claimData = await claimRequestService.getClaimRequest(claimId, {
+          accessToken: webClientAuthService.getToken() ?? undefined,
+        });
         setClaim(claimData);
       } catch (err: any) {
         console.error("Failed to load claim:", err);

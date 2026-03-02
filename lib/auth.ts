@@ -161,28 +161,13 @@ export function logoutAdmin(): void {
     localStorage.removeItem('admin_email');
     localStorage.removeItem('admin_name');
     localStorage.removeItem('user_role');
-    localStorage.removeItem('admin_token');
   }
-}
-
-export function setAdminToken(token: string): void {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('admin_token', token);
-  }
-}
-
-export function getAdminToken(): string | null {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('admin_token');
-  }
-  return null;
 }
 
 export function isAdminLoggedIn(): boolean {
   if (typeof window !== 'undefined') {
     const adminId = localStorage.getItem('admin_id');
-    const token = localStorage.getItem('admin_token');
-    return !!(adminId && token && isValidUUID(adminId));
+    return !!(adminId && isValidUUID(adminId));
   }
   return false;
 }

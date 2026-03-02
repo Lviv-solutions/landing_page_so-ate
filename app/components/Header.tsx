@@ -7,10 +7,13 @@ import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { isAdmin } from "../../lib/auth";
+import { webClientAuthService } from "../../lib/auth-service";
 // import HeaderThreeBackground from "./HeaderThreeBackground";
 import MobileHeader from "./MobileHeader";
 import PromoBanner from "./PromoBanner";
 import MouseTrackingButton from "./MouseTrackingButton";
+import SignInModal from "./SignInModal";
+import SignUpModal from "./SignUpModal";
 import "../style.css";
 
 export default function Header() {
@@ -19,6 +22,10 @@ export default function Header() {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
   const [isAdminUser, setIsAdminUser] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [signUpOpen, setSignUpOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pendingBusinessNav, setPendingBusinessNav] = useState(false);
   
   // Extract current locale from pathname - common for both ar and en
   const getLocaleFromPath = () => {
@@ -41,6 +48,10 @@ export default function Header() {
   useEffect(() => {
     setIsAdminUser(isAdmin());
   }, []);
+
+  useEffect(() => {
+    setIsLoggedIn(webClientAuthService.isAuthenticated());
+  }, [signInOpen, signUpOpen]);
 
   const navItems = [
     { key: "nav.home", href: "#hero" },
@@ -101,7 +112,27 @@ export default function Header() {
 
   const handleBusinessPageClick = () => {
     const basePath = `/${currentLocale}`;
+    if (!webClientAuthService.isAuthenticated()) {
+      setPendingBusinessNav(true);
+      setSignInOpen(true);
+      return;
+    }
     router.push(`${basePath}/business`);
+  };
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setSignInOpen(false);
+    setSignUpOpen(false);
+    if (pendingBusinessNav) {
+      setPendingBusinessNav(false);
+      router.push(`/${currentLocale}/business`);
+    }
+  };
+
+  const handleSignOut = () => {
+    webClientAuthService.logout();
+    setIsLoggedIn(false);
   };
 
   const handleAdminPanelClick = () => {
@@ -193,6 +224,39 @@ export default function Header() {
                 <LanguageSwitcher />
               </motion.div>
 
+              {isLoggedIn ? (
+                <motion.button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg hover:bg-white/10 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t("header.actions.signOut")}
+                </motion.button>
+              ) : (
+                <>
+                  <motion.button
+                    type="button"
+                    onClick={() => setSignInOpen(true)}
+                    className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg hover:bg-white/10 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {t("header.actions.signIn")}
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    onClick={() => setSignUpOpen(true)}
+                    className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {t("header.actions.signUp")}
+                  </motion.button>
+                </>
+              )}
+
                 <MouseTrackingButton
                   variant="primary"
                   size="md"
@@ -262,6 +326,18 @@ export default function Header() {
         initial={{ width: 0 }}
         animate={{ width: "100%" }}
         transition={{ duration: 2, delay: 1 }}
+      />
+
+      <SignInModal
+        open={signInOpen}
+        onClose={() => { setSignInOpen(false); setPendingBusinessNav(false); }}
+        onSwitchToSignUp={() => { setSignInOpen(false); setSignUpOpen(true); }}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      <SignUpModal
+        open={signUpOpen}
+        onClose={() => setSignUpOpen(false)}
+        onSwitchToSignIn={() => { setSignUpOpen(false); setSignInOpen(true); }}
       />
     </header>
     </>
