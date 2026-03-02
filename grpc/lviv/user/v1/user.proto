@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package lviv.user.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "lviv_backend/api/gen/user/v1;user_v1";
+
+// UserService provides user management operations
+service UserService {
+  // Create a new user account
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  
+  // Get user by ID
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  
+  // Update user information
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  
+  // Delete user account
+  rpc DeleteUser(DeleteUserRequest) returns (google.protobuf.Empty);
+  
+  // List users with pagination
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  
+  // Stream user updates (real-time)
+  rpc StreamUserUpdates(google.protobuf.Empty) returns (stream UserUpdate);
+  
+  // Get user profile
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+  
+  // Update user preferences
+  rpc UpdateUserPreferences(UpdateUserPreferencesRequest) returns (UpdateUserPreferencesResponse);
+}
+
+// User represents a user in the system
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string password = 4;
+}
+
+// UserPreferences holds user-specific settings
+message UserPreferences {
+  string theme = 1;
+  bool notifications_enabled = 2;
+  string language = 3;
+  string timezone = 4;
+  bool email_notifications = 5;
+  bool push_notifications = 6;
+}
+
+// UserUpdate represents a real-time user update
+message UserUpdate {
+  string user_id = 1;
+  string update_type = 2; // created, updated, deleted, status_changed
+  User user = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+// Request messages
+message CreateUserRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message GetUserResponse {
+  User user = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string password = 4;
+}
+
+message UpdateUserResponse {
+  User user = 1;
+}
+
+message DeleteUserRequest {
+  string id = 1;
+}
+
+message ListUsersRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+  string role_filter = 3;
+  bool active_only = 4;
+}
+
+message ListUsersResponse {
+  repeated User users = 1;
+  string next_page_token = 2;
+  int32 total_count = 3;
+}
+
+message GetUserByIDRequest {
+  string user_id = 1;
+}
+
+message GetUserByIDResponse {
+  User user = 1;
+}
+
+message UpdateUserPreferencesRequest {
+  string user_id = 1;
+  UserPreferences preferences = 2;
+}
+
+message UpdateUserPreferencesResponse {
+  UserPreferences preferences = 1;
+}
+
+message UserStats {
+  int32 login_count = 1;
+  google.protobuf.Timestamp last_login = 2;
+  int32 companies_count = 3;
+  int32 tasks_count = 4;
+}

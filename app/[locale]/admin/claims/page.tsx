@@ -417,6 +417,20 @@ function AdminClaimsReviewContent() {
         </Stack>
 
         <Stack direction="row" spacing={2} alignItems="center">
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:bill-list-bold" />}
+            onClick={() => router.push(`/${locale}/admin/plans`)}
+          >
+            Plans
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:user-check-bold" />}
+            onClick={() => router.push(`/${locale}/admin/assignments`)}
+          >
+            Assignments
+          </Button>
           <Box
             component="button"
             onClick={toggleLocale}
