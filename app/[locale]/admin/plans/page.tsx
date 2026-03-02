@@ -1,0 +1,853 @@
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AdminRoute from "../../../components/AdminRoute";
+import Image from "next/image";
+
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Typography from "@mui/material/Typography";
+import CardContent from "@mui/material/CardContent";
+import CircularProgress from "@mui/material/CircularProgress";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import Alert from "@mui/material/Alert";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import InputAdornment from "@mui/material/InputAdornment";
+
+import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
+import { useTranslation } from "../../../hooks/useTranslation";
+import { getAdminId, getAdminInfo, logoutAdmin } from "../../../../lib/auth";
+import { webClientAuthService } from "../../../../lib/auth-service";
+import planManagementService, {
+  Plan,
+  PlanStatus,
+  BillingPeriod,
+} from "../../../../services/planManagementService";
+
+function AdminPlansContent() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [filteredPlans, setFilteredPlans] = useState<Plan[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [createDialog, setCreateDialog] = useState(false);
+  const [editDialog, setEditDialog] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [adminInfo, setAdminInfo] = useState<{ id: string; email?: string; name?: string } | null>(null);
+
+  const [formData, setFormData] = useState({
+    code: "",
+    name: "",
+    description: "",
+    billingPeriod: BillingPeriod.BILLING_PERIOD_MONTHLY,
+    priceMinor: 0,
+    currency: "USD",
+    trialDays: 0,
+  });
+
+  const router = useRouter();
+  const { t, locale } = useTranslation();
+  const isArabic = locale === "ar";
+
+  const toggleLocale = () => {
+    const newLocale = locale === "ar" ? "en" : "ar";
+    const currentPath = window.location.pathname;
+    const pathSegments = currentPath.split("/").filter(Boolean);
+    pathSegments[0] = newLocale;
+    router.push("/" + pathSegments.join("/"));
+  };
+
+  useEffect(() => {
+    const loadPlans = async () => {
+      try {
+        const loggedInAdminId = getAdminId();
+        if (!loggedInAdminId) {
+          setError("Admin not logged in");
+          setIsLoading(false);
+          router.push(`/${locale}/admin`);
+          return;
+        }
+        setAdminInfo(getAdminInfo());
+
+        const token = webClientAuthService.getToken();
+        const response = await planManagementService.listPlans(
+          { pageSize: 100 },
+          { accessToken: token ?? undefined }
+        );
+
+        setPlans(response.plans);
+        filterPlansByTab(response.plans, 0);
+      } catch (error) {
+        console.error("Failed to load plans:", error);
+        setError("Failed to load plans");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPlans();
+  }, [router, locale]);
+
+  const handleLogout = () => {
+    logoutAdmin();
+    webClientAuthService.logout();
+    router.push(`/${locale}/admin`);
+  };
+
+  const filterPlansByTab = (allPlans: Plan[], tabIndex: number) => {
+    let filtered: Plan[];
+    switch (tabIndex) {
+      case 0:
+        filtered = allPlans.filter((p) => p.status === PlanStatus.PLAN_STATUS_ACTIVE);
+        break;
+      case 1:
+        filtered = allPlans.filter((p) => p.status === PlanStatus.PLAN_STATUS_INACTIVE);
+        break;
+      case 2:
+        filtered = allPlans.filter((p) => p.status === PlanStatus.PLAN_STATUS_ARCHIVED);
+        break;
+      default:
+        filtered = allPlans;
+    }
+    setFilteredPlans(filtered);
+  };
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue);
+    filterPlansByTab(plans, newValue);
+  };
+
+  const getPlanStatusColor = (status: PlanStatus) => {
+    switch (status) {
+      case PlanStatus.PLAN_STATUS_ACTIVE:
+        return "success";
+      case PlanStatus.PLAN_STATUS_INACTIVE:
+        return "warning";
+      case PlanStatus.PLAN_STATUS_ARCHIVED:
+        return "error";
+      default:
+        return "default";
+    }
+  };
+
+  const getPlanStatusText = (status: PlanStatus) => {
+    switch (status) {
+      case PlanStatus.PLAN_STATUS_ACTIVE:
+        return "Active";
+      case PlanStatus.PLAN_STATUS_INACTIVE:
+        return "Inactive";
+      case PlanStatus.PLAN_STATUS_ARCHIVED:
+        return "Archived";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const getBillingPeriodText = (period: BillingPeriod) => {
+    switch (period) {
+      case BillingPeriod.BILLING_PERIOD_MONTHLY:
+        return "Monthly";
+      case BillingPeriod.BILLING_PERIOD_QUARTERLY:
+        return "Quarterly";
+      case BillingPeriod.BILLING_PERIOD_YEARLY:
+        return "Yearly";
+      case BillingPeriod.BILLING_PERIOD_LIFETIME:
+        return "Lifetime";
+      default:
+        return "Unknown";
+    }
+  };
+
+  const formatPrice = (priceMinor: number, currency: string) => {
+    const price = priceMinor / 100;
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(price);
+  };
+
+  const handleOpenCreateDialog = () => {
+    setFormData({
+      code: "",
+      name: "",
+      description: "",
+      billingPeriod: BillingPeriod.BILLING_PERIOD_MONTHLY,
+      priceMinor: 0,
+      currency: "USD",
+      trialDays: 0,
+    });
+    setCreateDialog(true);
+    setError(null);
+  };
+
+  const handleOpenEditDialog = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setFormData({
+      code: plan.code,
+      name: plan.name,
+      description: plan.description,
+      billingPeriod: plan.billingPeriod,
+      priceMinor: plan.priceMinor,
+      currency: plan.currency,
+      trialDays: plan.trialDays,
+    });
+    setEditDialog(true);
+    setError(null);
+  };
+
+  const handleOpenDeleteDialog = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setDeleteDialog(true);
+    setError(null);
+  };
+
+  const handleCreatePlan = async () => {
+    setActionLoading(true);
+    setError(null);
+
+    try {
+      const token = webClientAuthService.getToken();
+      const newPlan = await planManagementService.createPlan(
+        {
+          code: formData.code,
+          name: formData.name,
+          description: formData.description,
+          billingPeriod: formData.billingPeriod,
+          priceMinor: formData.priceMinor,
+          currency: formData.currency,
+          trialDays: formData.trialDays,
+        },
+        { accessToken: token ?? undefined }
+      );
+
+      setSuccessMessage(`Plan "${newPlan.name}" created successfully!`);
+      const updatedPlans = [...plans, newPlan];
+      setPlans(updatedPlans);
+      filterPlansByTab(updatedPlans, currentTab);
+      setCreateDialog(false);
+    } catch (err: any) {
+      console.error("Failed to create plan:", err);
+      setError(err.message || "Failed to create plan");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleUpdatePlan = async () => {
+    if (!selectedPlan) return;
+
+    setActionLoading(true);
+    setError(null);
+
+    try {
+      const token = webClientAuthService.getToken();
+      const updatedPlan = await planManagementService.updatePlan(
+        {
+          code: formData.code,
+          name: formData.name,
+          description: formData.description,
+          billingPeriod: formData.billingPeriod,
+          priceMinor: formData.priceMinor,
+          currency: formData.currency,
+          trialDays: formData.trialDays,
+          status: selectedPlan.status,
+        },
+        { accessToken: token ?? undefined }
+      );
+
+      setSuccessMessage(`Plan "${updatedPlan.name}" updated successfully!`);
+      const updatedPlans = plans.map((p) =>
+        p.code === updatedPlan.code ? updatedPlan : p
+      );
+      setPlans(updatedPlans);
+      filterPlansByTab(updatedPlans, currentTab);
+      setEditDialog(false);
+    } catch (err: any) {
+      console.error("Failed to update plan:", err);
+      setError(err.message || "Failed to update plan");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleArchivePlan = async () => {
+    if (!selectedPlan) return;
+
+    setActionLoading(true);
+    setError(null);
+
+    try {
+      const token = webClientAuthService.getToken();
+      const updatedPlan = await planManagementService.updatePlan(
+        {
+          code: selectedPlan.code,
+          status: PlanStatus.PLAN_STATUS_ARCHIVED,
+        },
+        { accessToken: token ?? undefined }
+      );
+
+      setSuccessMessage(`Plan "${selectedPlan.name}" archived successfully!`);
+      const updatedPlans = plans.map((p) =>
+        p.code === updatedPlan.code ? updatedPlan : p
+      );
+      setPlans(updatedPlans);
+      filterPlansByTab(updatedPlans, currentTab);
+      setDeleteDialog(false);
+    } catch (err: any) {
+      console.error("Failed to archive plan:", err);
+      setError(err.message || "Failed to archive plan");
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "background.default",
+        }}
+      >
+        <Stack spacing={2} alignItems="center">
+          <CircularProgress size={64} />
+          <Typography color="text.secondary">Loading...</Typography>
+        </Stack>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#FAFAFA",
+        position: "relative",
+      }}
+      dir={isArabic ? "rtl" : "ltr"}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: { xs: 3, md: 6 },
+          py: 3,
+          bgcolor: "#FFFFFF",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Image
+            src="/assets/admin-console/Icon.svg"
+            alt="So-Eat Business"
+            width={48}
+            height={48}
+          />
+          <Stack>
+            <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+              {t("brand.name")} - Admin Panel
+            </Typography>
+            {adminInfo && (
+              <Typography variant="caption" color="text.secondary">
+                {adminInfo.email || adminInfo.name || adminInfo.id}
+              </Typography>
+            )}
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:list-bold" />}
+            onClick={() => router.push(`/${locale}/admin/claims`)}
+          >
+            Claims
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<Iconify icon="solar:user-check-bold" />}
+            onClick={() => router.push(`/${locale}/admin/assignments`)}
+          >
+            Assignments
+          </Button>
+          <Box
+            component="button"
+            onClick={toggleLocale}
+            sx={{
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              padding: "8px 12px",
+              borderRadius: 1,
+              transition: "all 0.2s",
+              "&:hover": {
+                bgcolor: "rgba(0, 0, 0, 0.04)",
+              },
+            }}
+          >
+            <Iconify
+              icon={
+                locale === "ar"
+                  ? "twemoji:flag-saudi-arabia"
+                  : "twemoji:flag-united-states"
+              }
+              width={20}
+            />
+            <Typography sx={{ fontSize: "0.875rem", fontWeight: 500, color: "#6B7280" }}>
+              {locale === "ar" ? "العربية" : "English"}
+            </Typography>
+          </Box>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<Iconify icon="solar:logout-2-bold" />}
+            onClick={handleLogout}
+            sx={{ borderRadius: 2, textTransform: "none", fontWeight: 600 }}
+          >
+            Logout
+          </Button>
+        </Stack>
+      </Box>
+
+      <Box sx={{ maxWidth: "1400px", mx: "auto", px: { xs: 3, md: 6 }, py: 4 }}>
+        <Stack spacing={3}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box>
+              <Typography variant="h4" fontWeight="bold" gutterBottom>
+                Plan Management
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Create and manage subscription plans
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="solar:add-circle-bold" />}
+              onClick={handleOpenCreateDialog}
+              sx={{
+                background: "linear-gradient(135deg, #ED614A 0%, #E6446F 50%, #FF6B35 100%)",
+                "&:hover": {
+                  background: "linear-gradient(135deg, #DC5039 0%, #D5335E 50%, #EE5A24 100%)",
+                },
+              }}
+            >
+              Create Plan
+            </Button>
+          </Box>
+
+          {successMessage && (
+            <Alert
+              severity="success"
+              onClose={() => setSuccessMessage(null)}
+              icon={<Iconify icon="solar:check-circle-bold" />}
+            >
+              {successMessage}
+            </Alert>
+          )}
+
+          <Card>
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs value={currentTab} onChange={handleTabChange}>
+                <Tab
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>Active</span>
+                      <Chip
+                        label={plans.filter((p) => p.status === PlanStatus.PLAN_STATUS_ACTIVE).length}
+                        size="small"
+                        color="success"
+                      />
+                    </Stack>
+                  }
+                />
+                <Tab
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>Inactive</span>
+                      <Chip
+                        label={plans.filter((p) => p.status === PlanStatus.PLAN_STATUS_INACTIVE).length}
+                        size="small"
+                        color="warning"
+                      />
+                    </Stack>
+                  }
+                />
+                <Tab
+                  label={
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <span>Archived</span>
+                      <Chip
+                        label={plans.filter((p) => p.status === PlanStatus.PLAN_STATUS_ARCHIVED).length}
+                        size="small"
+                        color="error"
+                      />
+                    </Stack>
+                  }
+                />
+              </Tabs>
+            </Box>
+
+            <CardContent>
+              {filteredPlans.length === 0 ? (
+                <Box textAlign="center" py={6}>
+                  <Iconify icon="solar:inbox-line-bold-duotone" width={80} color="grey.400" />
+                  <Typography variant="h6" color="text.secondary" mt={2}>
+                    No plans in this category
+                  </Typography>
+                </Box>
+              ) : (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Code</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Price</TableCell>
+                        <TableCell>Billing Period</TableCell>
+                        <TableCell>Trial Days</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell align={isArabic ? "left" : "right"}>Actions</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {filteredPlans.map((plan) => (
+                        <TableRow key={plan.code} sx={{ "&:hover": { bgcolor: "action.hover" } }}>
+                          <TableCell>
+                            <Typography variant="body2" fontFamily="monospace" fontWeight="medium">
+                              {plan.code}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" fontWeight="medium">
+                              {plan.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {plan.description}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2" fontWeight="bold">
+                              {formatPrice(plan.priceMinor, plan.currency)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {getBillingPeriodText(plan.billingPeriod)}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">{plan.trialDays} days</Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Chip
+                              label={getPlanStatusText(plan.status)}
+                              color={getPlanStatusColor(plan.status)}
+                              size="small"
+                            />
+                          </TableCell>
+                          <TableCell align={isArabic ? "left" : "right"}>
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              justifyContent={isArabic ? "flex-start" : "flex-end"}
+                            >
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                color="primary"
+                                startIcon={<Iconify icon="solar:pen-bold" />}
+                                onClick={() => handleOpenEditDialog(plan)}
+                              >
+                                Edit
+                              </Button>
+                              {plan.status !== PlanStatus.PLAN_STATUS_ARCHIVED && (
+                                <Button
+                                  size="small"
+                                  variant="outlined"
+                                  color="error"
+                                  startIcon={<Iconify icon="solar:archive-bold" />}
+                                  onClick={() => handleOpenDeleteDialog(plan)}
+                                >
+                                  Archive
+                                </Button>
+                              )}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </CardContent>
+          </Card>
+        </Stack>
+      </Box>
+
+      <Dialog open={createDialog} onClose={() => setCreateDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Create New Plan</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} pt={1}>
+            {error && (
+              <Alert severity="error" icon={<Iconify icon="solar:danger-circle-bold" />}>
+                {error}
+              </Alert>
+            )}
+            <TextField
+              label="Plan Code"
+              value={formData.code}
+              onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+              fullWidth
+              required
+              helperText="Unique identifier (e.g., premium, enterprise)"
+            />
+            <TextField
+              label="Plan Name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              fullWidth
+              multiline
+              rows={3}
+              required
+            />
+            <FormControl fullWidth>
+              <InputLabel>Billing Period</InputLabel>
+              <Select
+                value={formData.billingPeriod}
+                onChange={(e) =>
+                  setFormData({ ...formData, billingPeriod: e.target.value as BillingPeriod })
+                }
+                label="Billing Period"
+              >
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_MONTHLY}>Monthly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_QUARTERLY}>Quarterly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_YEARLY}>Yearly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_LIFETIME}>Lifetime</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Price"
+              type="number"
+              value={formData.priceMinor / 100}
+              onChange={(e) =>
+                setFormData({ ...formData, priceMinor: Math.round(parseFloat(e.target.value) * 100) })
+              }
+              fullWidth
+              required
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              helperText="Enter price in dollars (e.g., 29.99)"
+            />
+            <FormControl fullWidth>
+              <InputLabel>Currency</InputLabel>
+              <Select
+                value={formData.currency}
+                onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                label="Currency"
+              >
+                <MenuItem value="USD">USD</MenuItem>
+                <MenuItem value="EUR">EUR</MenuItem>
+                <MenuItem value="GBP">GBP</MenuItem>
+                <MenuItem value="SAR">SAR</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Trial Days"
+              type="number"
+              value={formData.trialDays}
+              onChange={(e) => setFormData({ ...formData, trialDays: parseInt(e.target.value) })}
+              fullWidth
+              helperText="Number of free trial days (0 for no trial)"
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCreateDialog(false)} disabled={actionLoading}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCreatePlan}
+            variant="contained"
+            disabled={actionLoading}
+            startIcon={
+              actionLoading ? <CircularProgress size={16} /> : <Iconify icon="solar:check-circle-bold" />
+            }
+          >
+            Create Plan
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={editDialog} onClose={() => setEditDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Edit Plan</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} pt={1}>
+            {error && (
+              <Alert severity="error" icon={<Iconify icon="solar:danger-circle-bold" />}>
+                {error}
+              </Alert>
+            )}
+            <TextField label="Plan Code" value={formData.code} fullWidth disabled />
+            <TextField
+              label="Plan Name"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              fullWidth
+              required
+            />
+            <TextField
+              label="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              fullWidth
+              multiline
+              rows={3}
+              required
+            />
+            <FormControl fullWidth>
+              <InputLabel>Billing Period</InputLabel>
+              <Select
+                value={formData.billingPeriod}
+                onChange={(e) =>
+                  setFormData({ ...formData, billingPeriod: e.target.value as BillingPeriod })
+                }
+                label="Billing Period"
+              >
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_MONTHLY}>Monthly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_QUARTERLY}>Quarterly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_YEARLY}>Yearly</MenuItem>
+                <MenuItem value={BillingPeriod.BILLING_PERIOD_LIFETIME}>Lifetime</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Price"
+              type="number"
+              value={formData.priceMinor / 100}
+              onChange={(e) =>
+                setFormData({ ...formData, priceMinor: Math.round(parseFloat(e.target.value) * 100) })
+              }
+              fullWidth
+              required
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+            />
+            <FormControl fullWidth>
+              <InputLabel>Currency</InputLabel>
+              <Select
+                value={formData.currency}
+                onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                label="Currency"
+              >
+                <MenuItem value="USD">USD</MenuItem>
+                <MenuItem value="EUR">EUR</MenuItem>
+                <MenuItem value="GBP">GBP</MenuItem>
+                <MenuItem value="SAR">SAR</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              label="Trial Days"
+              type="number"
+              value={formData.trialDays}
+              onChange={(e) => setFormData({ ...formData, trialDays: parseInt(e.target.value) })}
+              fullWidth
+            />
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditDialog(false)} disabled={actionLoading}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleUpdatePlan}
+            variant="contained"
+            disabled={actionLoading}
+            startIcon={
+              actionLoading ? <CircularProgress size={16} /> : <Iconify icon="solar:check-circle-bold" />
+            }
+          >
+            Update Plan
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Archive Plan</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} pt={1}>
+            {error && (
+              <Alert severity="error" icon={<Iconify icon="solar:danger-circle-bold" />}>
+                {error}
+              </Alert>
+            )}
+            <Alert severity="warning" icon={<Iconify icon="solar:info-circle-bold" />}>
+              Are you sure you want to archive the plan "{selectedPlan?.name}"? This action will make the
+              plan unavailable for new subscriptions.
+            </Alert>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog(false)} disabled={actionLoading}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleArchivePlan}
+            variant="contained"
+            color="error"
+            disabled={actionLoading}
+            startIcon={
+              actionLoading ? <CircularProgress size={16} /> : <Iconify icon="solar:archive-bold" />
+            }
+          >
+            Archive Plan
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
+
+export default function AdminPlansPage() {
+  return (
+    <AdminRoute>
+      <AdminPlansContent />
+    </AdminRoute>
+  );
+}

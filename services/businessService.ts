@@ -191,15 +191,21 @@ class BusinessService {
   async listBusinesses(
     pageSize: number = 10,
     pageToken: string = "",
-    filter: string = ""
+    filter: string = "",
+    metadata?: { accessToken?: string }
   ): Promise<any> {
     const request = new ListBusinessesRequest();
     request.setPageSize(pageSize);
     request.setPageToken(pageToken);
     request.setFilter(filter);
 
+    const grpcMetadata: any = {};
+    if (metadata?.accessToken) {
+      grpcMetadata.authorization = `Bearer ${metadata.accessToken}`;
+    }
+
     return new Promise((resolve, reject) => {
-      this.client.listBusinesses(request, {}, (err, response) => {
+      this.client.listBusinesses(request, grpcMetadata, (err, response) => {
         if (err) {
           reject(err);
         } else {

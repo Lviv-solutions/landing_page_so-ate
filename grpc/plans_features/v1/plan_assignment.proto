@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+import "google/protobuf/timestamp.proto";
+
+service PlanAssignmentService {
+  rpc AssignPlanToUser(AssignPlanToUserRequest) returns (AssignPlanToUserResponse);
+  rpc GetPlanAssignment(GetPlanAssignmentRequest) returns (PlanAssignmentResponse);
+  rpc ListPlanAssignments(ListPlanAssignmentsRequest) returns (ListPlanAssignmentsResponse);
+  rpc AcceptPlanAssignment(AcceptPlanAssignmentRequest) returns (AcceptPlanAssignmentResponse);
+  rpc RejectPlanAssignment(RejectPlanAssignmentRequest) returns (RejectPlanAssignmentResponse);
+  rpc CancelPlanAssignment(CancelPlanAssignmentRequest) returns (CancelPlanAssignmentResponse);
+}
+
+enum AssignmentStatus {
+  ASSIGNMENT_STATUS_UNSPECIFIED = 0;
+  ASSIGNMENT_STATUS_PENDING = 1;
+  ASSIGNMENT_STATUS_ACCEPTED = 2;
+  ASSIGNMENT_STATUS_REJECTED = 3;
+  ASSIGNMENT_STATUS_CANCELED = 4;
+  ASSIGNMENT_STATUS_EXPIRED = 5;
+}
+
+message PlanAssignment {
+  string id = 1;
+  string plan_code = 2;
+  string user_id = 3;
+  string business_id = 4;
+  string assigned_by = 5;
+  AssignmentStatus status = 6;
+  google.protobuf.Timestamp start_at = 7;
+  google.protobuf.Timestamp end_at = 8;
+  google.protobuf.Timestamp expires_at = 9;
+  string subscription_id = 10;
+  string notes = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+message AssignPlanToUserRequest {
+  string plan_code = 1;
+  string user_id = 2;
+  string business_id = 3;
+  google.protobuf.Timestamp start_at = 4;
+  google.protobuf.Timestamp end_at = 5;
+  google.protobuf.Timestamp expires_at = 6;
+  string notes = 7;
+}
+
+message AssignPlanToUserResponse {
+  PlanAssignment assignment = 1;
+  bool email_sent = 2;
+}
+
+message GetPlanAssignmentRequest {
+  string id = 1;
+}
+
+message PlanAssignmentResponse {
+  PlanAssignment assignment = 1;
+}
+
+message ListPlanAssignmentsRequest {
+  optional string user_id = 1;
+  optional string business_id = 2;
+  optional AssignmentStatus status = 3;
+  int32 page_size = 4;
+  string page_token = 5;
+}
+
+message ListPlanAssignmentsResponse {
+  repeated PlanAssignment assignments = 1;
+  string next_page_token = 2;
+}
+
+message AcceptPlanAssignmentRequest {
+  string id = 1;
+}
+
+message AcceptPlanAssignmentResponse {
+  PlanAssignment assignment = 1;
+  string subscription_id = 2;
+  string invoice_id = 3;
+}
+
+message RejectPlanAssignmentRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message RejectPlanAssignmentResponse {
+  PlanAssignment assignment = 1;
+}
+
+message CancelPlanAssignmentRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message CancelPlanAssignmentResponse {
+  PlanAssignment assignment = 1;
+}
