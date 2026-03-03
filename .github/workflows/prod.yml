@@ -38,5 +38,6 @@ jobs:
             echo "NODE_ENV=${{ secrets.NODE_ENV }}" > .env
             echo "PORT=${{ secrets.PORT }}" >> .env
             docker compose down
+            docker rm -f business || true
             docker compose build
             docker compose up -d
