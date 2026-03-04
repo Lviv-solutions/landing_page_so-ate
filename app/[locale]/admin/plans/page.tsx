@@ -48,7 +48,12 @@ import serviceManagementService, {
 } from "../../../../services/serviceManagementService";
 import featureManagementService, {
   Feature,
+  ValueType,
 } from "../../../../services/featureManagementService";
+import planFeatureManagementService, {
+  LimitType,
+  CreatePlanFeatureParams,
+} from "../../../../services/planFeatureManagementService";
 
 function AdminPlansContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +72,11 @@ function AdminPlansContent() {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [featureLimits, setFeatureLimits] = useState<Map<string, {
+    limitType: LimitType;
+    limitValue: string;
+    notes: string;
+  }>>(new Map());
 
   const [formData, setFormData] = useState({
     code: "",
@@ -227,6 +237,7 @@ function AdminPlansContent() {
     });
     setSelectedServices([]);
     setSelectedFeatures([]);
+    setFeatureLimits(new Map());
     setCreateDialog(true);
     setError(null);
   };
@@ -276,6 +287,23 @@ function AdminPlansContent() {
         },
         { accessToken: token ?? undefined }
       );
+
+      // Create feature limits for each selected feature
+      for (const featureCode of selectedFeatures) {
+        const limit = featureLimits.get(featureCode);
+        if (limit) {
+          await planFeatureManagementService.createPlanFeature(
+            {
+              planCode: newPlan.code,
+              featureCode: featureCode,
+              limitType: limit.limitType,
+              limitValue: limit.limitValue,
+              notes: limit.notes,
+            },
+            { accessToken: token ?? undefined }
+          );
+        }
+      }
 
       setSuccessMessage(`Plan "${newPlan.name}" created successfully!`);
       const updatedPlans = [...plans, newPlan];
@@ -347,15 +375,156 @@ function AdminPlansContent() {
   };
 
   const handleFeatureToggle = (featureCode: string) => {
-    setSelectedFeatures((prev) =>
-      prev.includes(featureCode)
-        ? prev.filter((code) => code !== featureCode)
-        : [...prev, featureCode]
-    );
+    setSelectedFeatures((prev) => {
+      const isRemoving = prev.includes(featureCode);
+      if (isRemoving) {
+        // Remove feature limit when deselecting feature
+        const newLimits = new Map(featureLimits);
+        newLimits.delete(featureCode);
+        setFeatureLimits(newLimits);
+        return prev.filter((code) => code !== featureCode);
+      } else {
+        // Add default feature limit when selecting feature
+        const feature = features.find((f) => f.code === featureCode);
+        if (feature) {
+          const newLimits = new Map(featureLimits);
+          newLimits.set(featureCode, {
+            limitType: feature.valueType === ValueType.VALUE_TYPE_BOOL 
+              ? LimitType.LIMIT_TYPE_HARD 
+              : LimitType.LIMIT_TYPE_LIMITED,
+            limitValue: feature.valueType === ValueType.VALUE_TYPE_BOOL ? "true" : "",
+            notes: "",
+          });
+          setFeatureLimits(newLimits);
+        }
+        return [...prev, featureCode];
+      }
+    });
   };
 
   const getAvailableFeatures = () => {
     return features.filter((feature) => selectedServices.includes(feature.serviceCode));
+  };
+
+  const updateFeatureLimit = (
+    featureCode: string,
+    field: "limitType" | "limitValue" | "notes",
+    value: string | LimitType
+  ) => {
+    const newLimits = new Map(featureLimits);
+    const currentLimit = newLimits.get(featureCode);
+    if (currentLimit) {
+      newLimits.set(featureCode, {
+        ...currentLimit,
+        [field]: value,
+      });
+      setFeatureLimits(newLimits);
+    }
+  };
+
+  const renderFeatureLimitInput = (feature: Feature) => {
+    const limit = featureLimits.get(feature.code);
+    if (!limit) return null;
+
+    const isUnlimited = limit.limitType === LimitType.LIMIT_TYPE_UNLIMITED;
+
+    return (
+      <Box key={feature.code} sx={{ mb: 2, p: 2, border: "1px solid #e0e0e0", borderRadius: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600 }}>
+          {feature.name}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ display: "block", mb: 1 }}>
+          {feature.code} • {feature.serviceCode}
+        </Typography>
+
+        <Stack spacing={2}>
+          {/* Limit Type Selection */}
+          <FormControl fullWidth size="small">
+            <InputLabel>Limit Type</InputLabel>
+            <Select
+              value={limit.limitType}
+              onChange={(e) => updateFeatureLimit(feature.code, "limitType", e.target.value as LimitType)}
+              label="Limit Type"
+            >
+              <MenuItem value={LimitType.LIMIT_TYPE_HARD}>Hard Limit</MenuItem>
+              <MenuItem value={LimitType.LIMIT_TYPE_SOFT}>Soft Limit (Warning)</MenuItem>
+              {feature.valueType === ValueType.VALUE_TYPE_INT && (
+                <MenuItem value={LimitType.LIMIT_TYPE_UNLIMITED}>Unlimited</MenuItem>
+              )}
+              <MenuItem value={LimitType.LIMIT_TYPE_DISABLED}>Disabled</MenuItem>
+            </Select>
+          </FormControl>
+
+          {/* Value Input based on feature type */}
+          {!isUnlimited && limit.limitType !== LimitType.LIMIT_TYPE_DISABLED && (
+            <>
+              {feature.valueType === ValueType.VALUE_TYPE_INT && (
+                <TextField
+                  type="number"
+                  label={`Limit Value (${feature.unit})`}
+                  value={limit.limitValue}
+                  onChange={(e) => updateFeatureLimit(feature.code, "limitValue", e.target.value)}
+                  size="small"
+                  fullWidth
+                  inputProps={{ min: 0 }}
+                />
+              )}
+
+              {feature.valueType === ValueType.VALUE_TYPE_BOOL && (
+                <FormControl fullWidth size="small">
+                  <InputLabel>Value</InputLabel>
+                  <Select
+                    value={limit.limitValue}
+                    onChange={(e) => updateFeatureLimit(feature.code, "limitValue", e.target.value)}
+                    label="Value"
+                  >
+                    <MenuItem value="true">Enabled</MenuItem>
+                    <MenuItem value="false">Disabled</MenuItem>
+                  </Select>
+                </FormControl>
+              )}
+
+              {feature.valueType === ValueType.VALUE_TYPE_TEXT && (
+                <TextField
+                  label="Text Value"
+                  value={limit.limitValue}
+                  onChange={(e) => updateFeatureLimit(feature.code, "limitValue", e.target.value)}
+                  size="small"
+                  fullWidth
+                />
+              )}
+
+              {feature.valueType === ValueType.VALUE_TYPE_JSON && (
+                <TextField
+                  label="JSON Configuration"
+                  value={limit.limitValue}
+                  onChange={(e) => updateFeatureLimit(feature.code, "limitValue", e.target.value)}
+                  size="small"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  placeholder='{"key": "value"}'
+                />
+              )}
+            </>
+          )}
+
+          {isUnlimited && (
+            <Chip label="Unlimited" color="success" size="small" sx={{ width: "fit-content" }} />
+          )}
+
+          {/* Notes */}
+          <TextField
+            label="Notes (Optional)"
+            value={limit.notes}
+            onChange={(e) => updateFeatureLimit(feature.code, "notes", e.target.value)}
+            size="small"
+            fullWidth
+            placeholder="Add notes about this limit"
+          />
+        </Stack>
+      </Box>
+    );
   };
 
   const handleArchivePlan = async () => {
@@ -745,6 +914,32 @@ function AdminPlansContent() {
                 value={selectedFeatures}
                 onChange={(e) => {
                   const value = e.target.value as string[];
+                  const newFeatures = value.filter(code => !selectedFeatures.includes(code));
+                  const removedFeatures = selectedFeatures.filter(code => !value.includes(code));
+                  
+                  // Add new features with default limits
+                  newFeatures.forEach(featureCode => {
+                    const feature = features.find(f => f.code === featureCode);
+                    if (feature) {
+                      const newLimits = new Map(featureLimits);
+                      newLimits.set(featureCode, {
+                        limitType: feature.valueType === ValueType.VALUE_TYPE_BOOL 
+                          ? LimitType.LIMIT_TYPE_HARD 
+                          : LimitType.LIMIT_TYPE_LIMITED,
+                        limitValue: feature.valueType === ValueType.VALUE_TYPE_BOOL ? "true" : "",
+                        notes: "",
+                      });
+                      setFeatureLimits(newLimits);
+                    }
+                  });
+                  
+                  // Remove limits for deselected features
+                  if (removedFeatures.length > 0) {
+                    const newLimits = new Map(featureLimits);
+                    removedFeatures.forEach(code => newLimits.delete(code));
+                    setFeatureLimits(newLimits);
+                  }
+                  
                   setSelectedFeatures(value);
                 }}
                 label="Features"
@@ -767,6 +962,20 @@ function AdminPlansContent() {
                 ))}
               </Select>
             </FormControl>
+
+            {/* Feature Limits Configuration */}
+            {selectedFeatures.length > 0 && (
+              <Box>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+                  Configure Feature Limits
+                </Typography>
+                {selectedFeatures.map((featureCode) => {
+                  const feature = features.find((f) => f.code === featureCode);
+                  return feature ? renderFeatureLimitInput(feature) : null;
+                })}
+              </Box>
+            )}
+
             <FormControl fullWidth>
               <InputLabel>Billing Period</InputLabel>
               <Select
@@ -894,6 +1103,32 @@ function AdminPlansContent() {
                 value={selectedFeatures}
                 onChange={(e) => {
                   const value = e.target.value as string[];
+                  const newFeatures = value.filter(code => !selectedFeatures.includes(code));
+                  const removedFeatures = selectedFeatures.filter(code => !value.includes(code));
+                  
+                  // Add new features with default limits
+                  newFeatures.forEach(featureCode => {
+                    const feature = features.find(f => f.code === featureCode);
+                    if (feature) {
+                      const newLimits = new Map(featureLimits);
+                      newLimits.set(featureCode, {
+                        limitType: feature.valueType === ValueType.VALUE_TYPE_BOOL 
+                          ? LimitType.LIMIT_TYPE_HARD 
+                          : LimitType.LIMIT_TYPE_LIMITED,
+                        limitValue: feature.valueType === ValueType.VALUE_TYPE_BOOL ? "true" : "",
+                        notes: "",
+                      });
+                      setFeatureLimits(newLimits);
+                    }
+                  });
+                  
+                  // Remove limits for deselected features
+                  if (removedFeatures.length > 0) {
+                    const newLimits = new Map(featureLimits);
+                    removedFeatures.forEach(code => newLimits.delete(code));
+                    setFeatureLimits(newLimits);
+                  }
+                  
                   setSelectedFeatures(value);
                 }}
                 label="Features"
@@ -916,6 +1151,20 @@ function AdminPlansContent() {
                 ))}
               </Select>
             </FormControl>
+
+            {/* Feature Limits Configuration */}
+            {selectedFeatures.length > 0 && (
+              <Box>
+                <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 600 }}>
+                  Configure Feature Limits
+                </Typography>
+                {selectedFeatures.map((featureCode) => {
+                  const feature = features.find((f) => f.code === featureCode);
+                  return feature ? renderFeatureLimitInput(feature) : null;
+                })}
+              </Box>
+            )}
+
             <FormControl fullWidth>
               <InputLabel>Billing Period</InputLabel>
               <Select

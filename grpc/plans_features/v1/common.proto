@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+// LimitType defines the type of limit for a feature
+enum LimitType {
+  LIMIT_TYPE_UNSPECIFIED = 0;
+  LIMIT_TYPE_UNLIMITED = 1;
+  LIMIT_TYPE_LIMITED = 2;
+  LIMIT_TYPE_DISABLED = 3;
+  LIMIT_TYPE_HARD = 4;
+  LIMIT_TYPE_SOFT = 5;
+}
