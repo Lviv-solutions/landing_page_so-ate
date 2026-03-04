@@ -33,25 +33,29 @@ message Plan {
   string code = 1;
   string name = 2;
   string description = 3;
-  PlanStatus status = 4;
-  BillingPeriod billing_period = 5;
-  int64 price_minor = 6;
-  string currency = 7;
-  int32 trial_days = 8;
-  map<string, string> metadata = 9;
-  google.protobuf.Timestamp created_at = 10;
-  google.protobuf.Timestamp updated_at = 11;
+  repeated string service_codes = 4;
+  repeated string feature_codes = 5;
+  PlanStatus status = 6;
+  BillingPeriod billing_period = 7;
+  int64 price_minor = 8;
+  string currency = 9;
+  int32 trial_days = 10;
+  map<string, string> metadata = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
 }
 
 message CreatePlanRequest {
   string code = 1;
   string name = 2;
   string description = 3;
-  BillingPeriod billing_period = 4;
-  int64 price_minor = 5;
-  string currency = 6;
-  int32 trial_days = 7;
-  map<string, string> metadata = 8;
+  repeated string service_codes = 4;
+  repeated string feature_codes = 5;
+  BillingPeriod billing_period = 6;
+  int64 price_minor = 7;
+  string currency = 8;
+  int32 trial_days = 9;
+  map<string, string> metadata = 10;
 }
 
 message GetPlanRequest {
@@ -73,12 +77,14 @@ message UpdatePlanRequest {
   string code = 1;
   string name = 2;
   string description = 3;
-  PlanStatus status = 4;
-  BillingPeriod billing_period = 5;
-  int64 price_minor = 6;
-  string currency = 7;
-  int32 trial_days = 8;
-  map<string, string> metadata = 9;
+  repeated string service_codes = 4;
+  repeated string feature_codes = 5;
+  PlanStatus status = 6;
+  BillingPeriod billing_period = 7;
+  int64 price_minor = 8;
+  string currency = 9;
+  int32 trial_days = 10;
+  map<string, string> metadata = 11;
 }
 
 message DeletePlanRequest {

@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+import "google/protobuf/timestamp.proto";
+import "common.proto";
+
+service PlanFeatureManagement {
+  rpc CreatePlanFeature(CreatePlanFeatureRequest) returns (PlanFeatureResponse);
+  rpc GetPlanFeature(GetPlanFeatureRequest) returns (PlanFeatureResponse);
+  rpc ListPlanFeatures(ListPlanFeaturesRequest) returns (ListPlanFeaturesResponse);
+  rpc UpdatePlanFeature(UpdatePlanFeatureRequest) returns (PlanFeatureResponse);
+  rpc DeletePlanFeature(DeletePlanFeatureRequest) returns (DeletePlanFeatureResponse);
+}
+
+message PlanFeature {
+  string plan_code = 1;
+  string feature_code = 2;
+  LimitType limit_type = 3;
+  string limit_value = 4;
+  string notes = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message CreatePlanFeatureRequest {
+  string plan_code = 1;
+  string feature_code = 2;
+  LimitType limit_type = 3;
+  string limit_value = 4;
+  string notes = 5;
+}
+
+message GetPlanFeatureRequest {
+  string plan_code = 1;
+  string feature_code = 2;
+}
+
+message ListPlanFeaturesRequest {
+  string plan_code = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListPlanFeaturesResponse {
+  repeated PlanFeature plan_features = 1;
+  string next_page_token = 2;
+}
+
+message UpdatePlanFeatureRequest {
+  string plan_code = 1;
+  string feature_code = 2;
+  LimitType limit_type = 3;
+  string limit_value = 4;
+  string notes = 5;
+}
+
+message DeletePlanFeatureRequest {
+  string plan_code = 1;
+  string feature_code = 2;
+}
+
+message DeletePlanFeatureResponse {
+  bool success = 1;
+}
+
+message PlanFeatureResponse {
+  PlanFeature plan_feature = 1;
+}

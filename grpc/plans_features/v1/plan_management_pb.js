@@ -39,7 +39,7 @@ goog.exportSymbol('proto.plans_features.v1.UpdatePlanRequest', null, global);
  * @constructor
  */
 proto.plans_features.v1.Plan = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.plans_features.v1.Plan.repeatedFields_, null);
 };
 goog.inherits(proto.plans_features.v1.Plan, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -60,7 +60,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.plans_features.v1.CreatePlanRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.plans_features.v1.CreatePlanRequest.repeatedFields_, null);
 };
 goog.inherits(proto.plans_features.v1.CreatePlanRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -144,7 +144,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.plans_features.v1.UpdatePlanRequest = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.plans_features.v1.UpdatePlanRequest.repeatedFields_, null);
 };
 goog.inherits(proto.plans_features.v1.UpdatePlanRequest, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -218,6 +218,13 @@ if (goog.DEBUG && !COMPILED) {
   proto.plans_features.v1.PlanResponse.displayName = 'proto.plans_features.v1.PlanResponse';
 }
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.plans_features.v1.Plan.repeatedFields_ = [4,5];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -252,11 +259,13 @@ proto.plans_features.v1.Plan.toObject = function(includeInstance, msg) {
 code: jspb.Message.getFieldWithDefault(msg, 1, ""),
 name: jspb.Message.getFieldWithDefault(msg, 2, ""),
 description: jspb.Message.getFieldWithDefault(msg, 3, ""),
-status: jspb.Message.getFieldWithDefault(msg, 4, 0),
-billingPeriod: jspb.Message.getFieldWithDefault(msg, 5, 0),
-priceMinor: jspb.Message.getFieldWithDefault(msg, 6, 0),
-currency: jspb.Message.getFieldWithDefault(msg, 7, ""),
-trialDays: jspb.Message.getFieldWithDefault(msg, 8, 0),
+serviceCodesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+featureCodesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+status: jspb.Message.getFieldWithDefault(msg, 6, 0),
+billingPeriod: jspb.Message.getFieldWithDefault(msg, 7, 0),
+priceMinor: jspb.Message.getFieldWithDefault(msg, 8, 0),
+currency: jspb.Message.getFieldWithDefault(msg, 9, ""),
+trialDays: jspb.Message.getFieldWithDefault(msg, 10, 0),
 metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : [],
 createdAt: (f = msg.getCreatedAt()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
 updatedAt: (f = msg.getUpdatedAt()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f)
@@ -309,37 +318,45 @@ proto.plans_features.v1.Plan.deserializeBinaryFromReader = function(msg, reader)
       msg.setDescription(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addServiceCodes(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addFeatureCodes(value);
+      break;
+    case 6:
       var value = /** @type {!proto.plans_features.v1.PlanStatus} */ (reader.readEnum());
       msg.setStatus(value);
       break;
-    case 5:
+    case 7:
       var value = /** @type {!proto.plans_features.v1.BillingPeriod} */ (reader.readEnum());
       msg.setBillingPeriod(value);
       break;
-    case 6:
+    case 8:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setPriceMinor(value);
       break;
-    case 7:
+    case 9:
       var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setCurrency(value);
       break;
-    case 8:
+    case 10:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setTrialDays(value);
       break;
-    case 9:
+    case 11:
       var value = msg.getMetadataMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readStringRequireUtf8, null, "", "");
          });
       break;
-    case 10:
+    case 12:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setCreatedAt(value);
       break;
-    case 11:
+    case 13:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setUpdatedAt(value);
@@ -394,38 +411,52 @@ proto.plans_features.v1.Plan.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
+  f = message.getServiceCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      4,
+      f
+    );
+  }
+  f = message.getFeatureCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      5,
+      f
+    );
+  }
   f = message.getStatus();
   if (f !== 0.0) {
     writer.writeEnum(
-      4,
+      6,
       f
     );
   }
   f = message.getBillingPeriod();
   if (f !== 0.0) {
     writer.writeEnum(
-      5,
+      7,
       f
     );
   }
   f = message.getPriceMinor();
   if (f !== 0) {
     writer.writeInt64(
-      6,
+      8,
       f
     );
   }
   f = message.getCurrency();
   if (f.length > 0) {
     writer.writeString(
-      7,
+      9,
       f
     );
   }
   f = message.getTrialDays();
   if (f !== 0) {
     writer.writeInt32(
-      8,
+      10,
       f
     );
   }
@@ -433,7 +464,7 @@ proto.plans_features.v1.Plan.serializeBinaryToWriter = function(message, writer)
   if (f && f.getLength() > 0) {
 jspb.internal.public_for_gencode.serializeMapToBinary(
     message.getMetadataMap(true),
-    9,
+    11,
     writer,
     jspb.BinaryWriter.prototype.writeString,
     jspb.BinaryWriter.prototype.writeString);
@@ -441,7 +472,7 @@ jspb.internal.public_for_gencode.serializeMapToBinary(
   f = message.getCreatedAt();
   if (f != null) {
     writer.writeMessage(
-      10,
+      12,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -449,7 +480,7 @@ jspb.internal.public_for_gencode.serializeMapToBinary(
   f = message.getUpdatedAt();
   if (f != null) {
     writer.writeMessage(
-      11,
+      13,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -512,11 +543,85 @@ proto.plans_features.v1.Plan.prototype.setDescription = function(value) {
 
 
 /**
- * optional PlanStatus status = 4;
+ * repeated string service_codes = 4;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.Plan.prototype.getServiceCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.setServiceCodesList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.addServiceCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.clearServiceCodesList = function() {
+  return this.setServiceCodesList([]);
+};
+
+
+/**
+ * repeated string feature_codes = 5;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.Plan.prototype.getFeatureCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 5));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.setFeatureCodesList = function(value) {
+  return jspb.Message.setField(this, 5, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.addFeatureCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 5, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.clearFeatureCodesList = function() {
+  return this.setFeatureCodesList([]);
+};
+
+
+/**
+ * optional PlanStatus status = 6;
  * @return {!proto.plans_features.v1.PlanStatus}
  */
 proto.plans_features.v1.Plan.prototype.getStatus = function() {
-  return /** @type {!proto.plans_features.v1.PlanStatus} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {!proto.plans_features.v1.PlanStatus} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -525,16 +630,16 @@ proto.plans_features.v1.Plan.prototype.getStatus = function() {
  * @return {!proto.plans_features.v1.Plan} returns this
  */
 proto.plans_features.v1.Plan.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3EnumField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 
 /**
- * optional BillingPeriod billing_period = 5;
+ * optional BillingPeriod billing_period = 7;
  * @return {!proto.plans_features.v1.BillingPeriod}
  */
 proto.plans_features.v1.Plan.prototype.getBillingPeriod = function() {
-  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
@@ -543,51 +648,15 @@ proto.plans_features.v1.Plan.prototype.getBillingPeriod = function() {
  * @return {!proto.plans_features.v1.Plan} returns this
  */
 proto.plans_features.v1.Plan.prototype.setBillingPeriod = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 7, value);
 };
 
 
 /**
- * optional int64 price_minor = 6;
+ * optional int64 price_minor = 8;
  * @return {number}
  */
 proto.plans_features.v1.Plan.prototype.getPriceMinor = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.plans_features.v1.Plan} returns this
- */
-proto.plans_features.v1.Plan.prototype.setPriceMinor = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
-};
-
-
-/**
- * optional string currency = 7;
- * @return {string}
- */
-proto.plans_features.v1.Plan.prototype.getCurrency = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.plans_features.v1.Plan} returns this
- */
-proto.plans_features.v1.Plan.prototype.setCurrency = function(value) {
-  return jspb.Message.setProto3StringField(this, 7, value);
-};
-
-
-/**
- * optional int32 trial_days = 8;
- * @return {number}
- */
-proto.plans_features.v1.Plan.prototype.getTrialDays = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
 };
 
@@ -596,20 +665,56 @@ proto.plans_features.v1.Plan.prototype.getTrialDays = function() {
  * @param {number} value
  * @return {!proto.plans_features.v1.Plan} returns this
  */
-proto.plans_features.v1.Plan.prototype.setTrialDays = function(value) {
+proto.plans_features.v1.Plan.prototype.setPriceMinor = function(value) {
   return jspb.Message.setProto3IntField(this, 8, value);
 };
 
 
 /**
- * map<string, string> metadata = 9;
+ * optional string currency = 9;
+ * @return {string}
+ */
+proto.plans_features.v1.Plan.prototype.getCurrency = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.setCurrency = function(value) {
+  return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional int32 trial_days = 10;
+ * @return {number}
+ */
+proto.plans_features.v1.Plan.prototype.getTrialDays = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.plans_features.v1.Plan} returns this
+ */
+proto.plans_features.v1.Plan.prototype.setTrialDays = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * map<string, string> metadata = 11;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.plans_features.v1.Plan.prototype.getMetadataMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 9, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 11, opt_noLazyCreate,
       null));
 };
 
@@ -625,12 +730,12 @@ proto.plans_features.v1.Plan.prototype.clearMetadataMap = function() {
 
 
 /**
- * optional google.protobuf.Timestamp created_at = 10;
+ * optional google.protobuf.Timestamp created_at = 12;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.plans_features.v1.Plan.prototype.getCreatedAt = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 10));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 12));
 };
 
 
@@ -639,7 +744,7 @@ proto.plans_features.v1.Plan.prototype.getCreatedAt = function() {
  * @return {!proto.plans_features.v1.Plan} returns this
 */
 proto.plans_features.v1.Plan.prototype.setCreatedAt = function(value) {
-  return jspb.Message.setWrapperField(this, 10, value);
+  return jspb.Message.setWrapperField(this, 12, value);
 };
 
 
@@ -657,17 +762,17 @@ proto.plans_features.v1.Plan.prototype.clearCreatedAt = function() {
  * @return {boolean}
  */
 proto.plans_features.v1.Plan.prototype.hasCreatedAt = function() {
-  return jspb.Message.getField(this, 10) != null;
+  return jspb.Message.getField(this, 12) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp updated_at = 11;
+ * optional google.protobuf.Timestamp updated_at = 13;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.plans_features.v1.Plan.prototype.getUpdatedAt = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 11));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 13));
 };
 
 
@@ -676,7 +781,7 @@ proto.plans_features.v1.Plan.prototype.getUpdatedAt = function() {
  * @return {!proto.plans_features.v1.Plan} returns this
 */
 proto.plans_features.v1.Plan.prototype.setUpdatedAt = function(value) {
-  return jspb.Message.setWrapperField(this, 11, value);
+  return jspb.Message.setWrapperField(this, 13, value);
 };
 
 
@@ -694,10 +799,17 @@ proto.plans_features.v1.Plan.prototype.clearUpdatedAt = function() {
  * @return {boolean}
  */
 proto.plans_features.v1.Plan.prototype.hasUpdatedAt = function() {
-  return jspb.Message.getField(this, 11) != null;
+  return jspb.Message.getField(this, 13) != null;
 };
 
 
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.plans_features.v1.CreatePlanRequest.repeatedFields_ = [4,5];
 
 
 
@@ -733,10 +845,12 @@ proto.plans_features.v1.CreatePlanRequest.toObject = function(includeInstance, m
 code: jspb.Message.getFieldWithDefault(msg, 1, ""),
 name: jspb.Message.getFieldWithDefault(msg, 2, ""),
 description: jspb.Message.getFieldWithDefault(msg, 3, ""),
-billingPeriod: jspb.Message.getFieldWithDefault(msg, 4, 0),
-priceMinor: jspb.Message.getFieldWithDefault(msg, 5, 0),
-currency: jspb.Message.getFieldWithDefault(msg, 6, ""),
-trialDays: jspb.Message.getFieldWithDefault(msg, 7, 0),
+serviceCodesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+featureCodesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+billingPeriod: jspb.Message.getFieldWithDefault(msg, 6, 0),
+priceMinor: jspb.Message.getFieldWithDefault(msg, 7, 0),
+currency: jspb.Message.getFieldWithDefault(msg, 8, ""),
+trialDays: jspb.Message.getFieldWithDefault(msg, 9, 0),
 metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -787,22 +901,30 @@ proto.plans_features.v1.CreatePlanRequest.deserializeBinaryFromReader = function
       msg.setDescription(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addServiceCodes(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addFeatureCodes(value);
+      break;
+    case 6:
       var value = /** @type {!proto.plans_features.v1.BillingPeriod} */ (reader.readEnum());
       msg.setBillingPeriod(value);
       break;
-    case 5:
+    case 7:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setPriceMinor(value);
       break;
-    case 6:
+    case 8:
       var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setCurrency(value);
       break;
-    case 7:
+    case 9:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setTrialDays(value);
       break;
-    case 8:
+    case 10:
       var value = msg.getMetadataMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readStringRequireUtf8, null, "", "");
@@ -858,31 +980,45 @@ proto.plans_features.v1.CreatePlanRequest.serializeBinaryToWriter = function(mes
       f
     );
   }
+  f = message.getServiceCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      4,
+      f
+    );
+  }
+  f = message.getFeatureCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      5,
+      f
+    );
+  }
   f = message.getBillingPeriod();
   if (f !== 0.0) {
     writer.writeEnum(
-      4,
+      6,
       f
     );
   }
   f = message.getPriceMinor();
   if (f !== 0) {
     writer.writeInt64(
-      5,
+      7,
       f
     );
   }
   f = message.getCurrency();
   if (f.length > 0) {
     writer.writeString(
-      6,
+      8,
       f
     );
   }
   f = message.getTrialDays();
   if (f !== 0) {
     writer.writeInt32(
-      7,
+      9,
       f
     );
   }
@@ -890,7 +1026,7 @@ proto.plans_features.v1.CreatePlanRequest.serializeBinaryToWriter = function(mes
   if (f && f.getLength() > 0) {
 jspb.internal.public_for_gencode.serializeMapToBinary(
     message.getMetadataMap(true),
-    8,
+    10,
     writer,
     jspb.BinaryWriter.prototype.writeString,
     jspb.BinaryWriter.prototype.writeString);
@@ -953,11 +1089,85 @@ proto.plans_features.v1.CreatePlanRequest.prototype.setDescription = function(va
 
 
 /**
- * optional BillingPeriod billing_period = 4;
+ * repeated string service_codes = 4;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.getServiceCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.setServiceCodesList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.addServiceCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.clearServiceCodesList = function() {
+  return this.setServiceCodesList([]);
+};
+
+
+/**
+ * repeated string feature_codes = 5;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.getFeatureCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 5));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.setFeatureCodesList = function(value) {
+  return jspb.Message.setField(this, 5, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.addFeatureCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 5, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.clearFeatureCodesList = function() {
+  return this.setFeatureCodesList([]);
+};
+
+
+/**
+ * optional BillingPeriod billing_period = 6;
  * @return {!proto.plans_features.v1.BillingPeriod}
  */
 proto.plans_features.v1.CreatePlanRequest.prototype.getBillingPeriod = function() {
-  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -966,51 +1176,15 @@ proto.plans_features.v1.CreatePlanRequest.prototype.getBillingPeriod = function(
  * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
  */
 proto.plans_features.v1.CreatePlanRequest.prototype.setBillingPeriod = function(value) {
-  return jspb.Message.setProto3EnumField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 
 /**
- * optional int64 price_minor = 5;
+ * optional int64 price_minor = 7;
  * @return {number}
  */
 proto.plans_features.v1.CreatePlanRequest.prototype.getPriceMinor = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
- */
-proto.plans_features.v1.CreatePlanRequest.prototype.setPriceMinor = function(value) {
-  return jspb.Message.setProto3IntField(this, 5, value);
-};
-
-
-/**
- * optional string currency = 6;
- * @return {string}
- */
-proto.plans_features.v1.CreatePlanRequest.prototype.getCurrency = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
- */
-proto.plans_features.v1.CreatePlanRequest.prototype.setCurrency = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
-};
-
-
-/**
- * optional int32 trial_days = 7;
- * @return {number}
- */
-proto.plans_features.v1.CreatePlanRequest.prototype.getTrialDays = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
@@ -1019,20 +1193,56 @@ proto.plans_features.v1.CreatePlanRequest.prototype.getTrialDays = function() {
  * @param {number} value
  * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
  */
-proto.plans_features.v1.CreatePlanRequest.prototype.setTrialDays = function(value) {
+proto.plans_features.v1.CreatePlanRequest.prototype.setPriceMinor = function(value) {
   return jspb.Message.setProto3IntField(this, 7, value);
 };
 
 
 /**
- * map<string, string> metadata = 8;
+ * optional string currency = 8;
+ * @return {string}
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.getCurrency = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.setCurrency = function(value) {
+  return jspb.Message.setProto3StringField(this, 8, value);
+};
+
+
+/**
+ * optional int32 trial_days = 9;
+ * @return {number}
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.getTrialDays = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.plans_features.v1.CreatePlanRequest} returns this
+ */
+proto.plans_features.v1.CreatePlanRequest.prototype.setTrialDays = function(value) {
+  return jspb.Message.setProto3IntField(this, 9, value);
+};
+
+
+/**
+ * map<string, string> metadata = 10;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.plans_features.v1.CreatePlanRequest.prototype.getMetadataMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 8, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 10, opt_noLazyCreate,
       null));
 };
 
@@ -1558,6 +1768,13 @@ proto.plans_features.v1.ListPlansResponse.prototype.setNextPageToken = function(
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.plans_features.v1.UpdatePlanRequest.repeatedFields_ = [4,5];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -1592,11 +1809,13 @@ proto.plans_features.v1.UpdatePlanRequest.toObject = function(includeInstance, m
 code: jspb.Message.getFieldWithDefault(msg, 1, ""),
 name: jspb.Message.getFieldWithDefault(msg, 2, ""),
 description: jspb.Message.getFieldWithDefault(msg, 3, ""),
-status: jspb.Message.getFieldWithDefault(msg, 4, 0),
-billingPeriod: jspb.Message.getFieldWithDefault(msg, 5, 0),
-priceMinor: jspb.Message.getFieldWithDefault(msg, 6, 0),
-currency: jspb.Message.getFieldWithDefault(msg, 7, ""),
-trialDays: jspb.Message.getFieldWithDefault(msg, 8, 0),
+serviceCodesList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f,
+featureCodesList: (f = jspb.Message.getRepeatedField(msg, 5)) == null ? undefined : f,
+status: jspb.Message.getFieldWithDefault(msg, 6, 0),
+billingPeriod: jspb.Message.getFieldWithDefault(msg, 7, 0),
+priceMinor: jspb.Message.getFieldWithDefault(msg, 8, 0),
+currency: jspb.Message.getFieldWithDefault(msg, 9, ""),
+trialDays: jspb.Message.getFieldWithDefault(msg, 10, 0),
 metadataMap: (f = msg.getMetadataMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -1647,26 +1866,34 @@ proto.plans_features.v1.UpdatePlanRequest.deserializeBinaryFromReader = function
       msg.setDescription(value);
       break;
     case 4:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addServiceCodes(value);
+      break;
+    case 5:
+      var value = /** @type {string} */ (reader.readStringRequireUtf8());
+      msg.addFeatureCodes(value);
+      break;
+    case 6:
       var value = /** @type {!proto.plans_features.v1.PlanStatus} */ (reader.readEnum());
       msg.setStatus(value);
       break;
-    case 5:
+    case 7:
       var value = /** @type {!proto.plans_features.v1.BillingPeriod} */ (reader.readEnum());
       msg.setBillingPeriod(value);
       break;
-    case 6:
+    case 8:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setPriceMinor(value);
       break;
-    case 7:
+    case 9:
       var value = /** @type {string} */ (reader.readStringRequireUtf8());
       msg.setCurrency(value);
       break;
-    case 8:
+    case 10:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setTrialDays(value);
       break;
-    case 9:
+    case 11:
       var value = msg.getMetadataMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readStringRequireUtf8, jspb.BinaryReader.prototype.readStringRequireUtf8, null, "", "");
@@ -1722,38 +1949,52 @@ proto.plans_features.v1.UpdatePlanRequest.serializeBinaryToWriter = function(mes
       f
     );
   }
+  f = message.getServiceCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      4,
+      f
+    );
+  }
+  f = message.getFeatureCodesList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      5,
+      f
+    );
+  }
   f = message.getStatus();
   if (f !== 0.0) {
     writer.writeEnum(
-      4,
+      6,
       f
     );
   }
   f = message.getBillingPeriod();
   if (f !== 0.0) {
     writer.writeEnum(
-      5,
+      7,
       f
     );
   }
   f = message.getPriceMinor();
   if (f !== 0) {
     writer.writeInt64(
-      6,
+      8,
       f
     );
   }
   f = message.getCurrency();
   if (f.length > 0) {
     writer.writeString(
-      7,
+      9,
       f
     );
   }
   f = message.getTrialDays();
   if (f !== 0) {
     writer.writeInt32(
-      8,
+      10,
       f
     );
   }
@@ -1761,7 +2002,7 @@ proto.plans_features.v1.UpdatePlanRequest.serializeBinaryToWriter = function(mes
   if (f && f.getLength() > 0) {
 jspb.internal.public_for_gencode.serializeMapToBinary(
     message.getMetadataMap(true),
-    9,
+    11,
     writer,
     jspb.BinaryWriter.prototype.writeString,
     jspb.BinaryWriter.prototype.writeString);
@@ -1824,11 +2065,85 @@ proto.plans_features.v1.UpdatePlanRequest.prototype.setDescription = function(va
 
 
 /**
- * optional PlanStatus status = 4;
+ * repeated string service_codes = 4;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.getServiceCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.setServiceCodesList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.addServiceCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.clearServiceCodesList = function() {
+  return this.setServiceCodesList([]);
+};
+
+
+/**
+ * repeated string feature_codes = 5;
+ * @return {!Array<string>}
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.getFeatureCodesList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 5));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.setFeatureCodesList = function(value) {
+  return jspb.Message.setField(this, 5, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.addFeatureCodes = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 5, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.clearFeatureCodesList = function() {
+  return this.setFeatureCodesList([]);
+};
+
+
+/**
+ * optional PlanStatus status = 6;
  * @return {!proto.plans_features.v1.PlanStatus}
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.getStatus = function() {
-  return /** @type {!proto.plans_features.v1.PlanStatus} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {!proto.plans_features.v1.PlanStatus} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
@@ -1837,16 +2152,16 @@ proto.plans_features.v1.UpdatePlanRequest.prototype.getStatus = function() {
  * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.setStatus = function(value) {
-  return jspb.Message.setProto3EnumField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 6, value);
 };
 
 
 /**
- * optional BillingPeriod billing_period = 5;
+ * optional BillingPeriod billing_period = 7;
  * @return {!proto.plans_features.v1.BillingPeriod}
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.getBillingPeriod = function() {
-  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+  return /** @type {!proto.plans_features.v1.BillingPeriod} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
@@ -1855,51 +2170,15 @@ proto.plans_features.v1.UpdatePlanRequest.prototype.getBillingPeriod = function(
  * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.setBillingPeriod = function(value) {
-  return jspb.Message.setProto3EnumField(this, 5, value);
+  return jspb.Message.setProto3EnumField(this, 7, value);
 };
 
 
 /**
- * optional int64 price_minor = 6;
+ * optional int64 price_minor = 8;
  * @return {number}
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.getPriceMinor = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
- */
-proto.plans_features.v1.UpdatePlanRequest.prototype.setPriceMinor = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
-};
-
-
-/**
- * optional string currency = 7;
- * @return {string}
- */
-proto.plans_features.v1.UpdatePlanRequest.prototype.getCurrency = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
- */
-proto.plans_features.v1.UpdatePlanRequest.prototype.setCurrency = function(value) {
-  return jspb.Message.setProto3StringField(this, 7, value);
-};
-
-
-/**
- * optional int32 trial_days = 8;
- * @return {number}
- */
-proto.plans_features.v1.UpdatePlanRequest.prototype.getTrialDays = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
 };
 
@@ -1908,20 +2187,56 @@ proto.plans_features.v1.UpdatePlanRequest.prototype.getTrialDays = function() {
  * @param {number} value
  * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
  */
-proto.plans_features.v1.UpdatePlanRequest.prototype.setTrialDays = function(value) {
+proto.plans_features.v1.UpdatePlanRequest.prototype.setPriceMinor = function(value) {
   return jspb.Message.setProto3IntField(this, 8, value);
 };
 
 
 /**
- * map<string, string> metadata = 9;
+ * optional string currency = 9;
+ * @return {string}
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.getCurrency = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.setCurrency = function(value) {
+  return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional int32 trial_days = 10;
+ * @return {number}
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.getTrialDays = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.plans_features.v1.UpdatePlanRequest} returns this
+ */
+proto.plans_features.v1.UpdatePlanRequest.prototype.setTrialDays = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * map<string, string> metadata = 11;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.plans_features.v1.UpdatePlanRequest.prototype.getMetadataMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 9, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 11, opt_noLazyCreate,
       null));
 };
 
