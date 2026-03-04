@@ -1,12 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
-import claimRequestService from "../../../../../services/claimRequestService";
-import { getCurrentUserId } from "../../../../../lib/auth";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { useBusinessFormGuard } from "../../../../hooks/useBusinessFormGuard";
+import { BusinessStepLayout, FormCard } from "../../../../components/business";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -25,13 +24,9 @@ interface WeekSchedule {
 }
 
 export default function CreateBusinessStep3() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
+  const { savedData } = useBusinessFormGuard(locale, router);
 
   const [schedule, setSchedule] = useState<WeekSchedule>({
     saturday: { isOpen: true, from: "09:00", to: "23:00" },
@@ -58,26 +53,13 @@ export default function CreateBusinessStep3() {
   };
 
   useEffect(() => {
-    // Check if previous step data exists and load schedule data
-    const loadData = async () => {
-      try {
-        const savedData = await businessFormDB.getFormData();
-        if (!savedData || !savedData.arName) {
-          router.push(`/${locale}/business/create/step1`);
-        } else {
-          if (savedData.schedule) {
-            setSchedule(savedData.schedule);
-          }
-          if (savedData.alwaysOpen !== undefined) {
-            setAlwaysOpen(savedData.alwaysOpen);
-          }
-        }
-      } catch (error) {
-        console.error("Failed to load form data:", error);
-      }
-    };
-    loadData();
-  }, [router, locale]);
+    if (savedData?.schedule) {
+      setSchedule(savedData.schedule);
+    }
+    if (savedData?.alwaysOpen !== undefined) {
+      setAlwaysOpen(savedData.alwaysOpen);
+    }
+  }, [savedData]);
 
   const handleDayToggle = (day: string) => {
     setSchedule((prev) => ({
@@ -124,30 +106,8 @@ export default function CreateBusinessStep3() {
     }
   };
 
-  useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
-
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <Box
           sx={{
             width: "1152px",
@@ -180,19 +140,7 @@ export default function CreateBusinessStep3() {
           </Box>
 
           {/* Form Section */}
-          <Box
-            sx={{
-              width: "617px",
-              height: "518px",
-              borderRadius: "16px",
-              border: "1px solid #E0E0E0",
-              padding: "24px",
-              bgcolor: "white",
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
-            }}
-          >
+          <FormCard sx={{ width: "617px", height: "518px" }}>
             <Box>
               <Typography
                 variant="h5"
@@ -423,9 +371,8 @@ export default function CreateBusinessStep3() {
                 t("businessForm.nextButton") || "التالي"
               )}
             </Button>
-          </Box>
+          </FormCard>
         </Box>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }

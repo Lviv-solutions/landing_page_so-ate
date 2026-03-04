@@ -1,9 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Navigation from "../../../../../components/Navigation";
+import { useState } from "react";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { useBusinessFormGuard } from "../../../../hooks/useBusinessFormGuard";
+import { BusinessStepLayout, FormCard } from "../../../../components/business";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -22,47 +23,13 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function CreateBusinessStep6() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
+  useBusinessFormGuard(locale, router);
 
   const [selectedImages, setSelectedImages] = useState<(string | null)[]>(
     Array(6).fill(null)
   );
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const savedData = await businessFormDB.getFormData();
-        if (!savedData || !savedData.arName) {
-          router.push(`/${locale}/business/create/step1`);
-        }
-      } catch (error) {
-        console.error("Failed to load form data:", error);
-      }
-    };
-    loadData();
-  }, [router, locale]);
 
   const handleImageChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -96,13 +63,7 @@ export default function CreateBusinessStep6() {
   const hasImages = selectedImages.some((img) => img !== null);
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <Box
           sx={{
             display: "flex",
@@ -111,20 +72,7 @@ export default function CreateBusinessStep6() {
             minHeight: "calc(100vh - 200px)",
           }}
         >
-          <Box
-            sx={{
-              width: "712px",
-              minHeight: "546px",
-              borderRadius: "16px",
-              border: "1px solid #E0E0E0",
-              padding: "24px",
-              bgcolor: "white",
-              display: "flex",
-              flexDirection: "column",
-              gap: "36px",
-              opacity: 1,
-            }}
-          >
+          <FormCard sx={{ width: "712px", minHeight: "546px", gap: "36px" }}>
             <Box
               sx={{
                 textAlign: locale === "ar" ? "right" : "left",
@@ -322,9 +270,8 @@ export default function CreateBusinessStep6() {
                 {t("businessForm.saveAndContinue")}
               </Button>
             </Box>
-          </Box>
+          </FormCard>
         </Box>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }
