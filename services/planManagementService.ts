@@ -20,6 +20,8 @@ export interface Plan {
   code: string;
   name: string;
   description: string;
+  serviceCodes: string[];
+  featureCodes: string[];
   status: PlanStatus;
   billingPeriod: BillingPeriod;
   priceMinor: number;
@@ -34,6 +36,8 @@ export interface CreatePlanParams {
   code: string;
   name: string;
   description: string;
+  serviceCodes?: string[];
+  featureCodes?: string[];
   billingPeriod: BillingPeriod;
   priceMinor: number;
   currency: string;
@@ -45,6 +49,8 @@ export interface UpdatePlanParams {
   code: string;
   name?: string;
   description?: string;
+  serviceCodes?: string[];
+  featureCodes?: string[];
   status?: PlanStatus;
   billingPeriod?: BillingPeriod;
   priceMinor?: number;
@@ -87,6 +93,12 @@ class PlanManagementService {
         request.setCode(params.code);
         request.setName(params.name);
         request.setDescription(params.description);
+        if (params.serviceCodes) {
+          request.setServiceCodesList(params.serviceCodes);
+        }
+        if (params.featureCodes) {
+          request.setFeatureCodesList(params.featureCodes);
+        }
         request.setBillingPeriod(params.billingPeriod);
         request.setPriceMinor(params.priceMinor);
         request.setCurrency(params.currency);
@@ -199,6 +211,8 @@ class PlanManagementService {
         request.setCode(params.code);
         if (params.name) request.setName(params.name);
         if (params.description) request.setDescription(params.description);
+        if (params.serviceCodes) request.setServiceCodesList(params.serviceCodes);
+        if (params.featureCodes) request.setFeatureCodesList(params.featureCodes);
         if (params.status !== undefined) request.setStatus(params.status);
         if (params.billingPeriod !== undefined)
           request.setBillingPeriod(params.billingPeriod);
@@ -274,6 +288,8 @@ class PlanManagementService {
       code: obj.code,
       name: obj.name,
       description: obj.description,
+      serviceCodes: obj.serviceCodesList || [],
+      featureCodes: obj.featureCodesList || [],
       status: obj.status,
       billingPeriod: obj.billingPeriod,
       priceMinor: obj.priceMinor,

@@ -31,6 +31,8 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
 
 import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../hooks/useTranslation";
@@ -41,6 +43,12 @@ import planManagementService, {
   PlanStatus,
   BillingPeriod,
 } from "../../../../services/planManagementService";
+import serviceManagementService, {
+  Service,
+} from "../../../../services/serviceManagementService";
+import featureManagementService, {
+  Feature,
+} from "../../../../services/featureManagementService";
 
 function AdminPlansContent() {
   const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +63,10 @@ function AdminPlansContent() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [currentTab, setCurrentTab] = useState(0);
   const [adminInfo, setAdminInfo] = useState<{ id: string; email?: string; name?: string } | null>(null);
+  const [services, setServices] = useState<Service[]>([]);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
   const [formData, setFormData] = useState({
     code: "",
@@ -64,6 +76,8 @@ function AdminPlansContent() {
     priceMinor: 0,
     currency: "USD",
     trialDays: 0,
+    serviceCodes: [] as string[],
+    featureCodes: [] as string[],
   });
 
   const router = useRouter();
@@ -79,7 +93,7 @@ function AdminPlansContent() {
   };
 
   useEffect(() => {
-    const loadPlans = async () => {
+    const loadData = async () => {
       try {
         const loggedInAdminId = getAdminId();
         if (!loggedInAdminId) {
@@ -91,22 +105,34 @@ function AdminPlansContent() {
         setAdminInfo(getAdminInfo());
 
         const token = webClientAuthService.getToken();
-        const response = await planManagementService.listPlans(
-          { pageSize: 100 },
-          { accessToken: token ?? undefined }
-        );
+        const [plansResponse, servicesResponse, featuresResponse] = await Promise.all([
+          planManagementService.listPlans(
+            { pageSize: 100 },
+            { accessToken: token ?? undefined }
+          ),
+          serviceManagementService.listServices(
+            { pageSize: 100 },
+            { accessToken: token ?? undefined }
+          ),
+          featureManagementService.listFeatures(
+            { pageSize: 100 },
+            { accessToken: token ?? undefined }
+          ),
+        ]);
 
-        setPlans(response.plans);
-        filterPlansByTab(response.plans, 0);
+        setPlans(plansResponse.plans);
+        setServices(servicesResponse.services);
+        setFeatures(featuresResponse.features);
+        filterPlansByTab(plansResponse.plans, 0);
       } catch (error) {
-        console.error("Failed to load plans:", error);
-        setError("Failed to load plans");
+        console.error("Failed to load data:", error);
+        setError("Failed to load data");
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadPlans();
+    loadData();
   }, [router, locale]);
 
   const handleLogout = () => {
@@ -196,7 +222,11 @@ function AdminPlansContent() {
       priceMinor: 0,
       currency: "USD",
       trialDays: 0,
+      serviceCodes: [],
+      featureCodes: [],
     });
+    setSelectedServices([]);
+    setSelectedFeatures([]);
     setCreateDialog(true);
     setError(null);
   };
@@ -211,7 +241,11 @@ function AdminPlansContent() {
       priceMinor: plan.priceMinor,
       currency: plan.currency,
       trialDays: plan.trialDays,
+      serviceCodes: plan.serviceCodes || [],
+      featureCodes: plan.featureCodes || [],
     });
+    setSelectedServices(plan.serviceCodes || []);
+    setSelectedFeatures(plan.featureCodes || []);
     setEditDialog(true);
     setError(null);
   };
@@ -233,6 +267,8 @@ function AdminPlansContent() {
           code: formData.code,
           name: formData.name,
           description: formData.description,
+          serviceCodes: selectedServices,
+          featureCodes: selectedFeatures,
           billingPeriod: formData.billingPeriod,
           priceMinor: formData.priceMinor,
           currency: formData.currency,
@@ -267,6 +303,8 @@ function AdminPlansContent() {
           code: formData.code,
           name: formData.name,
           description: formData.description,
+          serviceCodes: selectedServices,
+          featureCodes: selectedFeatures,
           billingPeriod: formData.billingPeriod,
           priceMinor: formData.priceMinor,
           currency: formData.currency,
@@ -289,6 +327,35 @@ function AdminPlansContent() {
     } finally {
       setActionLoading(false);
     }
+  };
+
+  const handleServiceToggle = (serviceCode: string) => {
+    setSelectedServices((prev) => {
+      if (prev.includes(serviceCode)) {
+        const updated = prev.filter((code) => code !== serviceCode);
+        setSelectedFeatures((prevFeatures) =>
+          prevFeatures.filter((fCode) => {
+            const feature = features.find((f) => f.code === fCode);
+            return feature && updated.includes(feature.serviceCode);
+          })
+        );
+        return updated;
+      } else {
+        return [...prev, serviceCode];
+      }
+    });
+  };
+
+  const handleFeatureToggle = (featureCode: string) => {
+    setSelectedFeatures((prev) =>
+      prev.includes(featureCode)
+        ? prev.filter((code) => code !== featureCode)
+        : [...prev, featureCode]
+    );
+  };
+
+  const getAvailableFeatures = () => {
+    return features.filter((feature) => selectedServices.includes(feature.serviceCode));
   };
 
   const handleArchivePlan = async () => {
@@ -647,6 +714,60 @@ function AdminPlansContent() {
               required
             />
             <FormControl fullWidth>
+              <InputLabel>Services</InputLabel>
+              <Select
+                multiple
+                value={selectedServices}
+                onChange={(e) => {
+                  const value = e.target.value as string[];
+                  setSelectedServices(value);
+                }}
+                label="Services"
+                renderValue={(selected) => {
+                  const selectedNames = services
+                    .filter((s) => selected.includes(s.code))
+                    .map((s) => s.name);
+                  return selectedNames.join(", ");
+                }}
+              >
+                {services.map((service) => (
+                  <MenuItem key={service.code} value={service.code}>
+                    <Checkbox checked={selectedServices.includes(service.code)} />
+                    <ListItemText primary={service.name} secondary={service.code} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Features</InputLabel>
+              <Select
+                multiple
+                value={selectedFeatures}
+                onChange={(e) => {
+                  const value = e.target.value as string[];
+                  setSelectedFeatures(value);
+                }}
+                label="Features"
+                disabled={selectedServices.length === 0}
+                renderValue={(selected) => {
+                  const selectedNames = features
+                    .filter((f) => selected.includes(f.code))
+                    .map((f) => f.name);
+                  return selectedNames.join(", ");
+                }}
+              >
+                {getAvailableFeatures().map((feature) => (
+                  <MenuItem key={feature.code} value={feature.code}>
+                    <Checkbox checked={selectedFeatures.includes(feature.code)} />
+                    <ListItemText 
+                      primary={feature.name} 
+                      secondary={`${feature.code} (${feature.serviceCode})`} 
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
               <InputLabel>Billing Period</InputLabel>
               <Select
                 value={formData.billingPeriod}
@@ -741,6 +862,60 @@ function AdminPlansContent() {
               rows={3}
               required
             />
+            <FormControl fullWidth>
+              <InputLabel>Services</InputLabel>
+              <Select
+                multiple
+                value={selectedServices}
+                onChange={(e) => {
+                  const value = e.target.value as string[];
+                  setSelectedServices(value);
+                }}
+                label="Services"
+                renderValue={(selected) => {
+                  const selectedNames = services
+                    .filter((s) => selected.includes(s.code))
+                    .map((s) => s.name);
+                  return selectedNames.join(", ");
+                }}
+              >
+                {services.map((service) => (
+                  <MenuItem key={service.code} value={service.code}>
+                    <Checkbox checked={selectedServices.includes(service.code)} />
+                    <ListItemText primary={service.name} secondary={service.code} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Features</InputLabel>
+              <Select
+                multiple
+                value={selectedFeatures}
+                onChange={(e) => {
+                  const value = e.target.value as string[];
+                  setSelectedFeatures(value);
+                }}
+                label="Features"
+                disabled={selectedServices.length === 0}
+                renderValue={(selected) => {
+                  const selectedNames = features
+                    .filter((f) => selected.includes(f.code))
+                    .map((f) => f.name);
+                  return selectedNames.join(", ");
+                }}
+              >
+                {getAvailableFeatures().map((feature) => (
+                  <MenuItem key={feature.code} value={feature.code}>
+                    <Checkbox checked={selectedFeatures.includes(feature.code)} />
+                    <ListItemText 
+                      primary={feature.name} 
+                      secondary={`${feature.code} (${feature.serviceCode})`} 
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <FormControl fullWidth>
               <InputLabel>Billing Period</InputLabel>
               <Select
