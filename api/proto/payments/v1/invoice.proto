@@ -1,0 +1,140 @@
+syntax = "proto3";
+
+package payments.v1;
+
+option go_package = "lviv_backend/api/gen/payments/v1;paymentsv1";
+
+import "google/protobuf/timestamp.proto";
+
+// InvoiceService manages invoice generation and retrieval
+service InvoiceService {
+  rpc GenerateInvoice(GenerateInvoiceRequest) returns (GenerateInvoiceResponse);
+  rpc GetInvoice(GetInvoiceRequest) returns (GetInvoiceResponse);
+  rpc GetInvoiceByCharge(GetInvoiceByChargeRequest) returns (GetInvoiceByChargeResponse);
+  rpc ListInvoices(ListInvoicesRequest) returns (ListInvoicesResponse);
+}
+
+// Invoice status enum
+enum InvoiceStatus {
+  INVOICE_STATUS_UNSPECIFIED = 0;
+  INVOICE_STATUS_DRAFT = 1;
+  INVOICE_STATUS_ISSUED = 2;
+  INVOICE_STATUS_PAID = 3;
+  INVOICE_STATUS_VOID = 4;
+  INVOICE_STATUS_CANCELED = 5;
+}
+
+// Invoice message
+message Invoice {
+  string id = 1;
+  string invoice_number = 2;
+  string charge_id = 3;
+  string business_id = 4;
+  string customer_id = 5;
+  InvoiceStatus status = 6;
+  string currency = 7;
+  int64 subtotal_minor = 8;
+  int64 tax_minor = 9;
+  int64 total_minor = 10;
+  repeated InvoiceItem items = 11;
+  repeated TaxBreakdown tax_breakdown = 12;
+  CustomerInfo customer_info = 13;
+  BusinessInfo business_info = 14;
+  map<string, string> metadata = 15;
+  google.protobuf.Timestamp issue_date = 16;
+  google.protobuf.Timestamp due_date = 17;
+  google.protobuf.Timestamp paid_at = 18;
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
+}
+
+// Invoice item
+message InvoiceItem {
+  string description = 1;
+  int32 quantity = 2;
+  int64 unit_price_minor = 3;
+  int64 total_minor = 4;
+  string tax_rate = 5;
+}
+
+// Tax breakdown
+message TaxBreakdown {
+  string tax_name = 1;
+  string tax_rate = 2;
+  int64 tax_amount_minor = 3;
+  int64 taxable_amount_minor = 4;
+}
+
+// Customer information
+message CustomerInfo {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  Address address = 4;
+  string tax_id = 5;
+}
+
+// Business information
+message BusinessInfo {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  Address address = 4;
+  string tax_id = 5;
+  string registration_number = 6;
+}
+
+// Address
+message Address {
+  string street = 1;
+  string city = 2;
+  string state = 3;
+  string postal_code = 4;
+  string country = 5;
+}
+
+// GenerateInvoice
+message GenerateInvoiceRequest {
+  string charge_id = 1;
+  optional string customer_name = 2;
+  optional string customer_email = 3;
+  optional Address customer_address = 4;
+  map<string, string> metadata = 5;
+}
+
+message GenerateInvoiceResponse {
+  Invoice invoice = 1;
+  string pdf_url = 2;
+}
+
+// GetInvoice
+message GetInvoiceRequest {
+  string invoice_id = 1;
+}
+
+message GetInvoiceResponse {
+  Invoice invoice = 1;
+}
+
+// GetInvoiceByCharge
+message GetInvoiceByChargeRequest {
+  string charge_id = 1;
+}
+
+message GetInvoiceByChargeResponse {
+  Invoice invoice = 1;
+}
+
+// ListInvoices
+message ListInvoicesRequest {
+  optional string business_id = 1;
+  optional string customer_id = 2;
+  optional InvoiceStatus status = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message ListInvoicesResponse {
+  repeated Invoice invoices = 1;
+  int32 total = 2;
+}
