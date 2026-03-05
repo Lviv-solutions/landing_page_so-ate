@@ -15,19 +15,22 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
 
 import { Iconify } from "../../../../packages/my-saas-components/src/iconify";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { getAdminId, getAdminInfo } from "../../../../lib/auth";
 import { webClientAuthService } from "../../../../lib/auth-service";
-import planAssignmentService, {
-  PlanAssignment,
-  AssignmentStatus,
-} from "../../../../services/planAssignmentService";
-import planManagementService, {
-  Plan,
-  BillingPeriod,
-} from "../../../../services/planManagementService";
+import invoiceService, {
+  Invoice,
+  InvoiceStatus,
+} from "../../../../services/invoiceService";
 
 import {
   AdminPageLayout,
@@ -44,68 +47,45 @@ const formatPrice = (priceMinor: number, currency: string) => {
   }).format(amount);
 };
 
-const getBillingPeriodText = (period: BillingPeriod) => {
-  switch (period) {
-    case BillingPeriod.BILLING_PERIOD_MONTHLY:
-      return "Monthly";
-    case BillingPeriod.BILLING_PERIOD_QUARTERLY:
-      return "Quarterly";
-    case BillingPeriod.BILLING_PERIOD_YEARLY:
-      return "Yearly";
-    case BillingPeriod.BILLING_PERIOD_LIFETIME:
-      return "Lifetime";
-    default:
-      return "Unknown";
-  }
-};
 
-const getStatusColor = (status: AssignmentStatus) => {
+const getInvoiceStatusText = (status: InvoiceStatus) => {
   switch (status) {
-    case AssignmentStatus.ASSIGNMENT_STATUS_PENDING:
-      return "warning";
-    case AssignmentStatus.ASSIGNMENT_STATUS_ACCEPTED:
-      return "success";
-    case AssignmentStatus.ASSIGNMENT_STATUS_REJECTED:
-    case AssignmentStatus.ASSIGNMENT_STATUS_CANCELED:
-      return "error";
-    case AssignmentStatus.ASSIGNMENT_STATUS_EXPIRED:
-      return "default";
-    default:
-      return "default";
-  }
-};
-
-const getStatusText = (status: AssignmentStatus) => {
-  switch (status) {
-    case AssignmentStatus.ASSIGNMENT_STATUS_PENDING:
-      return "Pending";
-    case AssignmentStatus.ASSIGNMENT_STATUS_ACCEPTED:
-      return "Accepted";
-    case AssignmentStatus.ASSIGNMENT_STATUS_REJECTED:
-      return "Rejected";
-    case AssignmentStatus.ASSIGNMENT_STATUS_CANCELED:
+    case InvoiceStatus.INVOICE_STATUS_DRAFT:
+      return "Draft";
+    case InvoiceStatus.INVOICE_STATUS_ISSUED:
+      return "Issued";
+    case InvoiceStatus.INVOICE_STATUS_PAID:
+      return "Paid";
+    case InvoiceStatus.INVOICE_STATUS_VOID:
+      return "Void";
+    case InvoiceStatus.INVOICE_STATUS_CANCELED:
       return "Canceled";
-    case AssignmentStatus.ASSIGNMENT_STATUS_EXPIRED:
-      return "Expired";
     default:
       return "Unknown";
   }
 };
 
-interface RevenueByPlan {
-  planCode: string;
-  planName: string;
-  price: number;
-  currency: string;
-  billingPeriod: BillingPeriod;
-  subscriptionCount: number;
-  totalRevenue: number;
-}
+const getInvoiceStatusColor = (status: InvoiceStatus) => {
+  switch (status) {
+    case InvoiceStatus.INVOICE_STATUS_DRAFT:
+      return "default";
+    case InvoiceStatus.INVOICE_STATUS_ISSUED:
+      return "info";
+    case InvoiceStatus.INVOICE_STATUS_PAID:
+      return "success";
+    case InvoiceStatus.INVOICE_STATUS_VOID:
+    case InvoiceStatus.INVOICE_STATUS_CANCELED:
+      return "error";
+    default:
+      return "default";
+  }
+};
 
 function AdminBillingContent() {
   const [isLoading, setIsLoading] = useState(true);
-  const [assignments, setAssignments] = useState<PlanAssignment[]>([]);
-  const [plans, setPlans] = useState<Plan[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [invoiceDialogOpen, setInvoiceDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [adminInfo, setAdminInfo] = useState<AdminInfo | null>(null);
 
@@ -127,24 +107,14 @@ function AdminBillingContent() {
         const token = webClientAuthService.getToken();
 
         try {
-          const assignmentsResponse = await planAssignmentService.listPlanAssignments(
-            { pageSize: 100 },
+          const invoicesResponse = await invoiceService.listInvoices(
+            { limit: 100, offset: 0 },
             { accessToken: token ?? undefined }
           );
-          setAssignments(assignmentsResponse.assignments);
-        } catch (assignError) {
-          console.error("Failed to load assignments:", assignError);
-          setError("Failed to load assignments.");
-        }
-
-        try {
-          const plansResponse = await planManagementService.listPlans(
-            { pageSize: 100 },
-            { accessToken: token ?? undefined }
-          );
-          setPlans(plansResponse.plans);
-        } catch (planError) {
-          console.error("Failed to load plans:", planError);
+          setInvoices(invoicesResponse.invoices);
+        } catch (invoiceError) {
+          console.error("Failed to load invoices:", invoiceError);
+          setError("Failed to load invoices.");
         }
       } catch (err) {
         console.error("Failed to load data:", err);
@@ -157,98 +127,51 @@ function AdminBillingContent() {
     loadData();
   }, [router, locale]);
 
-  const plansMap = useMemo(() => {
-    const map = new Map<string, Plan>();
-    plans.forEach((plan) => map.set(plan.code, plan));
-    return map;
-  }, [plans]);
-
-  const acceptedAssignments = useMemo(
-    () => assignments.filter((a) => a.status === AssignmentStatus.ASSIGNMENT_STATUS_ACCEPTED),
-    [assignments]
-  );
-
-  const pendingAssignments = useMemo(
-    () => assignments.filter((a) => a.status === AssignmentStatus.ASSIGNMENT_STATUS_PENDING),
-    [assignments]
-  );
-
-  const totalRevenue = useMemo(() => {
-    return acceptedAssignments.reduce((sum, assignment) => {
-      const plan = plansMap.get(assignment.planCode);
-      return sum + (plan ? plan.priceMinor : 0);
-    }, 0);
-  }, [acceptedAssignments, plansMap]);
-
   const mainCurrency = useMemo(() => {
-    const plan = plans.find((p) => p.currency);
-    return plan?.currency || "USD";
-  }, [plans]);
+    const invoice = invoices.find((inv) => inv.currency);
+    return invoice?.currency || "USD";
+  }, [invoices]);
 
-  const revenueByPlan: RevenueByPlan[] = useMemo(() => {
-    const grouped = new Map<string, PlanAssignment[]>();
-    acceptedAssignments.forEach((a) => {
-      const list = grouped.get(a.planCode) || [];
-      list.push(a);
-      grouped.set(a.planCode, list);
-    });
+  const totalInvoiceRevenue = useMemo(() => {
+    return invoices
+      .filter((inv) => inv.status === InvoiceStatus.INVOICE_STATUS_PAID)
+      .reduce((sum, inv) => sum + inv.totalMinor, 0);
+  }, [invoices]);
 
-    return Array.from(grouped.entries())
-      .map(([planCode, planAssignments]) => {
-        const plan = plansMap.get(planCode);
-        return {
-          planCode,
-          planName: plan?.name || planCode,
-          price: plan?.priceMinor || 0,
-          currency: plan?.currency || "USD",
-          billingPeriod: plan?.billingPeriod || BillingPeriod.BILLING_PERIOD_UNSPECIFIED,
-          subscriptionCount: planAssignments.length,
-          totalRevenue: (plan?.priceMinor || 0) * planAssignments.length,
-        };
-      })
-      .sort((a, b) => b.totalRevenue - a.totalRevenue);
-  }, [acceptedAssignments, plansMap]);
-
-  const recentAssignments = useMemo(() => {
-    return [...assignments]
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, 10);
-  }, [assignments]);
-
-  const statusCounts = useMemo(() => {
-    const counts = {
-      accepted: 0,
-      pending: 0,
-      rejected: 0,
-      canceled: 0,
-      expired: 0,
-    };
-    assignments.forEach((a) => {
-      switch (a.status) {
-        case AssignmentStatus.ASSIGNMENT_STATUS_ACCEPTED:
-          counts.accepted++;
-          break;
-        case AssignmentStatus.ASSIGNMENT_STATUS_PENDING:
-          counts.pending++;
-          break;
-        case AssignmentStatus.ASSIGNMENT_STATUS_REJECTED:
-          counts.rejected++;
-          break;
-        case AssignmentStatus.ASSIGNMENT_STATUS_CANCELED:
-          counts.canceled++;
-          break;
-        case AssignmentStatus.ASSIGNMENT_STATUS_EXPIRED:
-          counts.expired++;
-          break;
-      }
-    });
-    return counts;
-  }, [assignments]);
-
-  const activePlansCount = useMemo(
-    () => plans.filter((p) => p.status === 1).length,
-    [plans]
+  const paidInvoicesCount = useMemo(
+    () => invoices.filter((inv) => inv.status === InvoiceStatus.INVOICE_STATUS_PAID).length,
+    [invoices]
   );
+
+  const pendingInvoicesCount = useMemo(
+    () => invoices.filter((inv) => inv.status === InvoiceStatus.INVOICE_STATUS_ISSUED).length,
+    [invoices]
+  );
+
+  const draftInvoicesCount = useMemo(
+    () => invoices.filter((inv) => inv.status === InvoiceStatus.INVOICE_STATUS_DRAFT).length,
+    [invoices]
+  );
+
+  const handleViewInvoice = async (invoiceId: string) => {
+    try {
+      const token = webClientAuthService.getToken();
+      const invoice = await invoiceService.getInvoice(
+        { invoiceId },
+        { accessToken: token ?? undefined }
+      );
+      setSelectedInvoice(invoice);
+      setInvoiceDialogOpen(true);
+    } catch (err) {
+      console.error("Failed to load invoice:", err);
+      setError("Failed to load invoice details");
+    }
+  };
+
+  const handleCloseInvoiceDialog = () => {
+    setInvoiceDialogOpen(false);
+    setSelectedInvoice(null);
+  };
 
   if (isLoading) {
     return <AdminLoadingScreen />;
@@ -263,26 +186,26 @@ function AdminBillingContent() {
   const statCards = [
     {
       title: "Total Revenue",
-      value: formatPrice(totalRevenue, mainCurrency),
+      value: formatPrice(totalInvoiceRevenue, mainCurrency),
       icon: "solar:wallet-money-bold",
       gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     },
     {
-      title: "Active Subscriptions",
-      value: acceptedAssignments.length.toString(),
-      icon: "solar:check-circle-bold",
+      title: "Total Invoices",
+      value: invoices.length.toString(),
+      icon: "solar:bill-list-bold",
       gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
     },
     {
-      title: "Pending Assignments",
-      value: pendingAssignments.length.toString(),
-      icon: "solar:clock-circle-bold",
+      title: "Paid Invoices",
+      value: paidInvoicesCount.toString(),
+      icon: "solar:check-circle-bold",
       gradient: "linear-gradient(135deg, #F2994A 0%, #F2C94C 100%)",
     },
     {
-      title: "Active Plans",
-      value: activePlansCount.toString(),
-      icon: "solar:bill-list-bold",
+      title: "Pending Invoices",
+      value: pendingInvoicesCount.toString(),
+      icon: "solar:clock-circle-bold",
       gradient: "linear-gradient(135deg, #ED614A 0%, #E6446F 100%)",
     },
   ];
@@ -295,10 +218,10 @@ function AdminBillingContent() {
     >
       <Box>
         <Typography variant="h4" fontWeight="bold" gutterBottom>
-          Billing Dashboard
+          Invoices
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Revenue overview and subscription analytics
+          Manage and track all invoices
         </Typography>
       </Box>
 
@@ -355,146 +278,73 @@ function AdminBillingContent() {
         ))}
       </Stack>
 
-      {/* Revenue by Plan */}
+      {/* All Invoices */}
       <Card>
         <CardContent>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Revenue by Plan
+            All Invoices
           </Typography>
-          {revenueByPlan.length === 0 ? (
+          {invoices.length === 0 ? (
             <Typography variant="body2" color="text.secondary" sx={{ py: 4, textAlign: "center" }}>
-              No subscription revenue data yet
+              No invoices found
             </Typography>
           ) : (
             <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Plan</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Billing Period</TableCell>
-                    <TableCell align="center">Subscriptions</TableCell>
-                    <TableCell align="right">Revenue</TableCell>
+                    <TableCell>Invoice #</TableCell>
+                    <TableCell>Customer</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Amount</TableCell>
+                    <TableCell>Issue Date</TableCell>
+                    <TableCell align="center">Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {revenueByPlan.map((row) => (
-                    <TableRow key={row.planCode} sx={{ "&:hover": { bgcolor: "action.hover" } }}>
+                  {invoices.map((invoice) => (
+                    <TableRow key={invoice.id} sx={{ "&:hover": { bgcolor: "action.hover" } }}>
                       <TableCell>
                         <Typography variant="body2" fontWeight="medium">
-                          {row.planName}
+                          {invoice.invoiceNumber}
                         </Typography>
                         <Typography variant="caption" color="text.secondary" fontFamily="monospace">
-                          {row.planCode}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{formatPrice(row.price, row.currency)}</TableCell>
-                      <TableCell>{getBillingPeriodText(row.billingPeriod)}</TableCell>
-                      <TableCell align="center">
-                        <Chip label={row.subscriptionCount} size="small" color="primary" />
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="body2" fontWeight="bold">
-                          {formatPrice(row.totalRevenue, row.currency)}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Status Breakdown */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Assignment Status Breakdown
-          </Typography>
-          <Stack direction="row" spacing={2} flexWrap="wrap" sx={{ mt: 1 }}>
-            <Chip
-              icon={<Iconify icon="solar:check-circle-bold" width={18} />}
-              label={`Accepted: ${statusCounts.accepted}`}
-              color="success"
-            />
-            <Chip
-              icon={<Iconify icon="solar:clock-circle-bold" width={18} />}
-              label={`Pending: ${statusCounts.pending}`}
-              color="warning"
-            />
-            <Chip
-              icon={<Iconify icon="solar:close-circle-bold" width={18} />}
-              label={`Rejected: ${statusCounts.rejected}`}
-              color="error"
-            />
-            <Chip
-              icon={<Iconify icon="solar:close-circle-bold" width={18} />}
-              label={`Canceled: ${statusCounts.canceled}`}
-              color="error"
-              variant="outlined"
-            />
-            <Chip
-              icon={<Iconify icon="solar:calendar-remove-bold" width={18} />}
-              label={`Expired: ${statusCounts.expired}`}
-              color="default"
-            />
-          </Stack>
-        </CardContent>
-      </Card>
-
-      {/* Recent Assignments */}
-      <Card>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            Recent Assignments
-          </Typography>
-          {recentAssignments.length === 0 ? (
-            <Typography variant="body2" color="text.secondary" sx={{ py: 4, textAlign: "center" }}>
-              No assignments yet
-            </Typography>
-          ) : (
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Plan</TableCell>
-                    <TableCell>User ID</TableCell>
-                    <TableCell>Business ID</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Created</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {recentAssignments.map((assignment) => (
-                    <TableRow key={assignment.id} sx={{ "&:hover": { bgcolor: "action.hover" } }}>
-                      <TableCell>
-                        <Typography variant="body2" fontWeight="medium">
-                          {plansMap.get(assignment.planCode)?.name || assignment.planCode}
+                          {invoice.id.substring(0, 12)}...
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography variant="body2" fontFamily="monospace">
-                          {assignment.userId.substring(0, 12)}...
+                        <Typography variant="body2">
+                          {invoice.customerInfo?.name || "N/A"}
                         </Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body2" fontFamily="monospace">
-                          {assignment.businessId.substring(0, 12)}...
+                        <Typography variant="caption" color="text.secondary">
+                          {invoice.customerInfo?.email || ""}
                         </Typography>
                       </TableCell>
                       <TableCell>
                         <Chip
-                          label={getStatusText(assignment.status)}
-                          color={getStatusColor(assignment.status)}
+                          label={getInvoiceStatusText(invoice.status)}
+                          color={getInvoiceStatusColor(invoice.status)}
                           size="small"
                         />
                       </TableCell>
+                      <TableCell align="right">
+                        <Typography variant="body2" fontWeight="bold">
+                          {formatPrice(invoice.totalMinor, invoice.currency)}
+                        </Typography>
+                      </TableCell>
                       <TableCell>
                         <Typography variant="body2" color="text.secondary">
-                          {assignment.createdAt.toLocaleDateString()}
+                          {invoice.issueDate?.toLocaleDateString() || "N/A"}
                         </Typography>
+                      </TableCell>
+                      <TableCell align="center">
+                        <IconButton
+                          size="small"
+                          onClick={() => handleViewInvoice(invoice.id)}
+                          color="primary"
+                        >
+                          <Iconify icon="solar:eye-bold" width={20} />
+                        </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -504,6 +354,167 @@ function AdminBillingContent() {
           )}
         </CardContent>
       </Card>
+
+      {/* Invoice Detail Dialog */}
+      <Dialog
+        open={invoiceDialogOpen}
+        onClose={handleCloseInvoiceDialog}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" fontWeight="bold">
+              Invoice Details
+            </Typography>
+            <IconButton onClick={handleCloseInvoiceDialog} size="small">
+              <Iconify icon="solar:close-circle-bold" width={24} />
+            </IconButton>
+          </Stack>
+        </DialogTitle>
+        <DialogContent dividers>
+          {selectedInvoice && (
+            <Stack spacing={3}>
+              <Stack direction="row" justifyContent="space-between">
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Invoice Number
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold">
+                    {selectedInvoice.invoiceNumber}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Chip
+                    label={getInvoiceStatusText(selectedInvoice.status)}
+                    color={getInvoiceStatusColor(selectedInvoice.status)}
+                  />
+                </Box>
+              </Stack>
+
+              <Divider />
+
+              <Stack direction="row" spacing={4}>
+                <Box flex={1}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    Customer Information
+                  </Typography>
+                  <Typography variant="body2">{selectedInvoice.customerInfo?.name || "N/A"}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedInvoice.customerInfo?.email || ""}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedInvoice.customerInfo?.phone || ""}
+                  </Typography>
+                </Box>
+                <Box flex={1}>
+                  <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                    Business Information
+                  </Typography>
+                  <Typography variant="body2">{selectedInvoice.businessInfo?.name || "N/A"}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {selectedInvoice.businessInfo?.email || ""}
+                  </Typography>
+                </Box>
+              </Stack>
+
+              <Divider />
+
+              <Box>
+                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  Invoice Items
+                </Typography>
+                <TableContainer>
+                  <Table size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Description</TableCell>
+                        <TableCell align="center">Qty</TableCell>
+                        <TableCell align="right">Unit Price</TableCell>
+                        <TableCell align="right">Total</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {selectedInvoice.items.map((item, idx) => (
+                        <TableRow key={idx}>
+                          <TableCell>{item.description}</TableCell>
+                          <TableCell align="center">{item.quantity}</TableCell>
+                          <TableCell align="right">
+                            {formatPrice(item.unitPriceMinor, selectedInvoice.currency)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {formatPrice(item.totalMinor, selectedInvoice.currency)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+
+              <Divider />
+
+              <Stack spacing={1}>
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography variant="body2">Subtotal:</Typography>
+                  <Typography variant="body2" fontWeight="medium">
+                    {formatPrice(selectedInvoice.subtotalMinor, selectedInvoice.currency)}
+                  </Typography>
+                </Stack>
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography variant="body2">Tax:</Typography>
+                  <Typography variant="body2" fontWeight="medium">
+                    {formatPrice(selectedInvoice.taxMinor, selectedInvoice.currency)}
+                  </Typography>
+                </Stack>
+                <Divider />
+                <Stack direction="row" justifyContent="space-between">
+                  <Typography variant="h6" fontWeight="bold">
+                    Total:
+                  </Typography>
+                  <Typography variant="h6" fontWeight="bold" color="primary">
+                    {formatPrice(selectedInvoice.totalMinor, selectedInvoice.currency)}
+                  </Typography>
+                </Stack>
+              </Stack>
+
+              <Divider />
+
+              <Stack direction="row" spacing={4}>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Issue Date
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedInvoice.issueDate?.toLocaleDateString() || "N/A"}
+                  </Typography>
+                </Box>
+                <Box>
+                  <Typography variant="caption" color="text.secondary">
+                    Due Date
+                  </Typography>
+                  <Typography variant="body2">
+                    {selectedInvoice.dueDate?.toLocaleDateString() || "N/A"}
+                  </Typography>
+                </Box>
+                {selectedInvoice.paidAt && (
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      Paid At
+                    </Typography>
+                    <Typography variant="body2">
+                      {selectedInvoice.paidAt.toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                )}
+              </Stack>
+            </Stack>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseInvoiceDialog}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </AdminPageLayout>
   );
 }
