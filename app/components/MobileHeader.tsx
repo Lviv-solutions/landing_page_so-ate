@@ -1,18 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "../hooks/useTranslation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import Image from "next/image";
 import LanguageSwitcher from "./LanguageSwitcher";
 import PromoBanner from "./PromoBanner";
+import { webClientAuthService } from "../../lib/auth-service";
+import SignInModal from "./SignInModal";
+import SignUpModal from "./SignUpModal";
 
 export default function MobileHeader() {
   const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [signUpOpen, setSignUpOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [pendingBusinessNav, setPendingBusinessNav] = useState(false);
   
   // Extract current locale from pathname
   const currentLocale = pathname.split('/')[1] || 'ar';
@@ -35,12 +42,36 @@ export default function MobileHeader() {
   const isClientPage = pathname.includes('/client');
   const isBusinessPage = pathname.includes('/business');
 
+  useEffect(() => {
+    setIsLoggedIn(webClientAuthService.isAuthenticated());
+  }, [signInOpen, signUpOpen]);
+
   const handleClientPageClick = () => {
     router.push(`/${currentLocale}/client`);
   };
 
   const handleBusinessPageClick = () => {
+    if (!webClientAuthService.isAuthenticated()) {
+      setPendingBusinessNav(true);
+      setSignInOpen(true);
+      return;
+    }
     router.push(`/${currentLocale}/business`);
+  };
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setSignInOpen(false);
+    setSignUpOpen(false);
+    if (pendingBusinessNav) {
+      setPendingBusinessNav(false);
+      router.push(`/${currentLocale}/business`);
+    }
+  };
+
+  const handleSignOut = () => {
+    webClientAuthService.logout();
+    setIsLoggedIn(false);
   };
 
   return (
@@ -72,7 +103,39 @@ export default function MobileHeader() {
 
           <div className="flex items-center space-x-3">
             <LanguageSwitcher />
-            
+
+            {!isLoggedIn && (
+              <>
+                <motion.button
+                  type="button"
+                  onClick={() => setSignInOpen(true)}
+                  className="hidden sm:block px-3 py-1.5 rounded-full text-xs font-semibold text-white border border-white/50"
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t("header.actions.signIn")}
+                </motion.button>
+                <motion.button
+                  type="button"
+                  onClick={() => setSignUpOpen(true)}
+                  className="hidden sm:block px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                  style={{ background: 'rgba(255,255,255,0.25)' }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t("header.actions.signUp")}
+                </motion.button>
+              </>
+            )}
+            {isLoggedIn && (
+              <motion.button
+                type="button"
+                onClick={handleSignOut}
+                className="hidden sm:block px-3 py-1.5 rounded-full text-xs font-semibold text-white border border-white/50"
+                whileTap={{ scale: 0.95 }}
+              >
+                {t("header.actions.signOut")}
+              </motion.button>
+            )}
+
             {!isBusinessPage && (
               <motion.button
                 onClick={handleBusinessPageClick}
@@ -157,6 +220,18 @@ export default function MobileHeader() {
         initial={{ width: 0 }}
         animate={{ width: "100%" }}
         transition={{ duration: 2, delay: 0.5 }}
+      />
+
+      <SignInModal
+        open={signInOpen}
+        onClose={() => { setSignInOpen(false); setPendingBusinessNav(false); }}
+        onSwitchToSignUp={() => { setSignInOpen(false); setSignUpOpen(true); }}
+        onLoginSuccess={handleLoginSuccess}
+      />
+      <SignUpModal
+        open={signUpOpen}
+        onClose={() => setSignUpOpen(false)}
+        onSwitchToSignIn={() => { setSignUpOpen(false); setSignInOpen(true); }}
       />
     </header>
     </>

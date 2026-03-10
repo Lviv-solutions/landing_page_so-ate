@@ -17,6 +17,10 @@
       "cta": "Subscribe Now"
     },
     "actions": {
+      "signIn": "Sign In",
+      "signUp": "Sign Up",
+      "signOut": "Logout",
+      "logout": "Logout",
       "subscribe": "Subscribe Now",
       "contact": "Contact Us",
       "ClientPage": "So-Eat for Customers",
@@ -24,6 +28,32 @@
       "HomePage": "Back to Home",
       "AdminPanel": "Admin Panel"
     }
+  },
+  "auth": {
+    "signInTitle": "Sign In",
+    "signUpTitle": "Create Account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signingIn": "Signing in...",
+    "creating": "Creating account...",
+    "createAccount": "Create Account",
+    "noAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "or": "or",
+    "loginFailed": "Login failed. Please check your email and password.",
+    "registrationFailed": "Registration failed. Please try again.",
+    "networkError": "Network error. Please try again.",
+    "passwordMismatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 8 characters.",
+    "signUpSuccess": "Account created successfully! Please check your email to verify your account.",
+    "ok": "OK"
   },
   "clientPage": {
     "title": "So-Eat for Customers",
@@ -811,6 +841,7 @@
     "confirmLocation": "Confirm",
     "editLocation": "Edit",
     "pinLocation": "Pin your location on the map accurately",
+    "searchAddressPlaceholder": "Search for an address...",
     "nextButton": "Next",
     "locationValidationError": "Please complete all required fields",
     "step3Title": "Set Your Restaurant Working Hours",

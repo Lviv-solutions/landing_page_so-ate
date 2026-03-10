@@ -14,11 +14,13 @@ import Footer from "./components/Footer";
 import LocaleLayout from "./components/LocaleLayout";
 import ThreeBackground from "./components/ThreeBackground";
 import ScrollProgress from "./components/ScrollProgress";
+import PlanAssignmentHandler from "./components/PlanAssignmentHandler";
 
 export default function Home() {
   return (
     <LocaleLayout>
       <div className="min-h-screen relative">
+        <PlanAssignmentHandler />
         <ThreeBackground />
         <ScrollProgress />
         <Header />

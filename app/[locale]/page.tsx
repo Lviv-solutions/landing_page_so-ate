@@ -20,11 +20,13 @@ import LocaleLayout from "../components/LocaleLayout";
 import ThreeBackground from "../components/ThreeBackground";
 // import ScrollIndicator from "../components/ScrollIndicator";
 import ScrollProgress from "../components/ScrollProgress";
+import PlanAssignmentHandler from "../components/PlanAssignmentHandler";
 import "../style.css";
 export default function LocalePage() {
   return (
     <LocaleLayout>
       <div className="min-h-screen bg-white relative">
+        <PlanAssignmentHandler />
         <ThreeBackground />
         <ScrollProgress />
         <Header />
