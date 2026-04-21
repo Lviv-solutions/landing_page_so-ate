@@ -25,14 +25,15 @@ ENV PORT=3000
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/package-lock.json* ./
 COPY --from=builder /app/.npmrc ./
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev && npm install --save-exact typescript
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/next-i18next.config.js ./
 
-# Run as non-root user
+# Set ownership and run as non-root user
+RUN chown -R node:node /app
 USER node
 
 EXPOSE 3000
