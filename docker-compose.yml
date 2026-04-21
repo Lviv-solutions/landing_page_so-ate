@@ -6,7 +6,7 @@ services:
     container_name: business
     restart: unless-stopped
     ports:
-      - "3500:3000"
+      - "127.0.0.1:3500:3000"
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
