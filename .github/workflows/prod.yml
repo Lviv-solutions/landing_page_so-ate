@@ -40,4 +40,4 @@ jobs:
             docker compose down
             docker rm -f business || true
             docker compose build
-            docker compose up -d
+            docker compose up -d 
