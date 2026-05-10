@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_GRPC_WEB_URL=${NEXT_PUBLIC_GRPC_WEB_URL}
     container_name: business
     restart: unless-stopped
     ports:
@@ -10,6 +12,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - PORT=${PORT}
+      - NEXT_PUBLIC_GRPC_WEB_URL=${NEXT_PUBLIC_GRPC_WEB_URL}
     env_file:
       - .env
     networks:
