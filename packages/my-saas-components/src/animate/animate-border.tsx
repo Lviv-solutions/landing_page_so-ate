@@ -100,7 +100,7 @@ export function AnimateBorder({
       size={slotProps?.primaryBorder?.size}
       sx={[
         {
-          ...theme.mixins.borderGradient({ padding: slotProps?.primaryBorder?.width }),
+          ...(theme.mixins as any).borderGradient({ padding: slotProps?.primaryBorder?.width }),
         },
         ...(Array.isArray(slotProps?.primaryBorder?.sx)
           ? slotProps.primaryBorder.sx
@@ -116,7 +116,7 @@ export function AnimateBorder({
         size={slotProps?.secondaryBorder?.size ?? slotProps?.primaryBorder?.size}
         sx={[
           {
-            ...theme.mixins.borderGradient({
+            ...(theme.mixins as any).borderGradient({
               padding: slotProps?.secondaryBorder?.width ?? secondaryBorderStyles.padding,
             }),
             borderRadius: secondaryBorderStyles.borderRadius,
@@ -141,7 +141,7 @@ export function AnimateBorder({
           overflow: 'hidden',
           position: 'relative',
           width: 'fit-content',
-          '&::before': theme.mixins.borderGradient({
+          '&::before': (theme.mixins as any).borderGradient({
             color: outlineColor,
             padding: slotProps?.primaryBorder?.width,
           }),

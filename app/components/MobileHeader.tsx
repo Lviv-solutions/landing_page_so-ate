@@ -89,7 +89,8 @@ export default function MobileHeader() {
               alt={t("company.name")}
               width={100}
               height={32}
-              className="h-8 w-auto"
+              className="h-8"
+              style={{ width: 'auto' }}
               priority
             />
             <motion.span

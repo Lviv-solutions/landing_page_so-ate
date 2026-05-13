@@ -4,10 +4,31 @@ import { useTranslation } from "../hooks/useTranslation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { Facebook, Instagram, Linkedin } from "lucide-react";
+import { webClientAuthService } from "../../lib/auth-service";
 
 export default function Footer() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const getLocaleFromPath = () => {
+    const segments = pathname.split('/').filter(Boolean);
+    return segments[0] === 'en' ? 'en' : 'ar';
+  };
+
+  const currentLocale = getLocaleFromPath();
+  const isBusinessPage = pathname.includes('/business');
+
+  const handleBusinessPageClick = () => {
+    const basePath = `/${currentLocale}`;
+    if (!webClientAuthService.isAuthenticated()) {
+      router.push(`${basePath}/business`);
+      return;
+    }
+    router.push(`${basePath}/business`);
+  };
 
   const footerSections = [
     {
@@ -82,7 +103,8 @@ export default function Footer() {
                     alt={t("company.name")}
                     width={40}
                     height={32}
-                    className="w-full h-auto"
+                    className="w-full"
+                    style={{ height: 'auto' }}
                   />
                 </div>
                 <h3 className="text-2xl font-bold">{t("company.name")}</h3>
@@ -109,6 +131,16 @@ export default function Footer() {
                   >
                     {t("footer.newsletter.demo")}
                   </motion.button>
+                  {!isBusinessPage && (
+                    <motion.button
+                      onClick={handleBusinessPageClick}
+                      className="px-4 sm:px-6 py-3 border-2 border-white/30 text-white rounded-full font-medium hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {t("header.actions.BusinessPage")}
+                    </motion.button>
+                  )}
                 </div>
               </div>
             </motion.div>
