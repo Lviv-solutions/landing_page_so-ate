@@ -40,10 +40,11 @@ jobs:
       - name: Create reports directory
         run: mkdir -p security/reports
 
-      # Step 1: Generate SBOM
+      # Step 1: Generate SBOM (exclude Node.js system npm)
       - name: Generate SBOM with Syft
         run: |
           syft landing-page-so-ate:${{ github.sha }} \
+            --exclude '/usr/local/lib/node_modules/**' \
             -o cyclonedx-json \
             > security/reports/sbom.cdx.json
 
@@ -80,6 +81,7 @@ jobs:
           scanners: vuln,secret,misconfig
           severity: HIGH,CRITICAL
           exit-code: "1"
+          skip-dirs: /usr/local/lib/node_modules
           format: json
           output: security/reports/trivy-image-report.json
 

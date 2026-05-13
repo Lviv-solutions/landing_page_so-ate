@@ -1,7 +1,8 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import arTranslations from "../../public/locales/ar/common.json";
+import enTranslations from "../../public/locales/en/common.json";
 
 interface Translations {
   [key: string]: string | number | Translations | string[] | FAQItem[];
@@ -14,10 +15,14 @@ export interface FAQItem {
 
 type TranslationValue = string | number | Translations | string[] | FAQItem[];
 
+// Static translation map — no network request needed
+const translationMap: Record<string, Translations> = {
+  ar: arTranslations as unknown as Translations,
+  en: enTranslations as unknown as Translations,
+};
+
 export function useTranslation() {
   const pathname = usePathname();
-  const [translations, setTranslations] = useState<Translations>({});
-  const [isLoading, setIsLoading] = useState(true);
 
   const getCurrentLocale = () => {
     const segments = pathname.split("/").filter(Boolean);
@@ -26,36 +31,8 @@ export function useTranslation() {
   };
 
   const locale = getCurrentLocale();
-
-  useEffect(() => {
-    const loadTranslations = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`/locales/${locale}/common.json`);
-        const data = await response.json();
-        setTranslations(data);
-      } catch (error) {
-        console.error("Failed to load translations:", error);
-        // Fallback to Arabic if English fails
-        if (locale === "en") {
-          try {
-            const fallbackResponse = await fetch("/locales/ar/common.json");
-            const fallbackData = await fallbackResponse.json();
-            setTranslations(fallbackData);
-          } catch (fallbackError) {
-            console.error(
-              "Failed to load fallback translations:",
-              fallbackError,
-            );
-          }
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTranslations();
-  }, [locale]);
+  const translations = translationMap[locale] || translationMap.ar;
+  const isLoading = false;
 
   const t = (
     key: string,

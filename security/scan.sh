@@ -15,6 +15,7 @@ echo ""
 # 1. Generate SBOM with Syft
 echo "▶ [1/4] Generating SBOM with Syft..."
 if syft "$IMAGE_NAME" \
+  --exclude '/usr/local/lib/node_modules/**' \
   -o cyclonedx-json \
   > "$REPORT_DIR/sbom.cdx.json" 2>/dev/null; then
   echo "  ✓ SBOM generated: $REPORT_DIR/sbom.cdx.json"
