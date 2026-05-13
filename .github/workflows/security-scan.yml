@@ -40,13 +40,17 @@ jobs:
       - name: Create reports directory
         run: mkdir -p security/reports
 
-      # Step 1: Generate SBOM (exclude Node.js system npm)
+      # Step 1: Generate SBOM from app filesystem only (exclude base image system packages)
       - name: Generate SBOM with Syft
         run: |
-          syft landing-page-so-ate:${{ github.sha }} \
-            --exclude '/usr/local/lib/node_modules/**' \
+          # Extract standalone app from image and scan only that
+          docker create --name sbom-extract landing-page-so-ate:${{ github.sha }}
+          docker cp sbom-extract:/app - | tar -xf - -C /tmp/app-extract 2>/dev/null || true
+          docker rm sbom-extract
+          syft dir:/tmp/app-extract \
             -o cyclonedx-json \
             > security/reports/sbom.cdx.json
+          rm -rf /tmp/app-extract
 
       # Step 2: Scan SBOM with Grype
       - name: Scan SBOM with Grype
