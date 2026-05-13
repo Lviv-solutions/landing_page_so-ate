@@ -6,9 +6,10 @@
 
 import * as authService from "../services/authService";
 
-const AUTH_TOKEN_KEY = "auth_token";
-const REFRESH_TOKEN_KEY = "auth_refresh_token";
-const AUTH_USER_KEY = "auth_user";
+const STORAGE_PREFIX = "so_eat_";
+const AUTH_TOKEN_KEY = `${STORAGE_PREFIX}tk`;
+const REFRESH_TOKEN_KEY = `${STORAGE_PREFIX}rt`;
+const AUTH_USER_KEY = `${STORAGE_PREFIX}usr`;
 
 export interface RegisterPayload {
   firstName: string;

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Cairo } from "next/font/google";
 import { clashDisplay, theYearOfHandicrafts } from "./fonts";
 import DocumentHead from "./components/DocumentHead";
 import { ThemeProvider } from "../theme/ThemeProvider";
+import RouteProgressBar from "./components/RouteProgressBar";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,11 +34,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ar">
+    <html lang="ar" data-scroll-behavior="smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} ${clashDisplay.variable} ${theYearOfHandicrafts.variable} antialiased`}
       >
         <DocumentHead />
+        <RouteProgressBar />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

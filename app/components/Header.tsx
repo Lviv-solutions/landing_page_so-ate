@@ -55,13 +55,11 @@ export default function Header() {
 
   const navItems = [
     { key: "nav.home", href: "#hero" },
-    { key: "nav.pricing", href: "#pricing" },
     { key: "nav.faq", href: "#faq" },
   ];
 
     const navItemsBusiness = [
     { key: "nav.home", href: "#hero" },
-    { key: "nav.pricing", href: "#pricing" },
     { key: "nav.faq", href: "#faq" },
   ];
     //   { key: "nav.home", href: "#hero" },
@@ -148,15 +146,15 @@ export default function Header() {
   return (
     <>
       <PromoBanner />
-      <header className="mx-2 sm:mx-4 md:mx-3 lg:mx-8 xl:mx-20 my-2 md:my-3 border-orange header-font hidden md:block shadow-sm overflow-hidden">
+      <header className="mx-4 md:mx-6 lg:mx-10 xl:mx-20 my-2 md:my-3 border-orange header-font hidden md:block shadow-sm overflow-hidden">
       {/* 3D AI Interface Background */}
       {/*<HeaderThreeBackground />*/}
 
       {/* Content */}
       <div className="relative z-10">
-        <div className="max-w-8xl mx-auto px-1 sm:px-2 md:px-2 lg:px-5 xl:px-8">
+        <div className="max-w-8xl mx-auto px-3 md:px-4 lg:px-6 xl:px-8">
           <motion.div
-            className="flex justify-start items-center py-3 md:py-3 lg:py-5 xl:py-6 gap-2 md:gap-3 lg:gap-6 xl:gap-12"
+            className="flex justify-start items-center py-3 lg:py-4 xl:py-5 gap-3 md:gap-4 lg:gap-6 xl:gap-10"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -183,7 +181,8 @@ export default function Header() {
                   alt={t("company.name")}
                   width={120}
                   height={40}
-                  className="h-10 w-auto"
+                  className="h-10"
+                  style={{ width: 'auto' }}
                   priority
                 />
                 <motion.span
@@ -197,16 +196,16 @@ export default function Header() {
             </motion.div>
 
             {/* Navigation Menu */}
-            <nav className="flex space-x-2 md:space-x-3 lg:space-x-4 xl:space-x-6">
+            <nav className="flex space-x-3 lg:space-x-5 xl:space-x-6">
               {(isClientPage ? navItems : navItemsBusiness).map((item, index) => (
                 <motion.button
                   key={item.key}
                   onClick={() => handleNavClick(item.href)}
-                  className="header-font hover:text-white transition-colors duration-300 relative group text-xs md:text-xs lg:text-sm xl:text-base px-1 md:px-1 lg:px-3"
+                  className="header-font hover:text-white transition-colors duration-300 relative group text-sm lg:text-base px-2 lg:px-3"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.05 }}
                 >
                   {t(item.key)}
                   <motion.div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300" />
@@ -215,7 +214,7 @@ export default function Header() {
             </nav>
 
             {/* Right Side Elements */}
-            <div className="flex items-center space-x-3 md:space-x-4 lg:space-x-5 xl:space-x-6" style={{ marginInlineStart: 'auto' }}>
+            <div className="flex items-center gap-3 lg:gap-4 xl:gap-5" style={{ marginInlineStart: 'auto' }}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -228,7 +227,7 @@ export default function Header() {
                 <motion.button
                   type="button"
                   onClick={handleSignOut}
-                  className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg hover:bg-white/10 transition-colors"
+                  className="text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -239,7 +238,7 @@ export default function Header() {
                   <motion.button
                     type="button"
                     onClick={() => setSignInOpen(true)}
-                    className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg hover:bg-white/10 transition-colors"
+                    className="text-sm font-semibold px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -248,7 +247,7 @@ export default function Header() {
                   <motion.button
                     type="button"
                     onClick={() => setSignUpOpen(true)}
-                    className="text-xs md:text-xs lg:text-sm font-semibold px-2 md:px-3 lg:px-4 py-1.5 md:py-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                    className="text-sm font-semibold px-4 py-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -258,9 +257,10 @@ export default function Header() {
               )}
 
                 <MouseTrackingButton
+                  onClick={() => handleNavClick("#pricing")}
                   variant="primary"
-                  size="md"
-                  className="text-xs md:text-xs lg:text-sm font-bold text-white px-2 md:px-3 lg:px-5 xl:px-8 py-1 md:py-1.5 lg:py-2.5 xl:py-3"
+                  size="sm"
+                  className="text-sm font-bold text-white px-6 lg:px-8 xl:px-10 py-2 lg:py-2.5 whitespace-nowrap"
                   baseBackground="linear-gradient(135deg, #ED614A 0%, #E6446F 50%, #FF6B35 100%)"
                   gradientColor="255, 255, 255"
                   gradientOpacity={0.2}
@@ -275,31 +275,12 @@ export default function Header() {
                   </span>
                 </MouseTrackingButton>
 
-                {!isBusinessPage && (
-                  <MouseTrackingButton
-                    onClick={handleBusinessPageClick}
-                    variant="secondary"
-                    size="md"
-                    className="text-xs md:text-xs lg:text-sm font-bold px-2 md:px-3 lg:px-5 xl:px-8 py-1 md:py-1.5 lg:py-2.5 xl:py-3 backdrop-blur-sm bg-white/10"
-                    baseBackground="rgba(255, 255, 255, 0.1)"
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      {t("header.actions.BusinessPage")}
-                      <motion.span
-                        className="text-xs"
-                        animate={{ rotate: [0, 360] }}
-                        transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      >
-                      </motion.span>
-                    </span>
-                  </MouseTrackingButton>
-                )}
 
                 <MouseTrackingButton
                   onClick={handleClientPageClick}
                   variant="secondary"
-                  size="md"
-                  className="text-xs md:text-xs lg:text-sm font-bold px-2 md:px-3 lg:px-5 xl:px-8 py-1 md:py-1.5 lg:py-2.5 xl:py-3 backdrop-blur-sm bg-white/10"
+                  size="sm"
+                  className="text-sm font-bold px-6 lg:px-8 xl:px-10 py-2 lg:py-2.5 whitespace-nowrap backdrop-blur-sm bg-white/10"
                   baseBackground="rgba(255, 255, 255, 0.1)"
                 >
                   <span className="relative z-10 flex items-center gap-2">

@@ -1,5 +1,7 @@
 {
     "i18n-ally.localesPaths": [
         "public/locales"
-    ]
+    ],
+    "snyk.advanced.autoSelectOrganization": true,
+    "snyk.advanced.organization": "b5b3377c-4361-4902-be6b-7193ee3c895a"
 }

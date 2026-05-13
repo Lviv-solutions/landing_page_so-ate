@@ -186,7 +186,7 @@ export default function TomTomMapPicker({
       const formattedAddress = address?.freeformAddress ?? null;
 
       if (mapRef.current) {
-        mapRef.current.flyTo({ center: [lng, lat], zoom: 16 });
+        (mapRef.current as any).flyTo({ center: [lng, lat], zoom: 16 });
       }
       if (markerRef.current) {
         markerRef.current.setLngLat([lng, lat]);

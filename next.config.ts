@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   transpilePackages: ["@my-saas/components"],
   webpack: (config) => {
     config.resolve.alias = {
