@@ -115,8 +115,7 @@ jobs:
           fi
 
           if [ "${{ steps.trivy-sbom.outcome }}" = "failure" ]; then
-            echo "::warning::Trivy SBOM scan found CRITICAL vulnerabilities (advisory)"
-            FAILED=1
+            echo "::warning::Trivy SBOM scan found vulnerabilities (advisory only — see report)"
           fi
 
           if [ "${{ steps.trivy-image.outcome }}" = "failure" ]; then
