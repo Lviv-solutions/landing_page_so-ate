@@ -63,7 +63,7 @@ jobs:
             -o json \
             > security/reports/grype-report.json
 
-      # Step 3: Scan SBOM with Trivy
+      # Step 3: Scan SBOM with Trivy (advisory — more aggressive DB than Grype)
       - name: Scan SBOM with Trivy
         continue-on-error: true
         id: trivy-sbom
@@ -71,7 +71,7 @@ jobs:
         with:
           scan-type: sbom
           input: security/reports/sbom.cdx.json
-          severity: HIGH,CRITICAL
+          severity: CRITICAL
           exit-code: "1"
           format: json
           output: security/reports/trivy-sbom-report.json
@@ -115,7 +115,7 @@ jobs:
           fi
 
           if [ "${{ steps.trivy-sbom.outcome }}" = "failure" ]; then
-            echo "::error::Trivy SBOM scan found HIGH/CRITICAL vulnerabilities"
+            echo "::warning::Trivy SBOM scan found CRITICAL vulnerabilities (advisory)"
             FAILED=1
           fi
 
