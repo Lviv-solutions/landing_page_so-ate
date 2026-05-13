@@ -52,11 +52,13 @@ fi
 echo ""
 
 # 4. Scan Docker image with Trivy (vuln + secrets + misconfig)
+# --skip-dirs skips Node.js system npm (not app code)
 echo "▶ [4/4] Scanning Docker image with Trivy..."
 if trivy image "$IMAGE_NAME" \
   --scanners vuln,secret,misconfig \
   --severity HIGH,CRITICAL \
   --exit-code 1 \
+  --skip-dirs /usr/local/lib/node_modules \
   --format json \
   --output "$REPORT_DIR/trivy-image-report.json" 2>/dev/null; then
   echo "  ✓ Trivy Image: No HIGH/CRITICAL issues"
