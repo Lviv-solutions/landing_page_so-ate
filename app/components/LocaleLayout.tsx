@@ -2,13 +2,14 @@
 
 import { useTranslation } from "../hooks/useTranslation";
 import { useEffect } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
 }
 
 export default function LocaleLayout({ children }: LocaleLayoutProps) {
-  const { locale } = useTranslation();
+  const { locale, isLoading } = useTranslation();
 
   useEffect(() => {
     // Update document direction based on locale
@@ -22,6 +23,10 @@ export default function LocaleLayout({ children }: LocaleLayoutProps) {
       document.title = "So-Eat - منصة إدارة المطاعم";
     }
   }, [locale]);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className={`locale-container ${locale === "ar" ? "rtl" : "ltr"}`}>

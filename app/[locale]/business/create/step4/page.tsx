@@ -1,56 +1,27 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { useBusinessFormGuard } from "../../../../hooks/useBusinessFormGuard";
+import { BusinessStepLayout, FormCard } from "../../../../components/business";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 export default function CreateBusinessStep4() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
+  const { savedData } = useBusinessFormGuard(locale, router);
 
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const savedData = await businessFormDB.getFormData();
-        if (!savedData || !savedData.arName) {
-          router.push(`/${locale}/business/create/step1`);
-        } else if (savedData.arDescription) {
-          setDescription(savedData.arDescription);
-        }
-      } catch (error) {
-        console.error("Failed to load form data:", error);
-      }
-    };
-    loadData();
-  }, [router, locale]);
+    if (savedData?.arDescription) {
+      setDescription(savedData.arDescription);
+    }
+  }, [savedData]);
 
   const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(event.target.value);
@@ -70,13 +41,7 @@ export default function CreateBusinessStep4() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <Box
           sx={{
             display: "flex",
@@ -85,20 +50,7 @@ export default function CreateBusinessStep4() {
             minHeight: "calc(100vh - 200px)",
           }}
         >
-          <Box
-            sx={{
-              width: "712px",
-              height: "546px",
-              borderRadius: "16px",
-              border: "1px solid #E0E0E0",
-              padding: "24px",
-              bgcolor: "white",
-              display: "flex",
-              flexDirection: "column",
-              gap: "36px",
-              opacity: 1,
-            }}
-          >
+          <FormCard sx={{ width: "712px", height: "546px", gap: "36px" }}>
             <Box sx={{ textAlign: locale === "ar" ? "right" : "left" }}>
               <Typography
                 variant="h5"
@@ -218,9 +170,8 @@ export default function CreateBusinessStep4() {
                 {t("businessForm.saveAndContinue")}
               </Button>
             </Box>
-          </Box>
+          </FormCard>
         </Box>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }

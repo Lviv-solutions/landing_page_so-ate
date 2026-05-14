@@ -1,0 +1,38 @@
+security_policy:
+  fail_on:
+    - CRITICAL
+    - HIGH
+
+  warn_on:
+    - MEDIUM
+    - LOW
+
+  ignore_unfixed: false
+
+  required_reports:
+    - sbom.cdx.json
+    - grype-report.json
+    - trivy-sbom-report.json
+    - trivy-image-report.json
+
+  required_scanners:
+    - syft
+    - grype
+    - trivy
+
+  required_checks:
+    - dependency_vulnerability_scan
+    - container_image_scan
+    - sbom_generation
+    - sbom_vulnerability_scan
+    - secret_scan
+    - misconfiguration_scan
+
+  sbom:
+    format: cyclonedx-json
+    generator: syft
+
+  ci_triggers:
+    - push:main
+    - push:develop
+    - pull_request

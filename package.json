@@ -11,6 +11,7 @@
     "postinstall": "node -e \"try{require('lightningcss');console.log('lightningcss ok')}catch(e){console.log('Rebuilding lightningcss from source…');require('child_process').execSync('npm rebuild lightningcss --build-from-source', {stdio:'inherit'})}\""
   },
   "dependencies": {
+    "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@hello-pangea/dnd": "^18.0.1",
@@ -53,13 +54,10 @@
     "google-protobuf": "^4.0.0",
     "grpc-web": "^2.0.2",
     "i18next": "^24.2.3",
-    "jsx-to-string": "^1.4.0",
     "lucide-react": "^0.545.0",
     "minimal-shared": "^1.1.4",
     "mui-one-time-password-input": "^5.0.0",
-    "next": "^15.5.4",
-    "next-i18next": "^15.4.2",
-    "next-images": "^1.8.5",
+    "next": "^16.2.5",
     "pascalcase": "^2.0.0",
     "payment": "^2.4.7",
     "react": "^19.0.0",
@@ -75,7 +73,7 @@
     "react-number-format": "^5.4.4",
     "react-phone-number-input": "^3.4.14",
     "react-scrollspy": "^3.4.3",
-    "react-syntax-highlighter": "^15.6.6",
+    "react-syntax-highlighter": "^16.0.0",
     "react-toastify": "^11.0.5",
     "react-use": "^17.6.0",
     "rehype-highlight": "^7.0.2",
@@ -141,7 +139,7 @@
     "madge": "^8.0.0",
     "next-intercept-stdout": "^1.0.1",
     "playwright": "^1.56.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.10",
     "prettier": "^3.6.2",
     "prismjs": "^1.30.0",
     "react-transition-group": "^4.4.5",
@@ -170,6 +168,20 @@
   },
   "overrides": {
     "json5": ">=2.2.2",
-    "ua-parser-js": ">=0.7.33"
+    "ua-parser-js": ">=0.7.33",
+    "ajv": ">=6.14.0",
+    "brace-expansion": ">=1.1.13",
+    "immutable": ">=4.3.8",
+    "lodash": ">=4.18.1",
+    "lodash-es": ">=4.18.1",
+    "minimatch": ">=9.0.7",
+    "picomatch": ">=2.3.2",
+    "uuid": ">=14.0.0",
+    "yaml": ">=1.10.3",
+    "postcss": "$postcss",
+    "protocol-buffers-schema": ">=3.6.1",
+    "cross-spawn": ">=7.0.5",
+    "glob": ">=10.5.0",
+    "tar": ">=7.5.11"
   }
 }

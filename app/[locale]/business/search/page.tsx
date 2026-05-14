@@ -15,6 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 import { Iconify } from "@my-saas/components";
 import { useTranslation } from "../../../hooks/useTranslation";
+import { LoadingScreen } from "../../../components/business";
 import businessService, {
   type Business,
 } from "../../../../services/businessService";
@@ -74,36 +75,7 @@ export default function Dashboard() {
   };
 
   if (isLoading) {
-    return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "background.default",
-        }}
-      >
-        <Stack spacing={2} alignItems="center">
-          <Box
-            sx={{
-              width: 128,
-              height: 128,
-              border: "2px solid",
-              borderColor: "primary.main",
-              borderTopColor: "transparent",
-              borderRadius: "50%",
-              animation: "spin 1s linear infinite",
-              "@keyframes spin": {
-                "0%": { transform: "rotate(0deg)" },
-                "100%": { transform: "rotate(360deg)" },
-              },
-            }}
-          />
-          <Typography color="text.secondary">{t("common.loading")}</Typography>
-        </Stack>
-      </Box>
-    );
+    return <LoadingScreen message={t("common.loading")} />;
   }
 
   if (!isAuthenticated) {
@@ -325,7 +297,8 @@ export default function Dashboard() {
                 bgcolor: "primary.main",
                 color: "primary.contrastText",
                 fontWeight: 600,
-                boxShadow: (theme: any) => theme.customShadows.primary,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                boxShadow: (theme: Record<string, any>) => theme.customShadows?.primary,
                 "&:hover": {
                   bgcolor: "primary.dark",
                 },
@@ -347,7 +320,8 @@ export default function Dashboard() {
                 width: 406,
                 height: 96,
                 minWidth: 320,
-                boxShadow: (theme: any) => theme.customShadows.card,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                boxShadow: (theme: Record<string, any>) => theme.customShadows?.card,
               }}
             >
               <CardContent

@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+import "google/protobuf/timestamp.proto";
+
+service ServiceManagement {
+  rpc CreateService(CreateServiceRequest) returns (ServiceResponse);
+  rpc GetService(GetServiceRequest) returns (ServiceResponse);
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse);
+  rpc UpdateService(UpdateServiceRequest) returns (ServiceResponse);
+  rpc DeleteService(DeleteServiceRequest) returns (DeleteServiceResponse);
+}
+
+message Service {
+  string code = 1;
+  string name = 2;
+  bool enabled_by_default = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
+}
+
+message CreateServiceRequest {
+  string code = 1;
+  string name = 2;
+  bool enabled_by_default = 3;
+}
+
+message GetServiceRequest {
+  string code = 1;
+}
+
+message ListServicesRequest {
+  int32 page_size = 1;
+  string page_token = 2;
+}
+
+message ListServicesResponse {
+  repeated Service services = 1;
+  string next_page_token = 2;
+}
+
+message UpdateServiceRequest {
+  string code = 1;
+  string name = 2;
+  bool enabled_by_default = 3;
+}
+
+message DeleteServiceRequest {
+  string code = 1;
+}
+
+message DeleteServiceResponse {
+  bool success = 1;
+}
+
+message ServiceResponse {
+  Service service = 1;
+}

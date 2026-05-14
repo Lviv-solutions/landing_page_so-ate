@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
-import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { useBusinessFormGuard } from "../../../../hooks/useBusinessFormGuard";
+import { BusinessStepLayout, FormCard } from "../../../../components/business";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -17,13 +18,9 @@ const TomTomMapPicker = dynamic(
 );
 
 export default function CreateBusinessStep2() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
+  const { savedData } = useBusinessFormGuard(locale, router);
 
   const [locationData, setLocationData] = useState({
     country: "",
@@ -36,40 +33,14 @@ export default function CreateBusinessStep2() {
   });
 
   useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const savedData = await businessFormDB.getFormData();
-        if (!savedData || !savedData.arName) {
-          router.push(`/${locale}/business/create/step1`);
-        } else if (savedData.location) {
-          setLocationData((prev) => ({
-            ...prev,
-            ...savedData.location,
-            formattedAddress: savedData.location.formattedAddress ?? prev.formattedAddress,
-          }));
-        }
-      } catch (error) {
-        console.error("Failed to load form data:", error);
-      }
-    };
-    loadData();
-  }, [router, locale]);
+    if (savedData?.location) {
+      setLocationData((prev) => ({
+        ...prev,
+        ...savedData.location,
+        formattedAddress: savedData.location?.formattedAddress ?? prev.formattedAddress,
+      }));
+    }
+  }, [savedData]);
 
   const handleMapLocationChange = useCallback(
     (result: { latitude: number; longitude: number; formattedAddress: string | null }) => {
@@ -117,13 +88,7 @@ export default function CreateBusinessStep2() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <div
           className="flex flex-wrap gap-6"
           style={{
@@ -199,20 +164,11 @@ export default function CreateBusinessStep2() {
           </Box>
 
           {/* Form Section - responsive */}
-          <Box
-            sx={{
-              flex: "1 1 350px",
-              maxWidth: { xs: "100%", md: "419px" },
-              minHeight: { xs: "auto", md: "556px" },
-              borderRadius: "16px",
-              border: "1px solid #E0E0E0",
-              padding: "16px",
-              bgcolor: "white",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-            }}
-          >
+          <FormCard sx={{
+            flex: "1 1 350px",
+            maxWidth: { xs: "100%", md: "419px" },
+            minHeight: { xs: "auto", md: "556px" },
+          }}>
             <Box>
               <Typography
                 variant="h6"
@@ -385,9 +341,8 @@ export default function CreateBusinessStep2() {
             >
               {t("businessForm.nextButton")}
             </Button>
-          </Box>
+          </FormCard>
         </div>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }

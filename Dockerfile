@@ -1,49 +1,57 @@
+# ---- Build ----
 FROM node:20-alpine AS builder
 
 ARG NEXT_PUBLIC_GRPC_WEB_URL
 ENV NEXT_PUBLIC_GRPC_WEB_URL=$NEXT_PUBLIC_GRPC_WEB_URL
 
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install deps
 COPY package.json package-lock.json* ./
-COPY .npmrc ./
-RUN npm ci
+COPY .npmrc* ./
+RUN npm ci --legacy-peer-deps
 
-# Copy project files
+# Fix nested lightningcss for Alpine musl
+RUN ARCH=$(uname -m) && \
+    if [ "$ARCH" = "aarch64" ]; then PLAT="linux-arm64-musl"; else PLAT="linux-x64-musl"; fi && \
+    LC_VER=$(node -e "console.log(require('./node_modules/@tailwindcss/node/node_modules/lightningcss/package.json').version)") && \
+    echo "Installing lightningcss-$PLAT@$LC_VER into nested location" && \
+    npm pack "lightningcss-$PLAT@$LC_VER" 2>/dev/null && \
+    mkdir -p node_modules/@tailwindcss/node/node_modules/lightningcss-$PLAT && \
+    tar -xzf lightningcss-$PLAT-*.tgz -C node_modules/@tailwindcss/node/node_modules/lightningcss-$PLAT --strip-components=1 && \
+    rm -f lightningcss-$PLAT-*.tgz && \
+    node -e "require('./node_modules/@tailwindcss/node/node_modules/lightningcss'); console.log('nested lightningcss: OK')"
+
 COPY . .
 
-# Build app
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
 RUN npm run build
 
-# Production stage
+# ---- Production Runner ----
 FROM node:20-alpine AS runner
 
+# Remove dangerous binaries + system npm
+RUN apk add --no-cache libc6-compat && \
+    apk --no-cache del busybox-extras curl wget || true && \
+    rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx \
+           /usr/bin/nc /usr/bin/ncat /usr/bin/wget /usr/bin/curl 2>/dev/null || true
 WORKDIR /app
 
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV NEXT_TELEMETRY_DISABLED=1
 
-# Remove dangerous binaries that attackers can abuse (nc, wget, curl, etc.)
-RUN apk --no-cache del busybox-extras curl wget || true && \
-    rm -f /usr/bin/nc /usr/bin/ncat /usr/bin/wget /usr/bin/curl 2>/dev/null || true
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Copy only what's needed from builder
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/package-lock.json* ./
-COPY --from=builder /app/.npmrc ./
-RUN npm ci --omit=dev && npm install --save-exact typescript
-
-COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.ts ./
-COPY --from=builder /app/next-i18next.config.js ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Set ownership and run as non-root user
-RUN chown -R node:node /app
-USER node
+USER nextjs
 
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-# Start normally (NO standalone)
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

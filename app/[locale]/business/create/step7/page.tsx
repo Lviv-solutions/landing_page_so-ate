@@ -1,45 +1,24 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import Navigation from "../../../../../components/Navigation";
 import { businessFormDB } from "../../../../../lib/businessFormDB";
 import { webClientAuthService } from "../../../../../lib/auth-service";
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { claimRequestService } from "../../../../../services/claimRequestService";
+import { useLocaleSync } from "../../../../hooks/useLocaleSync";
+import { BusinessStepLayout } from "../../../../components/business";
+import { claimRequestService, type CreateClaimRequestParams } from "../../../../../services/claimRequestService";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function CreateBusinessStep7() {
-  const router = useRouter();
+  const { locale, router } = useLocaleSync();
   const { t } = useTranslation();
-  const [locale, setLocale] = useState(
-    typeof window !== "undefined"
-      ? window.location.pathname.split("/")[1]
-      : "ar"
-  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const hasSubmittedRef = useRef(false);
-
-  useEffect(() => {
-    const handleRouteChange = () => {
-      const newLocale = window.location.pathname.split("/")[1];
-      if (newLocale !== locale) {
-        setLocale(newLocale);
-      }
-    };
-
-    window.addEventListener("popstate", handleRouteChange);
-    handleRouteChange();
-
-    return () => {
-      window.removeEventListener("popstate", handleRouteChange);
-    };
-  }, [router, locale]);
 
   useEffect(() => {
     const submitForm = async () => {
@@ -67,7 +46,7 @@ export default function CreateBusinessStep7() {
         const userId = authUser?.id ?? crypto.randomUUID();
 
         // Prepare business data for claim request - only include defined values
-        const businessData: any = {
+        const businessData: CreateClaimRequestParams['businessData'] = {
           ar_name: formData.arName || "",
           en_name: formData.enName || "",
         };
@@ -101,7 +80,7 @@ export default function CreateBusinessStep7() {
         }
 
         // Prepare evidence data - only include defined values
-        const evidenceJson: any = {};
+        const evidenceJson: CreateClaimRequestParams['evidenceJson'] = {};
         
         if (formData.tableCount) {
           evidenceJson.tableCount = formData.tableCount;
@@ -147,9 +126,9 @@ export default function CreateBusinessStep7() {
         
         // Clear the form data after successful submission
         await businessFormDB.clearFormData();
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Failed to submit form:", error);
-        setError(error.message || "Failed to submit claim request");
+        setError(error instanceof Error ? error.message : "Failed to submit claim request");
         setIsSubmitting(false);
       }
     };
@@ -163,13 +142,7 @@ export default function CreateBusinessStep7() {
 
   if (isSubmitting) {
     return (
-      <div
-        className="min-h-screen bg-white"
-        dir={locale === "ar" ? "rtl" : "ltr"}
-      >
-        <Navigation locale={locale} />
-
-        <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+      <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
           <Box
             sx={{
               display: "flex",
@@ -198,20 +171,13 @@ export default function CreateBusinessStep7() {
               </Typography>
             </Box>
           </Box>
-        </main>
-      </div>
+      </BusinessStepLayout>
     );
   }
 
   if (error) {
     return (
-      <div
-        className="min-h-screen bg-white"
-        dir={locale === "ar" ? "rtl" : "ltr"}
-      >
-        <Navigation locale={locale} />
-
-        <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+      <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
           <Box
             sx={{
               display: "flex",
@@ -281,19 +247,12 @@ export default function CreateBusinessStep7() {
               </Button>
             </Box>
           </Box>
-        </main>
-      </div>
+      </BusinessStepLayout>
     );
   }
 
   return (
-    <div
-      className="min-h-screen bg-white"
-      dir={locale === "ar" ? "rtl" : "ltr"}
-    >
-      <Navigation locale={locale} />
-
-      <main className="max-w-7xl mx-auto px-6 pt-32 pb-12">
+    <BusinessStepLayout locale={locale} maxWidth="max-w-7xl">
         <Box
           sx={{
             display: "flex",
@@ -394,7 +353,6 @@ export default function CreateBusinessStep7() {
             </Button>
           </Box>
         </Box>
-      </main>
-    </div>
+    </BusinessStepLayout>
   );
 }

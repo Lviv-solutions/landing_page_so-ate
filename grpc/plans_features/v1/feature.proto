@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package plans_features.v1;
+
+option go_package = "lviv_backend/api/gen/plans_features/v1;plans_featuresv1";
+
+import "google/protobuf/timestamp.proto";
+
+service FeatureManagement {
+  rpc CreateFeature(CreateFeatureRequest) returns (FeatureResponse);
+  rpc GetFeature(GetFeatureRequest) returns (FeatureResponse);
+  rpc ListFeatures(ListFeaturesRequest) returns (ListFeaturesResponse);
+  rpc UpdateFeature(UpdateFeatureRequest) returns (FeatureResponse);
+  rpc DeleteFeature(DeleteFeatureRequest) returns (DeleteFeatureResponse);
+}
+
+enum ValueType {
+  VALUE_TYPE_UNSPECIFIED = 0;
+  VALUE_TYPE_INT = 1;
+  VALUE_TYPE_BOOL = 2;
+  VALUE_TYPE_TEXT = 3;
+  VALUE_TYPE_JSON = 4;
+}
+
+message Feature {
+  string code = 1;
+  string name = 2;
+  ValueType value_type = 3;
+  string unit = 4;
+  string service_code = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+message CreateFeatureRequest {
+  string code = 1;
+  string name = 2;
+  ValueType value_type = 3;
+  string unit = 4;
+  string service_code = 5;
+}
+
+message GetFeatureRequest {
+  string code = 1;
+}
+
+message ListFeaturesRequest {
+  string service_code = 1;
+  int32 page_size = 2;
+  string page_token = 3;
+}
+
+message ListFeaturesResponse {
+  repeated Feature features = 1;
+  string next_page_token = 2;
+}
+
+message UpdateFeatureRequest {
+  string code = 1;
+  string name = 2;
+  ValueType value_type = 3;
+  string unit = 4;
+  string service_code = 5;
+}
+
+message DeleteFeatureRequest {
+  string code = 1;
+}
+
+message DeleteFeatureResponse {
+  bool success = 1;
+}
+
+message FeatureResponse {
+  Feature feature = 1;
+}

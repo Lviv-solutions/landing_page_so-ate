@@ -60,6 +60,12 @@ export default function HeroSection() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <motion.button
+                onClick={() => {
+                  const el = document.querySelector("#pricing") as HTMLElement;
+                  if (el) {
+                    window.scrollTo({ top: el.offsetTop - 100, behavior: "smooth" });
+                  }
+                }}
                 className="px-8 py-4 rounded-full text-lg bg-[#fff] font-semibold text-[#ED614A] font-clash shadow-lg"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -67,6 +73,12 @@ export default function HeroSection() {
                 {t("hero.startNow")}
               </motion.button>
               <motion.button
+                onClick={() => {
+                  const el = document.querySelector("#reservations") as HTMLElement;
+                  if (el) {
+                    window.scrollTo({ top: el.offsetTop - 100, behavior: "smooth" });
+                  }
+                }}
                 className="border-2 border-[#fff] text-[#fff] px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#ED614A] hover:text-white transition-all duration-300 font-clash"
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}

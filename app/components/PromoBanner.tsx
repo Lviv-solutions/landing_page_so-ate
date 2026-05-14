@@ -42,6 +42,12 @@ export default function PromoBanner() {
 
         <div className="flex items-center space-x-4">
           <motion.button
+            onClick={() => {
+              const el = document.querySelector("#pricing") as HTMLElement;
+              if (el) {
+                window.scrollTo({ top: el.offsetTop - 100, behavior: "smooth" });
+              }
+            }}
             className="bg-white text-[#FF6B6B] px-4 py-2 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors duration-200 shadow-lg font-clash"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
