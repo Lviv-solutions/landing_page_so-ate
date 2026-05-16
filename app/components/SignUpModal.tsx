@@ -26,33 +26,74 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
     confirmPassword: ''
   });
   const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const validateField = (field: string, value: string): string => {
+    switch (field) {
+      case 'firstName':
+      case 'lastName':
+        if (value.trim().length < 2) return t('auth.nameTooShort');
+        if (value.trim().length > 50) return t('auth.nameTooLong');
+        if (!/^[\p{L}\s'-]+$/u.test(value.trim())) return t('auth.nameInvalid');
+        return '';
+      case 'email':
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) return t('auth.emailInvalid');
+        return '';
+      case 'phone':
+        if (!/^\+?[0-9]{8,15}$/.test(value.replace(/[\s()-]/g, ''))) return t('auth.phoneInvalid');
+        return '';
+      case 'password':
+        if (value.length < 8) return t('auth.passwordTooShort');
+        if (!/[A-Z]/.test(value)) return t('auth.passwordNoUppercase');
+        if (!/[a-z]/.test(value)) return t('auth.passwordNoLowercase');
+        if (!/[0-9]/.test(value)) return t('auth.passwordNoNumber');
+        return '';
+      case 'confirmPassword':
+        if (value !== formData.password) return t('auth.passwordMismatch');
+        return '';
+      default:
+        return '';
+    }
+  };
 
   const isFormValid = formData.firstName.trim() !== '' &&
                       formData.lastName.trim() !== '' &&
                       formData.email.trim() !== '' &&
                       formData.phone.trim() !== '' &&
                       formData.password.trim() !== '' &&
-                      formData.confirmPassword.trim() !== '';
+                      formData.confirmPassword.trim() !== '' &&
+                      Object.values(fieldErrors).every(err => err === '');
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    const value = e.target.value;
+    setFormData(prev => ({ ...prev, [field]: value }));
     setErrorMessage('');
+  };
+
+  const handleBlur = (field: string) => () => {
+    const value = formData[field as keyof typeof formData];
+    if (value.trim() !== '') {
+      const error = validateField(field, value);
+      setFieldErrors(prev => ({ ...prev, [field]: error }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage(t('auth.passwordMismatch'));
-      return;
+    // Validate all fields before submit
+    const errors: Record<string, string> = {};
+    for (const [field, value] of Object.entries(formData)) {
+      errors[field] = validateField(field, value);
     }
+    setFieldErrors(errors);
 
-    if (formData.password.length < 8) {
-      setErrorMessage(t('auth.passwordTooShort'));
+    const hasErrors = Object.values(errors).some(err => err !== '');
+    if (hasErrors) {
       return;
     }
 
@@ -128,29 +169,33 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                         <div className={styles.input}>
                           <input
                             type="text"
-                            className={styles.label}
+                            className={`${styles.label} ${fieldErrors.lastName ? styles.inputError : ''}`}
                             placeholder={t('auth.lastName')}
                             value={formData.lastName}
                             onChange={handleInputChange('lastName')}
+                            onBlur={handleBlur('lastName')}
                             required
                           />
                         </div>
                       </div>
+                      {fieldErrors.lastName && <span className={styles.fieldError}>{fieldErrors.lastName}</span>}
                     </div>
                     <div className={styles.textField}>
                       <div className={styles.textField2}>
                         <div className={styles.input}>
                           <input
                             type="text"
-                            className={styles.label}
+                            className={`${styles.label} ${fieldErrors.firstName ? styles.inputError : ''}`}
                             placeholder={t('auth.firstName')}
                             value={formData.firstName}
                             onChange={handleInputChange('firstName')}
+                            onBlur={handleBlur('firstName')}
                             required
                           />
                         </div>
                         <Image className={styles.startAdornmentIcon} src="/assets/elements-1.svg" width={32} height={24} sizes="100vw" alt="" />
                       </div>
+                      {fieldErrors.firstName && <span className={styles.fieldError}>{fieldErrors.firstName}</span>}
                     </div>
                   </div>
                   <div className={styles.textField5}>
@@ -158,10 +203,11 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                       <div className={styles.input}>
                         <input
                           type="email"
-                          className={styles.label}
+                          className={`${styles.label} ${fieldErrors.email ? styles.inputError : ''}`}
                           placeholder={t('auth.email')}
                           value={formData.email}
                           onChange={handleInputChange('email')}
+                          onBlur={handleBlur('email')}
                           required
                         />
                       </div>
@@ -171,16 +217,18 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                         </IconCircle>
                       </div>
                     </div>
+                    {fieldErrors.email && <span className={styles.fieldError}>{fieldErrors.email}</span>}
                   </div>
                   <div className={styles.textField5}>
                     <div className={styles.textField2}>
                       <div className={styles.input}>
                         <input
                           type="tel"
-                          className={styles.label}
+                          className={`${styles.label} ${fieldErrors.phone ? styles.inputError : ''}`}
                           placeholder={t('auth.phoneNumber')}
                           value={formData.phone}
                           onChange={handleInputChange('phone')}
+                          onBlur={handleBlur('phone')}
                           autoComplete="off"
                           required
                         />
@@ -191,6 +239,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                         </IconCircle>
                       </div>
                     </div>
+                    {fieldErrors.phone && <span className={styles.fieldError}>{fieldErrors.phone}</span>}
                   </div>
                   <div className={styles.textField5}>
                     <div className={styles.textField2}>
@@ -206,10 +255,11 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                       <div className={styles.input}>
                         <input
                           type={showPassword ? "text" : "password"}
-                          className={styles.label}
+                          className={`${styles.label} ${fieldErrors.password ? styles.inputError : ''}`}
                           placeholder={t('auth.password')}
                           value={formData.password}
                           onChange={handleInputChange('password')}
+                          onBlur={handleBlur('password')}
                           required
                         />
                       </div>
@@ -219,6 +269,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                         </IconCircle>
                       </div>
                     </div>
+                    {fieldErrors.password && <span className={styles.fieldError}>{fieldErrors.password}</span>}
                   </div>
                   <div className={styles.textField5}>
                     <div className={styles.textField2}>
@@ -234,10 +285,11 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                       <div className={styles.input}>
                         <input
                           type={showConfirmPassword ? "text" : "password"}
-                          className={styles.label}
+                          className={`${styles.label} ${fieldErrors.confirmPassword ? styles.inputError : ''}`}
                           placeholder={t('auth.confirmPassword')}
                           value={formData.confirmPassword}
                           onChange={handleInputChange('confirmPassword')}
+                          onBlur={handleBlur('confirmPassword')}
                           required
                         />
                       </div>
@@ -247,6 +299,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSwitchToSign
                         </IconCircle>
                       </div>
                     </div>
+                    {fieldErrors.confirmPassword && <span className={styles.fieldError}>{fieldErrors.confirmPassword}</span>}
                   </div>
                 </div>
                 <button
