@@ -44,7 +44,7 @@ export const webClientAuthService = {
   register: async (payload: RegisterPayload): Promise<AuthResult> => {
     try {
       const username =
-        [payload.firstName, payload.lastName].filter(Boolean).join(" ").trim() || payload.email;
+        [payload.firstName, payload.lastName].filter(Boolean).join("_").trim().toLowerCase() || payload.email;
       const result = await authService.register({
         username,
         email: payload.email,
